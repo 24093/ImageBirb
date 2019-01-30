@@ -1,12 +1,105 @@
 ﻿<Window x:Class="ImageBirb.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ImageBirb"
+        xmlns:common="clr-namespace:ImageBirb.Core.Common;assembly=ImageBirb.Core"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:dd="urn:gong-wpf-dragdrop"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="ImageBirb" Height="450" Width="800"
+        DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
+        dd:DragDrop.IsDropTarget="True"
+        dd:DragDrop.DropHandler="{Binding}">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding UpdateThumbnailsCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="140" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="100" />
+        </Grid.ColumnDefinitions>
+
+        <ListView Grid.Column="0">
+
+        </ListView>
+
+        <ListView Name="ThumbnailsListView"
+                  Grid.Column="1"
+                  HorizontalAlignment="Stretch" 
+                  VerticalAlignment="Stretch"
+                  ScrollViewer.VerticalScrollBarVisibility="Visible"
+                  ItemsSource="{Binding Thumbnails}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding ShowImageCommand}"
+                                           CommandParameter="{Binding SelectedItem, ElementName=ThumbnailsListView}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Image Name="ThumbnailImage"
+                           Source="{Binding ThumbnailData}"
+                           Width="{Binding Source={x:Static common:Constants.ThumbnailWidth}}"
+                           Height="{Binding Source={x:Static common:Constants.ThumbnailHeight}}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <Image Name="SelectedImageView" 
+               Grid.Column="2"
+               Source="{Binding SelectedImage.ImageData}" />
+
+        <Grid Name="TagsArea"
+              Grid.Column="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ListView Name="CurrentImageTagsListView"
+                      Grid.Row="0"
+                      ItemsSource="{Binding SelectedImage.Tags}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Name="TagTextBlock" 
+                                       Text="{Binding}" />
+                            <Button Name="RemoveTagButton"
+                                    Content="X">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{Binding DataContext.RemoveTagCommand, ElementName=CurrentImageTagsListView}"
+                                                               CommandParameter="{Binding Text, ElementName=TagTextBlock}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <Grid Name="AddTagsArea"
+                  Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox Name="AddTagTextBox"
+                         Grid.Column="0" />
+                <Button Name="AddTagButton"
+                        Grid.Column="1"
+                        Content="Add"
+                        Command="{Binding AddTagCommand}"
+                        CommandParameter="{Binding Text, ElementName=AddTagTextBox}" />
+
+            </Grid>
+        </Grid>
+
     </Grid>
 </Window>

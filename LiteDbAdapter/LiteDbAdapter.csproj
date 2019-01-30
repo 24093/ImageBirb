@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>ImageBirb.LiteDb</AssemblyName>
+    <RootNamespace>ImageBirb.LiteDb</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LiteDB" Version="4.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Adapters\Secondary\" />
+  </ItemGroup>
+
+</Project>
