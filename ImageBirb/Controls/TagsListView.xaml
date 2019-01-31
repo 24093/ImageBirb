@@ -1,0 +1,39 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:ImageBirb.Controls"
+                    xmlns:common="clr-namespace:ImageBirb.Core.Common;assembly=ImageBirb.Core">
+
+    <Style TargetType="{x:Type local:TagsListView}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:TagsListView">
+                    <ListView Name="TagsListView" 
+                              SelectionMode="Multiple"
+                              HorizontalAlignment="Stretch" 
+                              VerticalAlignment="Stretch"
+                              ScrollViewer.VerticalScrollBarVisibility="Visible"
+                              ItemsSource="{Binding TagListViewModel.Tags, RelativeSource={RelativeSource TemplatedParent}}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding ThumbnailListViewModel.FilterThumbnailsByTagsCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                           CommandParameter="{Binding SelectedItems, ElementName=TagsListView}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <ListView.ItemTemplate>
+                            <DataTemplate DataType="{x:Type common:Tag}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}" />
+                                    <TextBlock Text=" (" />
+                                    <TextBlock Text="{Binding Count}" />
+                                    <TextBlock Text=")" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

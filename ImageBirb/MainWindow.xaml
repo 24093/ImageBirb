@@ -6,11 +6,19 @@
         xmlns:common="clr-namespace:ImageBirb.Core.Common;assembly=ImageBirb.Core"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:dd="urn:gong-wpf-dragdrop"
+        xmlns:controls="clr-namespace:ImageBirb.Controls"
         mc:Ignorable="d"
         Title="ImageBirb" Height="450" Width="800"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
         dd:DragDrop.IsDropTarget="True"
         dd:DragDrop.DropHandler="{Binding}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Controls/TagsListView.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding ThumbnailListViewModel.UpdateThumbnailsCommand}" />
@@ -25,30 +33,10 @@
             <ColumnDefinition Width="100" />
         </Grid.ColumnDefinitions>
 
-        <ListView Name="TagsListView" 
-                  Grid.Column="0"
-                  SelectionMode="Multiple"
-                  HorizontalAlignment="Stretch" 
-                  VerticalAlignment="Stretch"
-                  ScrollViewer.VerticalScrollBarVisibility="Visible"
-                  ItemsSource="{Binding TagListViewModel.Tags}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="SelectionChanged">
-                    <i:InvokeCommandAction Command="{Binding ThumbnailListViewModel.FilterThumbnailsByTagsCommand}"
-                                           CommandParameter="{Binding SelectedItems, ElementName=TagsListView}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            <ListView.ItemTemplate>
-                <DataTemplate DataType="{x:Type common:Tag}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Name}" />
-                        <TextBlock Text=" (" />
-                        <TextBlock Text="{Binding Count}" />
-                        <TextBlock Text=")" />
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <controls:TagsListView x:Name="TagsListView" 
+                               Grid.Column="0"
+                               TagListViewModel="{Binding TagListViewModel}"
+                               ThumbnailListViewModel="{Binding ThumbnailListViewModel}" />
 
         <ListView Name="ThumbnailsListView"
                   Grid.Column="1"
