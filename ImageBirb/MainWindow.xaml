@@ -13,7 +13,8 @@
         dd:DragDrop.DropHandler="{Binding}">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding UpdateThumbnailsCommand}" />
+            <i:InvokeCommandAction Command="{Binding ThumbnailListViewModel.UpdateThumbnailsCommand}" />
+            <i:InvokeCommandAction Command="{Binding TagListViewModel.UpdateTagsCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid>
@@ -24,8 +25,27 @@
             <ColumnDefinition Width="100" />
         </Grid.ColumnDefinitions>
 
-        <ListView Grid.Column="0">
-
+        <ListView Name="TagsListView" 
+                  Grid.Column="0"
+                  SelectionMode="Multiple"
+                  HorizontalAlignment="Stretch" 
+                  VerticalAlignment="Stretch"
+                  ScrollViewer.VerticalScrollBarVisibility="Visible"
+                  ItemsSource="{Binding TagListViewModel.Tags}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding ThumbnailListViewModel.FilterThumbnailsByTagsCommand}"
+                                           CommandParameter="{Binding SelectedItems, ElementName=TagsListView}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <ListView.ItemTemplate>
+                <DataTemplate DataType="{x:Type common:Tag}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Name}" />
+                        <TextBlock Text="{Binding Count}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
         </ListView>
 
         <ListView Name="ThumbnailsListView"
@@ -33,15 +53,15 @@
                   HorizontalAlignment="Stretch" 
                   VerticalAlignment="Stretch"
                   ScrollViewer.VerticalScrollBarVisibility="Visible"
-                  ItemsSource="{Binding Thumbnails}">
+                  ItemsSource="{Binding ThumbnailListViewModel.Thumbnails}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
-                    <i:InvokeCommandAction Command="{Binding ShowImageCommand}"
+                    <i:InvokeCommandAction Command="{Binding SelectedImageViewModel.ShowImageCommand}"
                                            CommandParameter="{Binding SelectedItem, ElementName=ThumbnailsListView}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <ListView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate DataType="{x:Type common:Image}">
                     <Image Name="ThumbnailImage"
                            Source="{Binding ThumbnailData}"
                            Width="{Binding Source={x:Static common:Constants.ThumbnailWidth}}"
@@ -52,7 +72,7 @@
 
         <Image Name="SelectedImageView" 
                Grid.Column="2"
-               Source="{Binding SelectedImage.ImageData}" />
+               Source="{Binding SelectedImageViewModel.SelectedImage.ImageData}" />
 
         <Grid Name="TagsArea"
               Grid.Column="3">
@@ -63,7 +83,7 @@
 
             <ListView Name="CurrentImageTagsListView"
                       Grid.Row="0"
-                      ItemsSource="{Binding SelectedImage.Tags}">
+                      ItemsSource="{Binding SelectedImageViewModel.SelectedImage.Tags}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -73,7 +93,7 @@
                                     Content="X">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
-                                        <i:InvokeCommandAction Command="{Binding DataContext.RemoveTagCommand, ElementName=CurrentImageTagsListView}"
+                                        <i:InvokeCommandAction Command="{Binding DataContext.SelectedImageViewModel.RemoveTagCommand, ElementName=CurrentImageTagsListView}"
                                                                CommandParameter="{Binding Text, ElementName=TagTextBlock}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
@@ -95,7 +115,7 @@
                 <Button Name="AddTagButton"
                         Grid.Column="1"
                         Content="Add"
-                        Command="{Binding AddTagCommand}"
+                        Command="{Binding SelectedImageViewModel.AddTagCommand}"
                         CommandParameter="{Binding Text, ElementName=AddTagTextBox}" />
 
             </Grid>

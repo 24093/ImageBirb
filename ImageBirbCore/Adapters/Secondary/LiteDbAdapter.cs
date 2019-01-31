@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace ImageBirb.Core.Adapters.Secondary
@@ -50,18 +51,25 @@ namespace ImageBirb.Core.Adapters.Secondary
             });
         }
 
-        public async Task<IList<Image>> GetThumbnails()
+        public async Task<IList<Image>> GetThumbnails(Predicate<Image> predicate = null)
         {
             return await Task.Run(() =>
             {
-                var images = _imageCollection.FindAll().ToList();
-                
-                foreach (var image in images)
+                IList<Image> allImages = _imageCollection.FindAll().ToList();
+                IList<Image> images = new List<Image>();
+
+                foreach (var image in allImages)
                 {
+                    if (predicate != null && !predicate(image))
+                    {
+                        continue;
+                    }
+
                     using (var ms = new MemoryStream())
                     {
                         _db.FileStorage.Download(FilePrefix + image.ImageId + ThumbnailPostfix, ms);
                         image.ThumbnailData = ms.ToArray();
+                        images.Add(image);
                     }
                 }
 

@@ -19,6 +19,8 @@ namespace ImageBirb.Core.Adapters.Primary
 
         public LoadTagsWorkflow LoadTags { get; }
 
+        public LoadThumbnailsByTagsWorkflow LoadThumbnailsByTags { get; }
+
         public WorkflowAdapter(
             AddImageWorkflow addImageWorkflow, 
             LoadThumbnailsWorkflow loadThumbnailsWorkflow, 
@@ -26,7 +28,8 @@ namespace ImageBirb.Core.Adapters.Primary
             VerifyImageFileWorkflow verifyImageFileWorkflow,
             AddTagWorkflow addTagWorkflow,
             RemoveTagWorkflow removeTagWorkflow,
-            LoadTagsWorkflow loadTagsWorkflow)
+            LoadTagsWorkflow loadTagsWorkflow,
+            LoadThumbnailsByTagsWorkflow loadThumbnailsByTagsWorkflow)
         {
             AddImage = addImageWorkflow;
             LoadThumbnails = loadThumbnailsWorkflow;
@@ -35,6 +38,7 @@ namespace ImageBirb.Core.Adapters.Primary
             AddTag = addTagWorkflow;
             RemoveTag = removeTagWorkflow;
             LoadTags = loadTagsWorkflow;
+            LoadThumbnailsByTags = loadThumbnailsByTagsWorkflow;
         }
     }
 }

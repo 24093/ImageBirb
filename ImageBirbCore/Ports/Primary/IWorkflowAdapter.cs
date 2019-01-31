@@ -17,5 +17,7 @@ namespace ImageBirb.Core.Ports.Primary
         RemoveTagWorkflow RemoveTag { get; }
 
         LoadTagsWorkflow LoadTags { get; }
+
+        LoadThumbnailsByTagsWorkflow LoadThumbnailsByTags { get; }
     }
 }

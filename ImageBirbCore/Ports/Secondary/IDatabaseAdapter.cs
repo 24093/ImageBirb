@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using ImageBirb.Core.Common;
 
@@ -10,7 +12,7 @@ namespace ImageBirb.Core.Ports.Secondary
 
         Task AddImage(Image image);
 
-        Task<IList<Image>> GetThumbnails();
+        Task<IList<Image>> GetThumbnails(Predicate<Image> predicate = null);
 
         Task<Image> GetImage(string imageId);
         

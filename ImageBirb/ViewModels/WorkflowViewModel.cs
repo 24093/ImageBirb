@@ -1,6 +1,7 @@
 using GalaSoft.MvvmLight;
 using ImageBirb.Core.Ports.Primary;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
@@ -52,6 +53,11 @@ namespace ImageBirb.ViewModels
         protected async Task<TagsResult> LoadTags()
         {
             return await Run(_workflowAdapter.LoadTags);
+        }
+
+        protected async Task<ThumbnailsResult> LoadThumbnailsByTags(List<string> tagNames)
+        {
+            return await Run(_workflowAdapter.LoadThumbnailsByTags, new TagNamesParameters(tagNames));
         }
 
         private static async Task<TResult> Run<TParameters, TResult>(Workflow<TParameters, TResult> workflow, TParameters parameters)
