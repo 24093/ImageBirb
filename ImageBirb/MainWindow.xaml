@@ -16,6 +16,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Controls/TagsListView.xaml" />
+                <ResourceDictionary Source="Controls/ThumbnailsListView.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -38,27 +39,10 @@
                                TagListViewModel="{Binding TagListViewModel}"
                                ThumbnailListViewModel="{Binding ThumbnailListViewModel}" />
 
-        <ListView Name="ThumbnailsListView"
-                  Grid.Column="1"
-                  HorizontalAlignment="Stretch" 
-                  VerticalAlignment="Stretch"
-                  ScrollViewer.VerticalScrollBarVisibility="Visible"
-                  ItemsSource="{Binding ThumbnailListViewModel.Thumbnails}">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="SelectionChanged">
-                    <i:InvokeCommandAction Command="{Binding SelectedImageViewModel.ShowImageCommand}"
-                                           CommandParameter="{Binding SelectedItem, ElementName=ThumbnailsListView}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            <ListView.ItemTemplate>
-                <DataTemplate DataType="{x:Type common:Image}">
-                    <Image Name="ThumbnailImage"
-                           Source="{Binding ThumbnailData}"
-                           Width="{Binding Source={x:Static common:Constants.ThumbnailWidth}}"
-                           Height="{Binding Source={x:Static common:Constants.ThumbnailHeight}}" />
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <controls:ThumbnailsListView x:Name="ThumbnailsListView"
+                                     Grid.Column="1"
+                                     SelectedImageViewModel="{Binding SelectedImageViewModel}"
+                                     ThumbnailListViewModel="{Binding ThumbnailListViewModel}" />
 
         <Image Name="SelectedImageView" 
                Grid.Column="2"
