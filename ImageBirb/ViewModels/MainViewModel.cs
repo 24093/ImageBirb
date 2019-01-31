@@ -7,7 +7,6 @@ namespace ImageBirb.ViewModels
 {
     internal class MainViewModel : WorkflowViewModel, IDropTarget
     {
-        
         public TagListViewModel TagListViewModel { get; }
 
         public ThumbnailListViewModel ThumbnailListViewModel { get; }
@@ -20,7 +19,6 @@ namespace ImageBirb.ViewModels
             TagListViewModel = new TagListViewModel(workflowAdapter);
             ThumbnailListViewModel = new ThumbnailListViewModel(workflowAdapter);
             SelectedImageViewModel = new SelectedImageViewModel(workflowAdapter);
-
         }
         
         public async void DragOver(IDropInfo dropInfo)

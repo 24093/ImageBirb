@@ -42,7 +42,9 @@
                 <DataTemplate DataType="{x:Type common:Tag}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Name}" />
+                        <TextBlock Text=" (" />
                         <TextBlock Text="{Binding Count}" />
+                        <TextBlock Text=")" />
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
