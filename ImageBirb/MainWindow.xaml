@@ -3,10 +3,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:common="clr-namespace:ImageBirb.Core.Common;assembly=ImageBirb.Core"
+        xmlns:c="clr-namespace:ImageBirb.Controls"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:dd="urn:gong-wpf-dragdrop"
-        xmlns:controls="clr-namespace:ImageBirb.Controls"
         mc:Ignorable="d"
         Title="ImageBirb" Height="450" Width="800"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
@@ -17,6 +16,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Controls/TagsListView.xaml" />
                 <ResourceDictionary Source="Controls/ThumbnailsListView.xaml" />
+                <ResourceDictionary Source="Controls/SelectedImageView.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -31,69 +31,21 @@
             <ColumnDefinition Width="150" />
             <ColumnDefinition Width="140" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="100" />
         </Grid.ColumnDefinitions>
 
-        <controls:TagsListView x:Name="TagsListView" 
-                               Grid.Column="0"
-                               TagListViewModel="{Binding TagListViewModel}"
-                               ThumbnailListViewModel="{Binding ThumbnailListViewModel}" />
+        <c:TagsListView x:Name="TagsListView" 
+                        Grid.Column="0"
+                        TagListViewModel="{Binding TagListViewModel}"
+                        ThumbnailListViewModel="{Binding ThumbnailListViewModel}" />
 
-        <controls:ThumbnailsListView x:Name="ThumbnailsListView"
-                                     Grid.Column="1"
-                                     SelectedImageViewModel="{Binding SelectedImageViewModel}"
-                                     ThumbnailListViewModel="{Binding ThumbnailListViewModel}" />
+        <c:ThumbnailsListView x:Name="ThumbnailsListView"
+                              Grid.Column="1"
+                              SelectedImageViewModel="{Binding SelectedImageViewModel}"
+                              ThumbnailListViewModel="{Binding ThumbnailListViewModel}" />
 
-        <Image Name="SelectedImageView" 
-               Grid.Column="2"
-               Source="{Binding SelectedImageViewModel.SelectedImage.ImageData}" />
-
-        <Grid Name="TagsArea"
-              Grid.Column="3">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-
-            <ListView Name="CurrentImageTagsListView"
-                      Grid.Row="0"
-                      ItemsSource="{Binding SelectedImageViewModel.SelectedImage.Tags}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Name="TagTextBlock" 
-                                       Text="{Binding}" />
-                            <Button Name="RemoveTagButton"
-                                    Content="X">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <i:InvokeCommandAction Command="{Binding DataContext.SelectedImageViewModel.RemoveTagCommand, ElementName=CurrentImageTagsListView}"
-                                                               CommandParameter="{Binding Text, ElementName=TagTextBlock}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </Button>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-
-            <Grid Name="AddTagsArea"
-                  Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBox Name="AddTagTextBox"
-                         Grid.Column="0" />
-                <Button Name="AddTagButton"
-                        Grid.Column="1"
-                        Content="Add"
-                        Command="{Binding SelectedImageViewModel.AddTagCommand}"
-                        CommandParameter="{Binding Text, ElementName=AddTagTextBox}" />
-
-            </Grid>
-        </Grid>
+        <c:SelectedImageView x:Name="SelectedImageView"
+                             Grid.Column="2"
+                             SelectedImageViewModel="{Binding SelectedImageViewModel}"/>
 
     </Grid>
 </Window>

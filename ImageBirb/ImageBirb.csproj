@@ -74,14 +74,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\SelectedImageView.cs" />
     <Compile Include="Controls\TagsListView.cs" />
     <Compile Include="Controls\ThumbnailsListView.cs" />
+    <Compile Include="ViewModels\DragDropViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\SelectedImageViewModel.cs" />
     <Compile Include="ViewModels\TagListViewModel.cs" />
     <Compile Include="ViewModels\ThumbnailListViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="ViewModels\WorkflowViewModel.cs" />
+    <Page Include="Controls\SelectedImageView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\ThumbnailsListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
