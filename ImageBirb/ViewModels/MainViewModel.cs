@@ -1,5 +1,9 @@
+using GalaSoft.MvvmLight.CommandWpf;
 using GongSolutions.Wpf.DragDrop;
 using ImageBirb.Core.Ports.Primary;
+using Microsoft.Win32;
+using System.Windows;
+using System.Windows.Input;
 
 namespace ImageBirb.ViewModels
 {
@@ -18,6 +22,8 @@ namespace ImageBirb.ViewModels
 
         public FlyoutViewModel FlyoutViewModel { get; }
 
+        public ICommand OpenFileDialogCommand { get; }
+
         public MainViewModel(IWorkflowAdapter workflowAdapter)
             : base(workflowAdapter)
         {
@@ -26,9 +32,17 @@ namespace ImageBirb.ViewModels
             SelectedImageViewModel = new SelectedImageViewModel(workflowAdapter);
             FlyoutViewModel = new FlyoutViewModel(() => SelectedImageViewModel.SelectedImage != null);
 
+            OpenFileDialogCommand = new RelayCommand(ExecuteOpenFileDialogCommand);
+
             InitDragDrop(workflowAdapter);
         }
-        
+
+        private void ExecuteOpenFileDialogCommand()
+        {
+            var dialog = new OpenFileDialog();
+            var dialogResult = dialog.ShowDialog(Application.Current.MainWindow);
+        }
+
         #region Drag & Drop
 
         private void InitDragDrop(IWorkflowAdapter workflowAdapter)

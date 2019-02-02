@@ -1,0 +1,22 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:ImageBirb.Controls">
+
+    <mah:FlyoutsControl x:Key="Flyouts">
+
+        <mah:Flyout Header="Tags" Position="Right" Width="200" IsOpen="{Binding FlyoutViewModel.IsTagListFlyoutOpen}">
+            <controls:TagsListView x:Name="TagsListView" 
+                                   TagListViewModel="{Binding TagListViewModel}"
+                                   ThumbnailListViewModel="{Binding ThumbnailListViewModel}" />
+        </mah:Flyout>
+
+        <mah:Flyout Header="Current Tags" Position="Right" Width="200" IsOpen="{Binding FlyoutViewModel.IsSelectedImageTagsFlyoutOpen}">
+            <controls:SelectedImageTagsView x:Name="SelectedImageTagsView" 
+                                            TagListViewModel="{Binding TagListViewModel}"
+                                            SelectedImageViewModel="{Binding SelectedImageViewModel}" />
+        </mah:Flyout>
+
+    </mah:FlyoutsControl>
+
+</ResourceDictionary>

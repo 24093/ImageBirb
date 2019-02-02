@@ -13,7 +13,8 @@
                   Width="800"
                   DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
                   dd:DragDrop.IsDropTarget="True"
-                  dd:DragDrop.DropHandler="{Binding}">
+                  dd:DragDrop.DropHandler="{Binding}" 
+                  Flyouts="{StaticResource Flyouts}">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -33,24 +34,6 @@
             <i:InvokeCommandAction Command="{Binding TagListViewModel.UpdateTagsCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
-
-    <mah:MetroWindow.Flyouts>
-        <mah:FlyoutsControl>
-
-            <mah:Flyout Header="Tags" Position="Right" Width="200" IsOpen="{Binding FlyoutViewModel.IsTagListFlyoutOpen}">
-                <c:TagsListView x:Name="TagsListView" 
-                                TagListViewModel="{Binding TagListViewModel}"
-                                ThumbnailListViewModel="{Binding ThumbnailListViewModel}" />
-            </mah:Flyout>
-
-            <mah:Flyout Header="Current Tags" Position="Right" Width="200" IsOpen="{Binding FlyoutViewModel.IsSelectedImageTagsFlyoutOpen}">
-                <c:SelectedImageTagsView x:Name="SelectedImageTagsView" 
-                                TagListViewModel="{Binding TagListViewModel}"
-                                SelectedImageViewModel="{Binding SelectedImageViewModel}" />
-            </mah:Flyout>
-
-        </mah:FlyoutsControl>
-    </mah:MetroWindow.Flyouts>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -82,5 +65,5 @@
                        Grid.Column="1"
                        MainViewModel="{Binding}" />
 
-</Grid>
+    </Grid>
 </mah:MetroWindow>

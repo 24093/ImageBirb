@@ -1,9 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using ImageBirb.Core.Common;
+﻿using ImageBirb.Core.Common;
 using ImageBirb.Core.Ports.Secondary;
 using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
+using System.Threading.Tasks;
 
 namespace ImageBirb.Core.Workflows
 {

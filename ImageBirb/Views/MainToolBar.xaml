@@ -29,7 +29,7 @@
                                 Height="64"
                                 Margin="10, 0, 10, 0"
                                 Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                                IsEnabled="False"
+                                Command="{Binding DataContext.OpenFileDialogCommand, RelativeSource={RelativeSource TemplatedParent}}"
                                 Content="{iconPacks:FontAwesome FolderOpenRegular, Width=32, Height=32}" />
                         <Button Name="RemoveImageButton" 
                                 Width="64"
