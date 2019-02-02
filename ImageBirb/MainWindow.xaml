@@ -8,16 +8,21 @@
                   xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
                   xmlns:dd="urn:gong-wpf-dragdrop"
                   mc:Ignorable="d"
-                  Title="ImageBirb" Height="450" Width="800"
+                  Title="ImageBirb" 
+                  Height="450" 
+                  Width="800"
                   DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
                   dd:DragDrop.IsDropTarget="True"
                   dd:DragDrop.DropHandler="{Binding}">
+
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Views/TagsListView.xaml" />
                 <ResourceDictionary Source="Views/ThumbnailsListView.xaml" />
                 <ResourceDictionary Source="Views/SelectedImageView.xaml" />
+                <ResourceDictionary Source="Views/SelectedImageTagsView.xaml" />
+                <ResourceDictionary Source="Views/MainToolBar.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -31,39 +36,51 @@
 
     <mah:MetroWindow.Flyouts>
         <mah:FlyoutsControl>
-            <mah:Flyout Header="Tags" Position="Right" Width="200" IsOpen="{Binding IsTagListFlyoutOpen}">
+
+            <mah:Flyout Header="Tags" Position="Right" Width="200" IsOpen="{Binding FlyoutViewModel.IsTagListFlyoutOpen}">
                 <c:TagsListView x:Name="TagsListView" 
                                 TagListViewModel="{Binding TagListViewModel}"
                                 ThumbnailListViewModel="{Binding ThumbnailListViewModel}" />
-
             </mah:Flyout>
+
+            <mah:Flyout Header="Current Tags" Position="Right" Width="200" IsOpen="{Binding FlyoutViewModel.IsSelectedImageTagsFlyoutOpen}">
+                <c:SelectedImageTagsView x:Name="SelectedImageTagsView" 
+                                TagListViewModel="{Binding TagListViewModel}"
+                                SelectedImageViewModel="{Binding SelectedImageViewModel}" />
+            </mah:Flyout>
+
         </mah:FlyoutsControl>
     </mah:MetroWindow.Flyouts>
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="100" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="140" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <DockPanel Name="ToolBarPanel">
-            <Button Command="{Binding ShowTagListCommand}">TAGS</Button>
-        </DockPanel>
-        
         <c:ThumbnailsListView x:Name="ThumbnailsListView"
                               Grid.Column="0"
-                              Grid.Row="1"
+                              Grid.Row="0"
+                              Grid.RowSpan="2"
+                              Margin="4"
                               SelectedImageViewModel="{Binding SelectedImageViewModel}"
                               ThumbnailListViewModel="{Binding ThumbnailListViewModel}" />
 
         <c:SelectedImageView x:Name="SelectedImageView"
                              Grid.Column="1"
-                             Grid.Row="1"
+                             Grid.Row="0"
+                             Margin="4"
+                             TagListViewModel="{Binding TagListViewModel}"
                              SelectedImageViewModel="{Binding SelectedImageViewModel}"/>
 
-    </Grid>
+        <c:MainToolBar x:Name="MainToolBar"
+                       Grid.Row="1"
+                       Grid.Column="1"
+                       MainViewModel="{Binding}" />
+
+</Grid>
 </mah:MetroWindow>

@@ -1,14 +1,13 @@
-using System.Windows.Input;
-using GalaSoft.MvvmLight.CommandWpf;
 using GongSolutions.Wpf.DragDrop;
 using ImageBirb.Core.Ports.Primary;
 
 namespace ImageBirb.ViewModels
 {
+    /// <summary>
+    /// Root view model. Creates and connects view models if necessary.
+    /// </summary>
     internal class MainViewModel : WorkflowViewModel, IDropTarget
     {
-        private bool _isTagListFlyoutOpen;
-
         private DragDropViewModel _dragDropViewModel;
 
         public TagListViewModel TagListViewModel { get; }
@@ -17,24 +16,15 @@ namespace ImageBirb.ViewModels
         
         public SelectedImageViewModel SelectedImageViewModel { get; }
 
-        public bool IsTagListFlyoutOpen
-        {
-            get => _isTagListFlyoutOpen;
-            set => Set(ref _isTagListFlyoutOpen, value);
-        }
+        public FlyoutViewModel FlyoutViewModel { get; }
 
-        public ICommand ShowTagListCommand { get; }
-        
         public MainViewModel(IWorkflowAdapter workflowAdapter)
             : base(workflowAdapter)
         {
             TagListViewModel = new TagListViewModel(workflowAdapter);
             ThumbnailListViewModel = new ThumbnailListViewModel(workflowAdapter);
             SelectedImageViewModel = new SelectedImageViewModel(workflowAdapter);
-
-            IsTagListFlyoutOpen = false;
-
-            ShowTagListCommand = new RelayCommand(() => IsTagListFlyoutOpen = !IsTagListFlyoutOpen);
+            FlyoutViewModel = new FlyoutViewModel(() => SelectedImageViewModel.SelectedImage != null);
 
             InitDragDrop(workflowAdapter);
         }

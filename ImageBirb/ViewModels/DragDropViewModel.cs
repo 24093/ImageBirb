@@ -6,6 +6,9 @@ using System.Windows;
 
 namespace ImageBirb.ViewModels
 {
+    /// <summary>
+    /// Handles drag & drop for the main window.
+    /// </summary>
     internal class DragDropViewModel : WorkflowViewModel
     {
         private readonly Action _onDrop;

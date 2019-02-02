@@ -12,7 +12,7 @@
                               SelectionMode="Multiple"
                               HorizontalAlignment="Stretch" 
                               VerticalAlignment="Stretch"
-                              ScrollViewer.VerticalScrollBarVisibility="Visible"
+                              Margin="4"
                               ItemsSource="{Binding TagListViewModel.Tags, RelativeSource={RelativeSource TemplatedParent}}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
@@ -23,10 +23,15 @@
                         <ListView.ItemTemplate>
                             <DataTemplate DataType="{x:Type common:Tag}">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Name}" />
-                                    <TextBlock Text=" (" />
-                                    <TextBlock Text="{Binding Count}" />
-                                    <TextBlock Text=")" />
+                                    <TextBlock Text="{Binding Name}"
+                                               VerticalAlignment="Center" />
+                                    <Border Background="{StaticResource AccentColorBrush}"
+                                            Padding="6,4"
+                                            Margin="10, 0, 0, 0"
+                                            CornerRadius="8"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Count}" />
+                                    </Border>
                                 </StackPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>

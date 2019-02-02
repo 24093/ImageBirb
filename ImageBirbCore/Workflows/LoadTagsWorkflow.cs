@@ -18,7 +18,10 @@ namespace ImageBirb.Core.Workflows
         protected override async Task<TagsResult> RunImpl()
         {
             var tags = await _databaseAdapter.GetTags();
-            var tagItems = tags.Select(t => new Tag(t.Key, t.Value));
+            var tagItems = tags.Select(t => new Tag(t.Key, t.Value)).ToList();
+
+            // Sort tags by count, highest value first.
+            tagItems.Sort((x, y) => -1 * x.Count.CompareTo(y.Count));
 
             return new TagsResult(ResultState.Success, tagItems);
         }

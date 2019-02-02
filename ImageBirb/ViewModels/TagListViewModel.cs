@@ -8,6 +8,9 @@ using ImageBirb.Core.Ports.Primary;
 
 namespace ImageBirb.ViewModels
 {
+    /// <summary>
+    /// Handels the global tag list.
+    /// </summary>
     internal class TagListViewModel : WorkflowViewModel
     {
         public ObservableCollection<Tag> Tags { get; }

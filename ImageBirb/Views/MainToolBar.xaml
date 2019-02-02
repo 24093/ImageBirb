@@ -1,0 +1,55 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:ImageBirb.Controls"
+                    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
+
+    <Style TargetType="{x:Type local:MainToolBar}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:MainToolBar">
+
+                    <DockPanel Name="ToolBarPanel"
+                               HorizontalAlignment="Center">
+                        <Button Name="ShowTagsButton" 
+                                Width="64"
+                                Height="64"
+                                Margin="10, 0, 10, 0"
+                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                                Command="{Binding DataContext.FlyoutViewModel.ShowTagListCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Content="{iconPacks:FontAwesome FilterSolid, Width=32, Height=32}" />
+                        <Button Name="ShowSelectedImageTagsButton" 
+                                Width="64"
+                                Height="64"
+                                Margin="10, 0, 10, 0"
+                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                                Command="{Binding DataContext.FlyoutViewModel.ShowSelectedImageTagsCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Content="{iconPacks:FontAwesome TagSolid, Width=32, Height=32}" />
+                        <Button Name="AddImageButton" 
+                                Width="64"
+                                Height="64"
+                                Margin="10, 0, 10, 0"
+                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                                IsEnabled="False"
+                                Content="{iconPacks:FontAwesome FolderOpenRegular, Width=32, Height=32}" />
+                        <Button Name="RemoveImageButton" 
+                                Width="64"
+                                Height="64"
+                                Margin="10, 0, 10, 0"
+                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                                IsEnabled="False"
+                                Content="{iconPacks:FontAwesome TrashAltRegular, Width=32, Height=32}" />
+                        <Button Name="SettingsButton" 
+                                Width="64"
+                                Height="64"
+                                Margin="10, 0, 10, 0"
+                                Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
+                                IsEnabled="False"
+                                Content="{iconPacks:FontAwesome BarsSolid, Width=32, Height=32}" />
+                    </DockPanel>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

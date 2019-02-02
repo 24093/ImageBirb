@@ -11,6 +11,9 @@ using ImageBirb.Core.Workflows.Results;
 
 namespace ImageBirb.ViewModels
 {
+    /// <summary>
+    /// Handles the thumbnails list.
+    /// </summary>
     internal class ThumbnailListViewModel : WorkflowViewModel
     {
         public ObservableCollection<Image> Thumbnails { get; }

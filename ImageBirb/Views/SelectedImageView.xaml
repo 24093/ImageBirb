@@ -1,5 +1,4 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:ImageBirb.Controls">
 
@@ -8,67 +7,9 @@
             <Setter.Value>
                 <ControlTemplate TargetType="local:SelectedImageView">
 
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="100" />
-                        </Grid.ColumnDefinitions>
-
-                        <Border Grid.Column="0"
-                                BorderThickness="1,1,1,0"
-                                BorderBrush="Black">
-                            <Image Name="SelectedImageView" 
-                                   Source="{Binding SelectedImageViewModel.SelectedImage.ImageData, RelativeSource={RelativeSource TemplatedParent}}" />
-                        </Border>
-
-                        <Grid Name="TagsArea"
-                              Grid.Column="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <ListView Name="CurrentImageTagsListView"
-                                      Grid.Row="0"
-                                      ItemsSource="{Binding SelectedImageViewModel.SelectedImage.Tags, RelativeSource={RelativeSource TemplatedParent}}">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Name="TagTextBlock" 
-                                                       Text="{Binding}" />
-                                            <Button Name="RemoveTagButton"
-                                                    Content="X">
-                                                <i:Interaction.Triggers>
-                                                    <i:EventTrigger EventName="Click">
-                                                        <i:InvokeCommandAction Command="{Binding DataContext.SelectedImageViewModel.RemoveTagCommand, ElementName=CurrentImageTagsListView}"
-                                                                               CommandParameter="{Binding Text, ElementName=TagTextBlock}"/>
-                                                    </i:EventTrigger>
-                                                </i:Interaction.Triggers>
-                                            </Button>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-
-                            <Grid Name="AddTagsArea"
-                                  Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
-                                <TextBox Name="AddTagTextBox"
-                                         Grid.Column="0" />
-                                <Button Name="AddTagButton"
-                                        Grid.Column="1"
-                                        Content="Add"
-                                        Command="{Binding SelectedImageViewModel.AddTagCommand}"
-                                        CommandParameter="{Binding Text, ElementName=AddTagTextBox}" />
-
-                            </Grid>
-                        </Grid>
-                    </Grid>
-
+                    <Image Name="SelectedImageView" 
+                           Source="{Binding SelectedImageViewModel.SelectedImage.ImageData, RelativeSource={RelativeSource TemplatedParent}}" />
+              
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

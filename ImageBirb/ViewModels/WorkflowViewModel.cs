@@ -11,6 +11,9 @@ using ImageBirb.Core.Workflows.Results;
 
 namespace ImageBirb.ViewModels
 {
+    /// <summary>
+    /// Base view model for anything that needs acccess to the backend.
+    /// </summary>
     internal abstract class WorkflowViewModel : ViewModelBase
     {
         private readonly IWorkflowAdapter _workflowAdapter;
