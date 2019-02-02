@@ -14,9 +14,12 @@
                             <ColumnDefinition Width="100" />
                         </Grid.ColumnDefinitions>
 
-                        <Image Name="SelectedImageView" 
-                               Grid.Column="0"
-                               Source="{Binding SelectedImageViewModel.SelectedImage.ImageData, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <Border Grid.Column="0"
+                                BorderThickness="1,1,1,0"
+                                BorderBrush="Black">
+                            <Image Name="SelectedImageView" 
+                                   Source="{Binding SelectedImageViewModel.SelectedImage.ImageData, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </Border>
 
                         <Grid Name="TagsArea"
                               Grid.Column="1">

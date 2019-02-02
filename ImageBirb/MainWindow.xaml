@@ -1,51 +1,69 @@
-﻿<Window x:Class="ImageBirb.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:c="clr-namespace:ImageBirb.Controls"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-        xmlns:dd="urn:gong-wpf-dragdrop"
-        mc:Ignorable="d"
-        Title="ImageBirb" Height="450" Width="800"
-        DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
-        dd:DragDrop.IsDropTarget="True"
-        dd:DragDrop.DropHandler="{Binding}">
+﻿<mah:MetroWindow  x:Class="ImageBirb.MainWindow"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  xmlns:c="clr-namespace:ImageBirb.Controls"
+                  xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+                  xmlns:dd="urn:gong-wpf-dragdrop"
+                  mc:Ignorable="d"
+                  Title="ImageBirb" Height="450" Width="800"
+                  DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
+                  dd:DragDrop.IsDropTarget="True"
+                  dd:DragDrop.DropHandler="{Binding}">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Controls/TagsListView.xaml" />
-                <ResourceDictionary Source="Controls/ThumbnailsListView.xaml" />
-                <ResourceDictionary Source="Controls/SelectedImageView.xaml" />
+                <ResourceDictionary Source="Views/TagsListView.xaml" />
+                <ResourceDictionary Source="Views/ThumbnailsListView.xaml" />
+                <ResourceDictionary Source="Views/SelectedImageView.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
+
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding ThumbnailListViewModel.UpdateThumbnailsCommand}" />
             <i:InvokeCommandAction Command="{Binding TagListViewModel.UpdateTagsCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
+
+    <mah:MetroWindow.Flyouts>
+        <mah:FlyoutsControl>
+            <mah:Flyout Header="Tags" Position="Right" Width="200" IsOpen="{Binding IsTagListFlyoutOpen}">
+                <c:TagsListView x:Name="TagsListView" 
+                                TagListViewModel="{Binding TagListViewModel}"
+                                ThumbnailListViewModel="{Binding ThumbnailListViewModel}" />
+
+            </mah:Flyout>
+        </mah:FlyoutsControl>
+    </mah:MetroWindow.Flyouts>
+
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150" />
             <ColumnDefinition Width="140" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <c:TagsListView x:Name="TagsListView" 
-                        Grid.Column="0"
-                        TagListViewModel="{Binding TagListViewModel}"
-                        ThumbnailListViewModel="{Binding ThumbnailListViewModel}" />
-
+        <DockPanel Name="ToolBarPanel">
+            <Button Command="{Binding ShowTagListCommand}">TAGS</Button>
+        </DockPanel>
+        
         <c:ThumbnailsListView x:Name="ThumbnailsListView"
-                              Grid.Column="1"
+                              Grid.Column="0"
+                              Grid.Row="1"
                               SelectedImageViewModel="{Binding SelectedImageViewModel}"
                               ThumbnailListViewModel="{Binding ThumbnailListViewModel}" />
 
         <c:SelectedImageView x:Name="SelectedImageView"
-                             Grid.Column="2"
+                             Grid.Column="1"
+                             Grid.Row="1"
                              SelectedImageViewModel="{Binding SelectedImageViewModel}"/>
 
     </Grid>
-</Window>
+</mah:MetroWindow>

@@ -35,7 +35,7 @@ namespace ImageBirb.Core
 
         private static void RegisterSecondaryAdapters(ContainerBuilder builder)
         {
-            builder.RegisterType<DefaultFileSystemAdapter>().As<IFileSystemAdapter>().SingleInstance();
+            builder.RegisterType<DefaultFileSystemAdapter>().As<IFileSystemAdapter>();
             builder.RegisterType<ImageSharpAdapter>().As<IImagingAdapter>();
             builder.RegisterType<LiteDbAdapter>().As<IDatabaseAdapter>().SingleInstance()
                 .WithParameter("databaseFilename", "ImageBirbDemo.db");

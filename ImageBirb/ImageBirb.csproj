@@ -84,15 +84,15 @@
     <Compile Include="ViewModels\ThumbnailListViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="ViewModels\WorkflowViewModel.cs" />
-    <Page Include="Controls\SelectedImageView.xaml">
+    <Page Include="Views\SelectedImageView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\ThumbnailsListView.xaml">
+    <Page Include="Views\ThumbnailsListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\TagsListView.xaml">
+    <Page Include="Views\TagsListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -142,6 +142,10 @@
       <Name>ImageBirbCore</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <PackageReference Include="MahApps.Metro">
+      <Version>2.0.0-alpha0212</Version>
+    </PackageReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
