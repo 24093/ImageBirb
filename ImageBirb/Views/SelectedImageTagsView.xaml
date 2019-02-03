@@ -19,7 +19,7 @@
                         <ListView Name="CurrentImageTagsListView"
                                   Grid.Row="0"
                                   Margin="4"
-                                  ItemsSource="{Binding SelectedImageViewModel.SelectedImageTags, RelativeSource={RelativeSource TemplatedParent}}">
+                                  ItemsSource="{Binding SelectedImageViewModel.SelectedImage.Tags, RelativeSource={RelativeSource TemplatedParent}}">
 
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">

@@ -15,14 +15,14 @@
                                 Height="64"
                                 Margin="10, 0, 10, 0"
                                 Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                                Command="{Binding DataContext.FlyoutViewModel.ShowTagListCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Command="{Binding DataContext.FlyoutViewModel.ToggleTagListCommand, RelativeSource={RelativeSource TemplatedParent}}"
                                 Content="{iconPacks:FontAwesome FilterSolid, Width=32, Height=32}" />
                         <Button Name="ShowSelectedImageTagsButton" 
                                 Width="64"
                                 Height="64"
                                 Margin="10, 0, 10, 0"
                                 Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                                Command="{Binding DataContext.FlyoutViewModel.ShowSelectedImageTagsCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Command="{Binding DataContext.FlyoutViewModel.ToggleSelectedImageTagsCommand, RelativeSource={RelativeSource TemplatedParent}}"
                                 Content="{iconPacks:FontAwesome TagSolid, Width=32, Height=32}" />
                         <Button Name="AddImageButton" 
                                 Width="64"

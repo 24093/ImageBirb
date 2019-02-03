@@ -1,5 +1,8 @@
-﻿namespace ImageBirb.Core.Common
+﻿using System.Diagnostics;
+
+namespace ImageBirb.Core.Common
 {
+    [DebuggerDisplay("{_debuggerDisplay,nq}")]
     public class Tag
     {
         public string Name { get; set; }
@@ -11,5 +14,7 @@
             Name = name;
             Count = count;
         }
+
+        private string _debuggerDisplay => Name;
     }
 }

@@ -32,7 +32,13 @@ namespace ImageBirb.Controls
         private static void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var listView = (ListView) e.OriginalSource;
-            listView?.ScrollIntoView(e.AddedItems[0]);
+
+            if (listView != null && 
+                e.AddedItems.Count > 0 && 
+                listView.Items.IndexOf(e.AddedItems[0]) >= 0)
+            {
+                listView.ScrollIntoView(e.AddedItems[0]);
+            }
         }
     }
 }

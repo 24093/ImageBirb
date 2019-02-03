@@ -1,23 +1,23 @@
-﻿<mah:MetroWindow  x:Class="ImageBirb.MainWindow"
-                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
-                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                  xmlns:c="clr-namespace:ImageBirb.Controls"
-                  xmlns:viewModels="clr-namespace:ImageBirb.ViewModels"
-                  xmlns:dlg="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
-                  xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-                  xmlns:dd="urn:gong-wpf-dragdrop"
-                  mc:Ignorable="d"
-                  Title="ImageBirb" 
-                  Height="450" 
-                  Width="800"
-                  DataContext="{Binding Source={StaticResource Locator}, Path=MainViewModel}"
-                  d:DataContext="{d:DesignInstance Type=viewModels:MainViewModel}"
-                  dd:DragDrop.IsDropTarget="True"
-                  dd:DragDrop.DropHandler="{Binding}"
-                  dlg:DialogParticipation.Register="{Binding }">
+﻿<mah:MetroWindow x:Class="ImageBirb.MainWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:c="clr-namespace:ImageBirb.Controls"
+                 xmlns:viewModels="clr-namespace:ImageBirb.ViewModels"
+                 xmlns:dlg="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+                 xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+                 xmlns:dd="urn:gong-wpf-dragdrop"
+                 mc:Ignorable="d"
+                 Title="ImageBirb" 
+                 Height="450" 
+                 Width="800"
+                 DataContext="{Binding Source={StaticResource Locator}, Path=MainViewModel}"
+                 d:DataContext="{d:DesignInstance Type=viewModels:MainViewModel}"
+                 dd:DragDrop.IsDropTarget="True"
+                 dd:DragDrop.DropHandler="{Binding}"
+                 dlg:DialogParticipation.Register="{Binding }">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -36,6 +36,11 @@
         <KeyBinding Key="Down" Command="{Binding ThumbnailListViewModel.NextCommand}"/>
         <KeyBinding Key="Left" Command="{Binding ThumbnailListViewModel.PreviousCommand}"/>
         <KeyBinding Key="Up" Command="{Binding ThumbnailListViewModel.PreviousCommand}"/>
+        <KeyBinding Key="Delete" Command="{Binding ImageManagementViewModel.RemoveImageCommand}"/>
+        <KeyBinding Key="T" Command="{Binding FlyoutViewModel.ToggleSelectedImageTagsCommand}"/>
+        <KeyBinding Key="T" Modifiers="Control" Command="{Binding FlyoutViewModel.ToggleTagListCommand}"/>
+        <KeyBinding Key="T" Modifiers="Shift" Command="{Binding FlyoutViewModel.ToggleTagListCommand}"/>
+        <KeyBinding Key="T" Modifiers="Alt" Command="{Binding FlyoutViewModel.ToggleTagListCommand}"/>
     </Window.InputBindings>
 
     <mah:MetroWindow.Flyouts>

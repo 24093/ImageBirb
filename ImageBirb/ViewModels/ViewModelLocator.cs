@@ -1,6 +1,5 @@
 using CommonServiceLocator;
 using GalaSoft.MvvmLight.Ioc;
-using MahApps.Metro.Controls.Dialogs;
 
 namespace ImageBirb.ViewModels
 {
@@ -24,6 +23,7 @@ namespace ImageBirb.ViewModels
             SimpleIoc.Default.Register<SelectedImageViewModel>();
             SimpleIoc.Default.Register<TagListViewModel>();
             SimpleIoc.Default.Register<ThumbnailListViewModel>();
+            SimpleIoc.Default.Register<DialogViewModel>();
         }
 
         public MainViewModel MainViewModel => ServiceLocator.Current.GetInstance<MainViewModel>();

@@ -28,9 +28,9 @@ namespace ImageBirb.ViewModels
             set => Set(ref _isSelectedImageTagsFlyoutOpen, value);
         }
 
-        public ICommand ShowTagListCommand { get; }
+        public ICommand ToggleTagListCommand { get; }
 
-        public ICommand ShowSelectedImageTagsCommand { get; }
+        public ICommand ToggleSelectedImageTagsCommand { get; }
 
         public FlyoutViewModel(SelectedImageViewModel selectedImageViewModel)
         {
@@ -39,16 +39,16 @@ namespace ImageBirb.ViewModels
             IsTagListFlyoutOpen = false;
             IsSelectedImageTagsFlyoutOpen = false;
 
-            ShowTagListCommand = new RelayCommand(ExecuteShotTagListCommand);
-            ShowSelectedImageTagsCommand = new RelayCommand(ExecuteShowSelectedImageTagsCommand, CanExecuteShowSelectedImageTagsCommand);
+            ToggleTagListCommand = new RelayCommand(ExecuteToggleTagListCommand);
+            ToggleSelectedImageTagsCommand = new RelayCommand(ExecuteToggleSelectedImageTagsCommand, CanExecuteShowSelectedImageTagsCommand);
         }
 
-        private void ExecuteShowSelectedImageTagsCommand()
+        private void ExecuteToggleSelectedImageTagsCommand()
         {
             IsSelectedImageTagsFlyoutOpen = !IsSelectedImageTagsFlyoutOpen;
         }
 
-        private void ExecuteShotTagListCommand()
+        private void ExecuteToggleTagListCommand()
         {
             IsTagListFlyoutOpen = !IsTagListFlyoutOpen;
         }

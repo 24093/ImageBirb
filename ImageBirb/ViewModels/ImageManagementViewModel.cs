@@ -15,6 +15,8 @@ namespace ImageBirb.ViewModels
 
         private readonly ThumbnailListViewModel _thumbnailListViewModel;
 
+        private readonly DialogViewModel _dialogViewModel;
+
         public ProgressBarViewModel ProgressBarViewModel { get; }
 
         public ICommand AddImageFromFileCommand { get; }
@@ -25,12 +27,14 @@ namespace ImageBirb.ViewModels
             IWorkflowAdapter workflowAdapter, 
             SelectedImageViewModel selectedImageViewModel, 
             ThumbnailListViewModel thumbnailListViewModel,
-            ProgressBarViewModel progressBarViewModel)
+            ProgressBarViewModel progressBarViewModel, 
+            DialogViewModel dialogViewModel)
             : base(workflowAdapter)
         {
             _selectedImageViewModel = selectedImageViewModel;
             _thumbnailListViewModel = thumbnailListViewModel;
             ProgressBarViewModel = progressBarViewModel;
+            _dialogViewModel = dialogViewModel;
 
             AddImageFromFileCommand = new RelayCommand(async () => await AddFilesFromOpenFileDialog());
             RemoveImageCommand = new RelayCommand<string>(async imageId => await RemoveSelectedImage(imageId), 
@@ -39,9 +43,7 @@ namespace ImageBirb.ViewModels
 
         private async Task RemoveSelectedImage(string imageId)
         {
-            var mainWindow = Application.Current.MainWindow as MetroWindow;
-
-            var dialogResult = await mainWindow.ShowMessageAsync("Delete image",
+            var dialogResult = await _dialogViewModel.ShowDialog("Delete image",
                 "This will delete the currently selected image. Continue?",
                 MessageDialogStyle.AffirmativeAndNegative);
             
@@ -57,21 +59,15 @@ namespace ImageBirb.ViewModels
 
         private async Task AddFilesFromOpenFileDialog()
         {
-            var dialog = new OpenFileDialog
-            {
-                Filter = "Image Files(*.bmp; *.jpg; *.jpeg; *.png)| *.bmp; *.jpg; *.jpeg; *.png | All files(*.*) | *.*",
-                Multiselect = true
-            };
-
-            var dialogResult = dialog.ShowDialog(Application.Current.MainWindow);
+            var (dialogResult, fileNames) = _dialogViewModel.ShowOpenImageFilesDialog();
 
             if (dialogResult == true)
             {
                 ProgressBarViewModel.Value = 0;
-                ProgressBarViewModel.MaxValue = dialog.FileNames.Length;
+                ProgressBarViewModel.MaxValue = fileNames.Length;
                 ProgressBarViewModel.Visibility = Visibility.Visible;
 
-                foreach (var filename in dialog.FileNames)
+                foreach (var filename in fileNames)
                 {
                     await AddImage(filename);
                     ProgressBarViewModel.Value++;
