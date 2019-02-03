@@ -81,16 +81,14 @@
     <Compile Include="Controls\ThumbnailsListView.cs" />
     <Compile Include="ViewModels\DragDropViewModel.cs" />
     <Compile Include="ViewModels\FlyoutViewModel.cs" />
+    <Compile Include="ViewModels\ImageManagementViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\ProgressBarViewModel.cs" />
     <Compile Include="ViewModels\SelectedImageViewModel.cs" />
     <Compile Include="ViewModels\TagListViewModel.cs" />
     <Compile Include="ViewModels\ThumbnailListViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="ViewModels\WorkflowViewModel.cs" />
-    <Page Include="Views\Flyouts.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\SelectedImageTagsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

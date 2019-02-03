@@ -23,5 +23,16 @@ namespace ImageBirb.Controls
             get => (ThumbnailListViewModel)GetValue(ThumbnailListViewModelProperty);
             set => SetValue(ThumbnailListViewModelProperty, value);
         }
+
+        public ThumbnailsListView()
+        {
+            SelectionChanged += OnSelectionChanged;
+        }
+
+        private static void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var listView = (ListView) e.OriginalSource;
+            listView?.ScrollIntoView(e.AddedItems[0]);
+        }
     }
 }

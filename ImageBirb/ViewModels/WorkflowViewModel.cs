@@ -12,7 +12,7 @@ using ImageBirb.Core.Workflows.Results;
 namespace ImageBirb.ViewModels
 {
     /// <summary>
-    /// Base view model for anything that needs acccess to the backend.
+    /// Base view model for anything that needs access to the backend.
     /// </summary>
     internal abstract class WorkflowViewModel : ViewModelBase
     {
@@ -26,6 +26,11 @@ namespace ImageBirb.ViewModels
         protected async Task<WorkflowResult> AddImage(string filename)
         {
             return await Run(_workflowAdapter.AddImage, new FilenameParameters(filename));
+        }
+
+        protected async Task<WorkflowResult> RemoveImage(string imageId)
+        {
+            return await Run(_workflowAdapter.RemoveImage, new ImageIdParameters(imageId));
         }
 
         protected async Task<ThumbnailsResult> LoadThumbnails()

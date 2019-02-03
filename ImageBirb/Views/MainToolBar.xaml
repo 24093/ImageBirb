@@ -29,14 +29,15 @@
                                 Height="64"
                                 Margin="10, 0, 10, 0"
                                 Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                                Command="{Binding DataContext.AddImageFromFileCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Command="{Binding DataContext.ImageManagementViewModel.AddImageFromFileCommand, RelativeSource={RelativeSource TemplatedParent}}"
                                 Content="{iconPacks:FontAwesome FolderOpenRegular, Width=32, Height=32}" />
                         <Button Name="RemoveImageButton" 
                                 Width="64"
                                 Height="64"
                                 Margin="10, 0, 10, 0"
                                 Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
-                                Command="{Binding DataContext.RemoveImageCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                Command="{Binding DataContext.ImageManagementViewModel.RemoveImageCommand, RelativeSource={RelativeSource TemplatedParent}}"
+                                CommandParameter="{Binding DataContext.SelectedImageViewModel.SelectedImage.ImageId, RelativeSource={RelativeSource TemplatedParent}}"
                                 Content="{iconPacks:FontAwesome TrashAltRegular, Width=32, Height=32}" />
                         <Button Name="SettingsButton" 
                                 Width="64"

@@ -6,17 +6,18 @@
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                   xmlns:c="clr-namespace:ImageBirb.Controls"
                   xmlns:viewModels="clr-namespace:ImageBirb.ViewModels"
+                  xmlns:dlg="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
                   xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
                   xmlns:dd="urn:gong-wpf-dragdrop"
                   mc:Ignorable="d"
                   Title="ImageBirb" 
                   Height="450" 
                   Width="800"
-                  DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
+                  DataContext="{Binding Source={StaticResource Locator}, Path=MainViewModel}"
                   d:DataContext="{d:DesignInstance Type=viewModels:MainViewModel}"
                   dd:DragDrop.IsDropTarget="True"
-                  dd:DragDrop.DropHandler="{Binding}" 
-                  Flyouts="{StaticResource Flyouts}">
+                  dd:DragDrop.DropHandler="{Binding}"
+                  dlg:DialogParticipation.Register="{Binding }">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -29,6 +30,37 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
+
+    <Window.InputBindings>
+        <KeyBinding Key="Right" Command="{Binding ThumbnailListViewModel.NextCommand}"/>
+        <KeyBinding Key="Down" Command="{Binding ThumbnailListViewModel.NextCommand}"/>
+        <KeyBinding Key="Left" Command="{Binding ThumbnailListViewModel.PreviousCommand}"/>
+        <KeyBinding Key="Up" Command="{Binding ThumbnailListViewModel.PreviousCommand}"/>
+    </Window.InputBindings>
+
+    <mah:MetroWindow.Flyouts>
+        <mah:FlyoutsControl>
+
+            <mah:Flyout Header="Tags"
+                        Position="Right"
+                        Width="200" 
+                        IsOpen="{Binding FlyoutViewModel.IsTagListFlyoutOpen}">
+                <c:TagsListView x:Name="TagsListView" 
+                                       TagListViewModel="{Binding TagListViewModel}"
+                                       ThumbnailListViewModel="{Binding ThumbnailListViewModel}" />
+            </mah:Flyout>
+
+            <mah:Flyout Header="Current Tags" 
+                        Position="Right" 
+                        Width="200" 
+                        IsOpen="{Binding FlyoutViewModel.IsSelectedImageTagsFlyoutOpen}">
+                <c:SelectedImageTagsView x:Name="SelectedImageTagsView" 
+                                                TagListViewModel="{Binding TagListViewModel}"
+                                                SelectedImageViewModel="{Binding SelectedImageViewModel}" />
+            </mah:Flyout>
+
+        </mah:FlyoutsControl>
+    </mah:MetroWindow.Flyouts>
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -67,5 +99,16 @@
                        Grid.Column="1"
                        MainViewModel="{Binding}" />
 
+        <mah:MetroProgressBar Name="MainProgressBar"
+                              Grid.Row="1"
+                              Grid.Column="0"
+                              Grid.ColumnSpan="2"
+                              DataContext="{Binding ImageManagementViewModel.ProgressBarViewModel}"
+                              Visibility="{Binding Visibility}"
+                              Value="{Binding Value}" 
+                              Minimum="0"
+                              VerticalAlignment="Bottom"
+                              Maximum="{Binding MaxValue}" />
     </Grid>
+
 </mah:MetroWindow>

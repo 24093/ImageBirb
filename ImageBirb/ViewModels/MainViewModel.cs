@@ -1,10 +1,8 @@
-using System.Threading.Tasks;
-using GalaSoft.MvvmLight.CommandWpf;
+using System.Windows;
 using GongSolutions.Wpf.DragDrop;
 using ImageBirb.Core.Ports.Primary;
-using Microsoft.Win32;
-using System.Windows;
-using System.Windows.Input;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace ImageBirb.ViewModels
 {
@@ -13,7 +11,7 @@ namespace ImageBirb.ViewModels
     /// </summary>
     internal class MainViewModel : WorkflowViewModel, IDropTarget
     {
-        private DragDropViewModel _dragDropViewModel;
+        private readonly DragDropViewModel _dragDropViewModel;
 
         public TagListViewModel TagListViewModel { get; }
 
@@ -22,76 +20,36 @@ namespace ImageBirb.ViewModels
         public SelectedImageViewModel SelectedImageViewModel { get; }
 
         public FlyoutViewModel FlyoutViewModel { get; }
-
-        public ICommand AddImageFromFileCommand { get; }
-
-        public ICommand RemoveImageCommand { get; }
-
-        public MainViewModel(IWorkflowAdapter workflowAdapter)
+        
+        public ImageManagementViewModel ImageManagementViewModel { get; }
+        
+        public MainViewModel(
+            IWorkflowAdapter workflowAdapter,
+            DragDropViewModel dragDropViewModel,
+            TagListViewModel tagListViewModel,
+            ThumbnailListViewModel thumbnailListViewModel,
+            SelectedImageViewModel selectedImageViewModel,
+            FlyoutViewModel flyoutViewModel,
+            ImageManagementViewModel imageManagementViewModel)
             : base(workflowAdapter)
         {
-            TagListViewModel = new TagListViewModel(workflowAdapter);
-            ThumbnailListViewModel = new ThumbnailListViewModel(workflowAdapter);
-            SelectedImageViewModel = new SelectedImageViewModel(workflowAdapter);
-            FlyoutViewModel = new FlyoutViewModel(() => SelectedImageViewModel.SelectedImage != null);
-
-            AddImageFromFileCommand = new RelayCommand(async () => await AddFilesFromOpenFileDialog());
-            RemoveImageCommand = new RelayCommand(ExecuteRemoveImageCommand);
-
-            InitDragDrop(workflowAdapter);
-        }
-
-        private void ExecuteRemoveImageCommand()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        private async Task AddFilesFromOpenFileDialog()
-        {
-            var dialog = new OpenFileDialog
-            {
-                Filter = "Image Files(*.bmp; *.jpg; *.jpeg; *.png)| *.bmp; *.jpg; *.jpeg; *.png | All files(*.*) | *.*",
-                Multiselect = true
-            };
-
-            var dialogResult = dialog.ShowDialog(Application.Current.MainWindow);
-
-            if (dialogResult == true)
-            {
-                foreach (var filename in dialog.FileNames)
-                {
-                    await AddImage(filename);
-                }
-            }
-
-            ThumbnailListViewModel.UpdateThumbnailsCommand.Execute(null);
-        }
-        
-        #region Drag & Drop
-
-        private void InitDragDrop(IWorkflowAdapter workflowAdapter)
-        {
-            _dragDropViewModel = new DragDropViewModel(workflowAdapter, () =>
-            {
-                if (ThumbnailListViewModel.UpdateThumbnailsCommand.CanExecute(null))
-                {
-                    ThumbnailListViewModel.UpdateThumbnailsCommand.Execute(null);
-                }
-            });
+            _dragDropViewModel = dragDropViewModel;
+            TagListViewModel = tagListViewModel;
+            ThumbnailListViewModel = thumbnailListViewModel;
+            SelectedImageViewModel = selectedImageViewModel;
+            FlyoutViewModel = flyoutViewModel;
+            ImageManagementViewModel = imageManagementViewModel;
         }
         
         public async void DragOver(IDropInfo dropInfo)
         {
             await _dragDropViewModel.DragOverAsync(dropInfo);
         }
-
         
         public async void Drop(IDropInfo dropInfo)
         {
             await _dragDropViewModel.DropAsync(dropInfo);
         }
-
-        #endregion
     }
 }
 

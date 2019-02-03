@@ -9,11 +9,13 @@ using System.Windows.Input;
 namespace ImageBirb.ViewModels
 {
     /// <summary>
-    /// Handles the selcted image and its tags.
+    /// Handles the selected image and its tags.
     /// </summary>
     internal class SelectedImageViewModel : WorkflowViewModel
     {
         private Image _selectedImage;
+
+        private TagListViewModel _tagListViewModel;
 
         public Image SelectedImage
         {
@@ -23,15 +25,19 @@ namespace ImageBirb.ViewModels
 
         public ObservableCollection<string> SelectedImageTags { get; }
 
+        public bool IsImageSelected => SelectedImage != null;
+
         public ICommand AddTagCommand { get; }
 
         public ICommand RemoveTagCommand { get; }
 
         public ICommand ShowImageCommand { get; }
-
-        public SelectedImageViewModel(IWorkflowAdapter workflowAdapter) 
+        
+        public SelectedImageViewModel(IWorkflowAdapter workflowAdapter, TagListViewModel tagListViewModel) 
             : base(workflowAdapter)
         {
+            _tagListViewModel = tagListViewModel;
+
             SelectedImageTags = new ObservableCollection<string>();
 
             AddTagCommand = new RelayCommand<string>(async tagName => await AddTag(tagName), CanExecuteAddTagCommand);
@@ -62,16 +68,26 @@ namespace ImageBirb.ViewModels
             }
         }
 
+        private void UpdateTags()
+        {
+            if (_tagListViewModel.UpdateTagsCommand.CanExecute(null))
+            {
+                _tagListViewModel.UpdateTagsCommand.Execute(null);
+            }
+        }
+
         private async Task RemoveTag(string tagName)
         {
             await RemoveTag(SelectedImage?.ImageId, tagName);
             await UpdateImage(SelectedImage);
+            UpdateTags();
         }
 
         private async Task AddTag(string tagName)
         {
             await AddTag(SelectedImage?.ImageId, tagName);
             await UpdateImage(SelectedImage);
+            UpdateTags();
         }
     }
 }

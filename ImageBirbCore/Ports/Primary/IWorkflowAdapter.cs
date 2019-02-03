@@ -6,6 +6,8 @@ namespace ImageBirb.Core.Ports.Primary
     {
         AddImageWorkflow AddImage { get; }
 
+        RemoveImageWorkflow RemoveImage { get; }
+
         LoadThumbnailsWorkflow LoadThumbnails { get; }
 
         LoadImageWorkflow LoadImage { get; }

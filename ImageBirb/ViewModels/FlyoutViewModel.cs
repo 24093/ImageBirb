@@ -14,7 +14,7 @@ namespace ImageBirb.ViewModels
 
         private bool _isSelectedImageTagsFlyoutOpen;
 
-        private readonly Func<bool> _isImageSelected;
+        private readonly SelectedImageViewModel _selectedImageViewModel;
         
         public bool IsTagListFlyoutOpen
         {
@@ -32,9 +32,9 @@ namespace ImageBirb.ViewModels
 
         public ICommand ShowSelectedImageTagsCommand { get; }
 
-        public FlyoutViewModel(Func<bool> isImageSelected)
+        public FlyoutViewModel(SelectedImageViewModel selectedImageViewModel)
         {
-            _isImageSelected = isImageSelected;
+            _selectedImageViewModel = selectedImageViewModel;
 
             IsTagListFlyoutOpen = false;
             IsSelectedImageTagsFlyoutOpen = false;
@@ -55,7 +55,7 @@ namespace ImageBirb.ViewModels
 
         private bool CanExecuteShowSelectedImageTagsCommand()
         {
-            return _isImageSelected();
+            return _selectedImageViewModel.IsImageSelected;
         }
 
     }

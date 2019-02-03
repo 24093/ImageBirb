@@ -1,6 +1,5 @@
 using GongSolutions.Wpf.DragDrop;
 using ImageBirb.Core.Ports.Primary;
-using System;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -11,12 +10,12 @@ namespace ImageBirb.ViewModels
     /// </summary>
     internal class DragDropViewModel : WorkflowViewModel
     {
-        private readonly Action _onDrop;
+        private readonly ThumbnailListViewModel _thumbnailListViewModel;
         
-        public DragDropViewModel(IWorkflowAdapter workflowAdapter, Action onDrop)
+        public DragDropViewModel(IWorkflowAdapter workflowAdapter, ThumbnailListViewModel thumbnailListViewModel)
             :base(workflowAdapter)
         {
-            _onDrop = onDrop;
+            _thumbnailListViewModel = thumbnailListViewModel;
         }
 
         public async Task DragOverAsync(IDropInfo dropInfo)
@@ -47,7 +46,10 @@ namespace ImageBirb.ViewModels
                 await AddImage(filename);
             }
 
-            _onDrop?.Invoke();
+            if (_thumbnailListViewModel.UpdateThumbnailsCommand.CanExecute(null))
+            {
+                _thumbnailListViewModel.UpdateThumbnailsCommand.Execute(null);
+            }        
         }
     }
 }

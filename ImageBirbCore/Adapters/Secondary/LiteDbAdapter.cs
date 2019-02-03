@@ -50,6 +50,18 @@ namespace ImageBirb.Core.Adapters.Secondary
             });
         }
 
+        public async Task RemoveImage(string imageId)
+        {
+            await Task.Run(() =>
+            {
+                _imageCollection.Delete(doc => doc.ImageId == imageId);
+
+                var fileId = FilePrefix + imageId;
+                _db.FileStorage.Delete(fileId);
+                _db.FileStorage.Delete(fileId + ThumbnailPostfix);
+            });
+        }
+
         public async Task<IList<Image>> GetThumbnails(Predicate<Image> predicate = null)
         {
             return await Task.Run(() =>

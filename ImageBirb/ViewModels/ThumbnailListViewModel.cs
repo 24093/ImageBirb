@@ -16,19 +16,46 @@ namespace ImageBirb.ViewModels
     /// </summary>
     internal class ThumbnailListViewModel : WorkflowViewModel
     {
+        private readonly SelectedImageViewModel _selectedImageViewModel;
+
+        private Image _selectedThumbnail;
+
         public ObservableCollection<Image> Thumbnails { get; }
 
         public ICommand UpdateThumbnailsCommand { get; }
 
         public ICommand FilterThumbnailsByTagsCommand { get; }
 
-        public ThumbnailListViewModel(IWorkflowAdapter workflowAdapter) 
+        public ICommand NextCommand { get; }
+
+        public ICommand PreviousCommand { get; }
+
+        public Image SelectedThumbnail
+        {
+            get => _selectedThumbnail;
+            set
+            {
+                Set(ref _selectedThumbnail, value);
+
+                if (_selectedImageViewModel.ShowImageCommand.CanExecute(_selectedThumbnail))
+                {
+                    _selectedImageViewModel.ShowImageCommand.Execute(_selectedThumbnail);
+                }
+            }
+        }
+
+        public ThumbnailListViewModel(IWorkflowAdapter workflowAdapter, SelectedImageViewModel selectedImageViewModel) 
             : base(workflowAdapter)
         {
+            _selectedImageViewModel = selectedImageViewModel;
+
             Thumbnails = new ObservableCollection<Image>();
 
             FilterThumbnailsByTagsCommand = new RelayCommand<IList>(async tags => await FilterThumbnailsByTags(tags));
             UpdateThumbnailsCommand = new RelayCommand(async () => await UpdateThumbnails());
+
+            NextCommand = new RelayCommand(ShowNextImage);
+            PreviousCommand = new RelayCommand(ShowPreviousImage);
         }
 
         private async Task UpdateThumbnails()
@@ -59,6 +86,48 @@ namespace ImageBirb.ViewModels
             if (result.IsSuccess)
             {
                 Thumbnails.ReplaceItems(result.Thumbnails);
+            }
+        }
+
+        private void ShowNextImage()
+        {
+            if (SelectedThumbnail == null)
+            {
+                SelectedThumbnail = Thumbnails.FirstOrDefault();
+            }
+            else
+            {
+                var index = Thumbnails.IndexOf(SelectedThumbnail);
+
+                if (index < Thumbnails.Count - 1)
+                {
+                    SelectedThumbnail = Thumbnails[++index];
+                }
+                else
+                {
+                    SelectedThumbnail = Thumbnails.FirstOrDefault();
+                }
+            }
+        }
+
+        private void ShowPreviousImage()
+        {
+            if (SelectedThumbnail == null)
+            {
+                SelectedThumbnail = Thumbnails.LastOrDefault();
+            }
+            else
+            {
+                var index = Thumbnails.IndexOf(SelectedThumbnail);
+
+                if (index > 0)
+                {
+                    SelectedThumbnail = Thumbnails[--index];
+                }
+                else
+                {
+                    SelectedThumbnail = Thumbnails.LastOrDefault();
+                }
             }
         }
     }

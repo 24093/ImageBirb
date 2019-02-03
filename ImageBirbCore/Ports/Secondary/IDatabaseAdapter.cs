@@ -11,6 +11,8 @@ namespace ImageBirb.Core.Ports.Secondary
 
         Task AddImage(Image image);
 
+        Task RemoveImage(string imageId);
+
         Task<IList<Image>> GetThumbnails(Predicate<Image> predicate = null);
 
         Task<Image> GetImage(string imageId);
