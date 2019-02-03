@@ -1,13 +1,10 @@
-using System.Windows;
 using GongSolutions.Wpf.DragDrop;
 using ImageBirb.Core.Ports.Primary;
-using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
 
 namespace ImageBirb.ViewModels
 {
     /// <summary>
-    /// Root view model. Creates and connects view models if necessary.
+    /// Root view model. Creates child view models.
     /// </summary>
     internal class MainViewModel : WorkflowViewModel, IDropTarget
     {
@@ -41,14 +38,14 @@ namespace ImageBirb.ViewModels
             ImageManagementViewModel = imageManagementViewModel;
         }
         
-        public async void DragOver(IDropInfo dropInfo)
+        public void DragOver(IDropInfo dropInfo)
         {
-            await _dragDropViewModel.DragOverAsync(dropInfo);
+            _dragDropViewModel.DragOver(dropInfo);
         }
         
-        public async void Drop(IDropInfo dropInfo)
+        public void Drop(IDropInfo dropInfo)
         {
-            await _dragDropViewModel.DropAsync(dropInfo);
+            _dragDropViewModel.Drop(dropInfo);
         }
     }
 }

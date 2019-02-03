@@ -11,20 +11,23 @@ namespace ImageBirb.ViewModels
     internal class DragDropViewModel : WorkflowViewModel
     {
         private readonly ThumbnailListViewModel _thumbnailListViewModel;
+
+        private readonly ProgressBarViewModel _progressBarViewModel;
         
-        public DragDropViewModel(IWorkflowAdapter workflowAdapter, ThumbnailListViewModel thumbnailListViewModel)
+        public DragDropViewModel(IWorkflowAdapter workflowAdapter, ThumbnailListViewModel thumbnailListViewModel, ProgressBarViewModel progressBarViewModel)
             :base(workflowAdapter)
         {
             _thumbnailListViewModel = thumbnailListViewModel;
+            _progressBarViewModel = progressBarViewModel;
         }
 
-        public async Task DragOverAsync(IDropInfo dropInfo)
+        public void DragOver(IDropInfo dropInfo)
         {
             var filename = ((DataObject)dropInfo.Data).GetFileDropList()[0];
 
             if (!string.IsNullOrEmpty(filename))
             {
-                var result = await VerifyImageFile(filename);
+                var result = Task.Run(async () => await VerifyImageFile(filename)).Result;
 
                 if (result.IsSuccess && result.IsBitmapImage)
                 {
@@ -37,14 +40,24 @@ namespace ImageBirb.ViewModels
             }
         }
 
-        public async Task DropAsync(IDropInfo dropInfo)
+        public void Drop(IDropInfo dropInfo)
         {
             var fileList = ((DataObject)dropInfo.Data).GetFileDropList();
 
+            // TODO: Fix display of progress bar
+            _progressBarViewModel.Visibility = Visibility.Visible;
+            _progressBarViewModel.Value = 0;
+            _progressBarViewModel.MaxValue = fileList.Count;
+        
             foreach (var filename in fileList)
             {
-                await AddImage(filename);
+                var task = Task.Run(async () => await AddImage(filename));
+                task.Wait();
+
+                _progressBarViewModel.Value++;
             }
+            
+            _progressBarViewModel.Visibility = Visibility.Collapsed;
 
             if (_thumbnailListViewModel.UpdateThumbnailsCommand.CanExecute(null))
             {
