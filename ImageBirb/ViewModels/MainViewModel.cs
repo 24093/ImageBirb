@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using GalaSoft.MvvmLight.CommandWpf;
 using GongSolutions.Wpf.DragDrop;
 using ImageBirb.Core.Ports.Primary;
@@ -22,7 +23,9 @@ namespace ImageBirb.ViewModels
 
         public FlyoutViewModel FlyoutViewModel { get; }
 
-        public ICommand OpenFileDialogCommand { get; }
+        public ICommand AddImageFromFileCommand { get; }
+
+        public ICommand RemoveImageCommand { get; }
 
         public MainViewModel(IWorkflowAdapter workflowAdapter)
             : base(workflowAdapter)
@@ -32,17 +35,38 @@ namespace ImageBirb.ViewModels
             SelectedImageViewModel = new SelectedImageViewModel(workflowAdapter);
             FlyoutViewModel = new FlyoutViewModel(() => SelectedImageViewModel.SelectedImage != null);
 
-            OpenFileDialogCommand = new RelayCommand(ExecuteOpenFileDialogCommand);
+            AddImageFromFileCommand = new RelayCommand(async () => await AddFilesFromOpenFileDialog());
+            RemoveImageCommand = new RelayCommand(ExecuteRemoveImageCommand);
 
             InitDragDrop(workflowAdapter);
         }
 
-        private void ExecuteOpenFileDialogCommand()
+        private void ExecuteRemoveImageCommand()
         {
-            var dialog = new OpenFileDialog();
-            var dialogResult = dialog.ShowDialog(Application.Current.MainWindow);
+            throw new System.NotImplementedException();
         }
 
+        private async Task AddFilesFromOpenFileDialog()
+        {
+            var dialog = new OpenFileDialog
+            {
+                Filter = "Image Files(*.bmp; *.jpg; *.jpeg; *.png)| *.bmp; *.jpg; *.jpeg; *.png | All files(*.*) | *.*",
+                Multiselect = true
+            };
+
+            var dialogResult = dialog.ShowDialog(Application.Current.MainWindow);
+
+            if (dialogResult == true)
+            {
+                foreach (var filename in dialog.FileNames)
+                {
+                    await AddImage(filename);
+                }
+            }
+
+            ThumbnailListViewModel.UpdateThumbnailsCommand.Execute(null);
+        }
+        
         #region Drag & Drop
 
         private void InitDragDrop(IWorkflowAdapter workflowAdapter)
@@ -70,3 +94,4 @@ namespace ImageBirb.ViewModels
         #endregion
     }
 }
+

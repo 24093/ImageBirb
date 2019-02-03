@@ -4,6 +4,7 @@ using ImageBirb.Core.Common;
 using ImageBirb.Core.Ports.Secondary;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
+using SixLabors.Primitives;
 using Image = SixLabors.ImageSharp.Image;
 
 namespace ImageBirb.Core.Adapters.Secondary
@@ -17,7 +18,13 @@ namespace ImageBirb.Core.Adapters.Secondary
                 var format = Image.DetectFormat(imageData);
                 var image = Image.Load(imageData);
 
-                image.Mutate(x => x.Resize(Constants.ThumbnailWidth, Constants.ThumbnailHeight));
+                var resizeOptions = new ResizeOptions
+                {
+                    Mode = ResizeMode.Pad,
+                    Size = new Size(Constants.ThumbnailWidth, Constants.ThumbnailHeight)
+                };
+
+                image.Mutate(x => x.Resize(resizeOptions));
 
                 using (var ms = new MemoryStream())
                 {

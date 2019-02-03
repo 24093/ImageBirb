@@ -5,6 +5,7 @@
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                   xmlns:c="clr-namespace:ImageBirb.Controls"
+                  xmlns:viewModels="clr-namespace:ImageBirb.ViewModels"
                   xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
                   xmlns:dd="urn:gong-wpf-dragdrop"
                   mc:Ignorable="d"
@@ -12,6 +13,7 @@
                   Height="450" 
                   Width="800"
                   DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
+                  d:DataContext="{d:DesignInstance Type=viewModels:MainViewModel}"
                   dd:DragDrop.IsDropTarget="True"
                   dd:DragDrop.DropHandler="{Binding}" 
                   Flyouts="{StaticResource Flyouts}">
