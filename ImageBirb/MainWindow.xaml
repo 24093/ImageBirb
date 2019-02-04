@@ -64,6 +64,14 @@
                                                 SelectedImageViewModel="{Binding SelectedImageViewModel}" />
             </mah:Flyout>
 
+            <mah:Flyout Header="Settings" 
+                        Position="Right" 
+                        Width="400" 
+                        IsOpen="{Binding FlyoutViewModel.IsSettingsFlyoutOpen}">
+                <c:SettingsView x:Name="SettingsView" 
+                                SettingsViewModel="{Binding SettingsViewModel}" />
+            </mah:Flyout>
+
         </mah:FlyoutsControl>
     </mah:MetroWindow.Flyouts>
 

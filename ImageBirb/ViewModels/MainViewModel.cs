@@ -19,7 +19,9 @@ namespace ImageBirb.ViewModels
         public FlyoutViewModel FlyoutViewModel { get; }
         
         public ImageManagementViewModel ImageManagementViewModel { get; }
-        
+
+        public SettingsViewModel SettingsViewModel { get; }
+
         public MainViewModel(
             IWorkflowAdapter workflowAdapter,
             DragDropViewModel dragDropViewModel,
@@ -27,7 +29,8 @@ namespace ImageBirb.ViewModels
             ThumbnailListViewModel thumbnailListViewModel,
             SelectedImageViewModel selectedImageViewModel,
             FlyoutViewModel flyoutViewModel,
-            ImageManagementViewModel imageManagementViewModel)
+            ImageManagementViewModel imageManagementViewModel,
+            SettingsViewModel settingsViewModel)
             : base(workflowAdapter)
         {
             _dragDropViewModel = dragDropViewModel;
@@ -36,8 +39,9 @@ namespace ImageBirb.ViewModels
             SelectedImageViewModel = selectedImageViewModel;
             FlyoutViewModel = flyoutViewModel;
             ImageManagementViewModel = imageManagementViewModel;
+            SettingsViewModel = settingsViewModel;
         }
-        
+
         public void DragOver(IDropInfo dropInfo)
         {
             _dragDropViewModel.DragOver(dropInfo);

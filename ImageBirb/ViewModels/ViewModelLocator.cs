@@ -15,15 +15,16 @@ namespace ImageBirb.ViewModels
             SimpleIoc.Default.Register(() => imageBirb.WorkflowAdapter);
 
             // Register view models.
+            SimpleIoc.Default.Register<DialogViewModel>();
             SimpleIoc.Default.Register<DragDropViewModel>();
             SimpleIoc.Default.Register<FlyoutViewModel>();
             SimpleIoc.Default.Register<ImageManagementViewModel>();
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<ProgressBarViewModel>();
             SimpleIoc.Default.Register<SelectedImageViewModel>();
+            SimpleIoc.Default.Register<SettingsViewModel>();
             SimpleIoc.Default.Register<TagListViewModel>();
             SimpleIoc.Default.Register<ThumbnailListViewModel>();
-            SimpleIoc.Default.Register<DialogViewModel>();
         }
 
         public MainViewModel MainViewModel => ServiceLocator.Current.GetInstance<MainViewModel>();

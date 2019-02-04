@@ -77,6 +77,7 @@
     <Compile Include="Controls\MainToolBar.cs" />
     <Compile Include="Controls\SelectedImageTagsView.cs" />
     <Compile Include="Controls\SelectedImageView.cs" />
+    <Compile Include="Controls\SettingsView.cs" />
     <Compile Include="Controls\TagsListView.cs" />
     <Compile Include="Controls\ThumbnailsListView.cs" />
     <Compile Include="ViewModels\DialogViewModel.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\ProgressBarViewModel.cs" />
     <Compile Include="ViewModels\SelectedImageViewModel.cs" />
+    <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\TagListViewModel.cs" />
     <Compile Include="ViewModels\ThumbnailListViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
@@ -99,6 +101,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\SelectedImageView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
