@@ -1,13 +1,13 @@
 using GalaSoft.MvvmLight;
 using ImageBirb.Core.Ports.Primary;
+using ImageBirb.Core.Workflows;
+using ImageBirb.Core.Workflows.Parameters;
+using ImageBirb.Core.Workflows.Results;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
-using ImageBirb.Core.Workflows;
-using ImageBirb.Core.Workflows.Parameters;
-using ImageBirb.Core.Workflows.Results;
 
 namespace ImageBirb.ViewModels
 {
@@ -68,6 +68,16 @@ namespace ImageBirb.ViewModels
             return await Run(_workflowAdapter.LoadThumbnailsByTags, new TagNamesParameters(tagNames));
         }
 
+        protected async Task<SettingsResult> ReadSettings()
+        {
+            return await Run(_workflowAdapter.ReadSettings);
+        }
+
+        protected async Task<WorkflowResult> UpdateSetting(string key, object value)
+        {
+            return await Run(_workflowAdapter.UpdateSetting, new KeyValueParameters(key, value)));
+        }
+
         private static async Task<TResult> Run<TParameters, TResult>(Workflow<TParameters, TResult> workflow, TParameters parameters)
             where TParameters : WorkflowParameters
             where TResult : WorkflowResult
@@ -80,7 +90,7 @@ namespace ImageBirb.ViewModels
         private static async Task<TResult> Run<TResult>(Workflow<TResult> workflow)
             where TResult : WorkflowResult
         {
-            var result = await workflow.Run();
+            var result = await workflow.RunWorkflow();
             VerifyWorkflowResult(result);
             return result;
         }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace ImageBirb.Core.Extensions
@@ -8,15 +7,8 @@ namespace ImageBirb.Core.Extensions
     {
         public static void ReplaceItems<T>(this ObservableCollection<T> collection, IEnumerable<T> items)
         {
-            try
-            {
-                collection.Clear();
-                collection.AddRange(items);
-            }
-            catch (Exception e)
-            {
-                 throw;
-            }
+            collection.Clear();
+            collection.AddRange(items);
         }
 
         public static void AddRange<T>(this ObservableCollection<T> collection, IEnumerable<T> items)

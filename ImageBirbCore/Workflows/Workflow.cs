@@ -27,11 +27,11 @@ namespace ImageBirb.Core.Workflows
     public abstract class Workflow<TResult> : IWorkflow
         where TResult : WorkflowResult
     {
-        public async Task<TResult> Run()
+        public async Task<TResult> RunWorkflow()
         {
             try
             {
-                return await RunImpl();
+                return await Run();
             }
             catch (Exception ex)
             {
@@ -39,6 +39,6 @@ namespace ImageBirb.Core.Workflows
             }
         }
 
-        protected abstract Task<TResult> RunImpl();
+        protected abstract Task<TResult> Run();
     }
 }

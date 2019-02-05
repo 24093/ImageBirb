@@ -1,16 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ImageBirb.Core.Common;
 
 namespace ImageBirb.ViewModels
 {
-    internal class SettingsViewModel
+    internal class SettingsViewModel : WorkflowViewModel
     {
+        private Settings _settings;
+
+        private string _databaseFilename;
+
+        public string DatabaseFilename
+        {
+           
+        }
+
         public SettingsViewModel()
         {
-
+            
         }
     }
 }

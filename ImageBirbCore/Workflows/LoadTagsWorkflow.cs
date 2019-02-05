@@ -15,7 +15,7 @@ namespace ImageBirb.Core.Workflows
             _databaseAdapter = databaseAdapter;
         }
 
-        protected override async Task<TagsResult> RunImpl()
+        protected override async Task<TagsResult> Run()
         {
             var tags = await _databaseAdapter.GetTags();
             var tagItems = tags.Select(t => new Tag(t.Key, t.Value)).ToList();

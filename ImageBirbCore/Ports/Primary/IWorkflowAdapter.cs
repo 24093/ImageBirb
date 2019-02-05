@@ -21,5 +21,9 @@ namespace ImageBirb.Core.Ports.Primary
         LoadTagsWorkflow LoadTags { get; }
 
         LoadThumbnailsByTagsWorkflow LoadThumbnailsByTags { get; }
+
+        ReadSettingsWorkflow ReadSettings { get; }
+
+        UpdateSettingWorkflow UpdateSetting { get; }
     }
 }

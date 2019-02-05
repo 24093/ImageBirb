@@ -9,9 +9,28 @@
             <Setter.Value>
                 <ControlTemplate TargetType="local:SettingsView">
 
+                    <Grid Name="SettingsGrid">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
 
+                        <Label Content="database file"
+                               Grid.Column="0"
+                               Grid.Row="0" />
 
+                        <StackPanel Orientation="Horizontal"
+                                    Grid.Column="1"
+                                    Grid.Row="0">
+                            <TextBox Text="{Binding SettingsViewModel.DatabaseFilename, RelativeSource={RelativeSource TemplatedParent}}" />
+                        </StackPanel>
 
+                    </Grid>
 
                 </ControlTemplate>
             </Setter.Value>
@@ -19,3 +38,5 @@
     </Style>
 
 </ResourceDictionary>
+    
+    

@@ -1,11 +1,11 @@
-﻿using System.Linq;
-using System.Reflection;
-using Autofac;
+﻿using Autofac;
 using ImageBirb.Core.Adapters.Primary;
 using ImageBirb.Core.Adapters.Secondary;
 using ImageBirb.Core.Ports.Primary;
 using ImageBirb.Core.Ports.Secondary;
 using ImageBirb.Core.Workflows;
+using System.Linq;
+using System.Reflection;
 
 namespace ImageBirb.Core
 {

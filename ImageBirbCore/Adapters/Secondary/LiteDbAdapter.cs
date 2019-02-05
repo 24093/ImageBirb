@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ImageBirb.Core.Adapters.Secondary
 {
-    public class LiteDbAdapter : IDatabaseAdapter, IDisposable
+    internal class LiteDbAdapter : IDatabaseAdapter, IDisposable
     {
         private const string FilePrefix = "$/images/";
 

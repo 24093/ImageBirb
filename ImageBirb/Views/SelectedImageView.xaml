@@ -7,9 +7,10 @@
             <Setter.Value>
                 <ControlTemplate TargetType="local:SelectedImageView">
 
-                    <Image Name="SelectedImageView" 
-                           Source="{Binding SelectedImageViewModel.SelectedImage.ImageData, RelativeSource={RelativeSource TemplatedParent}}" />
-              
+                    <Border Name="SelectedImageView">
+                        <Image Source="{Binding SelectedImageViewModel.SelectedImage.ImageData, RelativeSource={RelativeSource TemplatedParent}}" />
+                    </Border>
+
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

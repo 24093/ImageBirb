@@ -13,7 +13,7 @@ namespace ImageBirb.Core.Workflows
             _databaseAdapter = databaseAdapter;
         }
 
-        protected override async Task<ThumbnailsResult> RunImpl()
+        protected override async Task<ThumbnailsResult> Run()
         {
             var thumbnails = await _databaseAdapter.GetThumbnails();
             return new ThumbnailsResult(ResultState.Success, thumbnails);
