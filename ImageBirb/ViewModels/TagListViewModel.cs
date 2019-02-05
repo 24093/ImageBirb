@@ -27,7 +27,7 @@ namespace ImageBirb.ViewModels
 
         private async Task UpdateTags()
         {
-            var result = await LoadTags();
+            var result = await WorkflowAdapter.LoadTags();
 
             if (result.IsSuccess)
             {

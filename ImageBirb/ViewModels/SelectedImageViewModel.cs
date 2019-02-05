@@ -54,7 +54,7 @@ namespace ImageBirb.ViewModels
                 return;
             }
 
-            var result = await LoadImage(image.ImageId);
+            var result = await WorkflowAdapter.LoadImage(image.ImageId);
 
             if (result.IsSuccess)
             {
@@ -72,14 +72,14 @@ namespace ImageBirb.ViewModels
 
         private async Task RemoveTag(string tagName)
         {
-            await RemoveTag(SelectedImage?.ImageId, tagName);
+            await WorkflowAdapter.RemoveTag(SelectedImage?.ImageId, tagName);
             await UpdateImage(SelectedImage);
             UpdateTags();
         }
 
         private async Task AddTag(string tagName)
         {
-            await AddTag(SelectedImage?.ImageId, tagName);
+            await WorkflowAdapter.AddTag(SelectedImage?.ImageId, tagName);
             await UpdateImage(SelectedImage);
             UpdateTags();
         }

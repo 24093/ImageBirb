@@ -1,29 +1,31 @@
-﻿using ImageBirb.Core.Workflows;
+﻿using ImageBirb.Core.Workflows.Results;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ImageBirb.Core.Ports.Primary
 {
     public interface IWorkflowAdapter
     {
-        AddImageWorkflow AddImage { get; }
+        Task<WorkflowResult> AddImage(string filename);
 
-        RemoveImageWorkflow RemoveImage { get; }
+        Task<WorkflowResult> RemoveImage(string imageId);
 
-        LoadThumbnailsWorkflow LoadThumbnails { get; }
+        Task<ThumbnailsResult> LoadThumbnails();
 
-        LoadImageWorkflow LoadImage { get; }
+        Task<ImageResult> LoadImage(string imageId);
 
-        VerifyImageFileWorkflow VerifyImageFile { get; }
+        Task<IsBitmapImageResult> VerifyImageFile(string filename);
 
-        AddTagWorkflow AddTag { get; }
+        Task<WorkflowResult> AddTag(string imageId, string tagName);
 
-        RemoveTagWorkflow RemoveTag { get; }
+        Task<WorkflowResult> RemoveTag(string imageId, string tagName);
 
-        LoadTagsWorkflow LoadTags { get; }
+        Task<TagsResult> LoadTags();
 
-        LoadThumbnailsByTagsWorkflow LoadThumbnailsByTags { get; }
+        Task<ThumbnailsResult> LoadThumbnailsByTags(List<string> tagNames);
 
-        ReadSettingsWorkflow ReadSettings { get; }
+        Task<SettingsResult> ReadSettings();
 
-        UpdateSettingWorkflow UpdateSetting { get; }
+        Task<WorkflowResult> UpdateSetting(string key, object value);
     }
 }

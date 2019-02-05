@@ -27,7 +27,7 @@ namespace ImageBirb.ViewModels
 
             if (!string.IsNullOrEmpty(filename))
             {
-                var result = Task.Run(async () => await VerifyImageFile(filename)).Result;
+                var result = Task.Run(async () => await WorkflowAdapter.VerifyImageFile(filename)).Result;
 
                 if (result.IsSuccess && result.IsBitmapImage)
                 {
@@ -51,7 +51,7 @@ namespace ImageBirb.ViewModels
         
             foreach (var filename in fileList)
             {
-                var task = Task.Run(async () => await AddImage(filename));
+                var task = Task.Run(async () => await WorkflowAdapter.AddImage(filename));
                 task.Wait();
 
                 _progressBarViewModel.Value++;

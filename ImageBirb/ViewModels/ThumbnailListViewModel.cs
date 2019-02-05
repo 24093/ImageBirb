@@ -60,7 +60,7 @@ namespace ImageBirb.ViewModels
 
         private async Task UpdateThumbnails()
         {
-            var result = await LoadThumbnails();
+            var result = await WorkflowAdapter.LoadThumbnails();
 
             if (result.IsSuccess)
             {
@@ -76,11 +76,11 @@ namespace ImageBirb.ViewModels
 
             if (tagsList.Any())
             {
-                result = await LoadThumbnailsByTags(tagsList);
+                result = await WorkflowAdapter.LoadThumbnailsByTags(tagsList);
             }
             else
             {
-                result = await LoadThumbnails();
+                result = await WorkflowAdapter.LoadThumbnails();
             }
 
             if (result.IsSuccess)

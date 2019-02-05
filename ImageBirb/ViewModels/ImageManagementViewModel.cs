@@ -49,7 +49,7 @@ namespace ImageBirb.ViewModels
             
             if (dialogResult == MessageDialogResult.Affirmative)
             {
-                await RemoveImage(imageId);
+                await WorkflowAdapter.RemoveImage(imageId);
 
                 _selectedImageViewModel.ShowImageCommand.Execute(null);
 
@@ -69,7 +69,7 @@ namespace ImageBirb.ViewModels
 
                 foreach (var filename in fileNames)
                 {
-                    await AddImage(filename);
+                    await WorkflowAdapter.AddImage(filename);
                     ProgressBarViewModel.Value++;
                 }
 
