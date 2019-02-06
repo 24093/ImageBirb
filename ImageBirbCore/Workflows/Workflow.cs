@@ -1,14 +1,18 @@
-﻿using System;
-using System.Threading.Tasks;
-using ImageBirb.Core.Workflows.Parameters;
+﻿using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
+using System;
+using System.Threading.Tasks;
 
 namespace ImageBirb.Core.Workflows
 {
-    public abstract class Workflow<TParameters, TResult> : IWorkflow
+    internal abstract class Workflow<TParameters, TResult> : IWorkflow
         where TParameters : WorkflowParameters
         where TResult : WorkflowResult
     {
+        public Type ParameterType => typeof(TParameters);
+
+        public Type ResultType => typeof(TResult);
+
         public async Task<TResult> RunWorkflow(TParameters p)
         {
             try
@@ -24,9 +28,13 @@ namespace ImageBirb.Core.Workflows
         protected abstract Task<TResult> Run(TParameters p);
     }
 
-    public abstract class Workflow<TResult> : IWorkflow
+    internal abstract class Workflow<TResult> : IWorkflow
         where TResult : WorkflowResult
     {
+        public Type ParameterType => null;
+
+        public Type ResultType => typeof(TResult);
+        
         public async Task<TResult> RunWorkflow()
         {
             try

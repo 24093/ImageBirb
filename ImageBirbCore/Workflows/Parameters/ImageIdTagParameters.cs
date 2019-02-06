@@ -1,6 +1,6 @@
 ﻿namespace ImageBirb.Core.Workflows.Parameters
 {
-    public class ImageIdTagParameters : WorkflowParameters
+    internal class ImageIdTagParameters : WorkflowParameters
     {
         public string ImageId { get; }
 

@@ -5,7 +5,7 @@ using ImageBirb.Core.Workflows.Results;
 
 namespace ImageBirb.Core.Workflows
 {
-    public class LoadImageWorkflow : Workflow<ImageIdParameters, ImageResult>
+    internal class LoadImageWorkflow : Workflow<ImageIdParameters, ImageResult>
     {
         private readonly IDatabaseAdapter _databaseAdapter;
 

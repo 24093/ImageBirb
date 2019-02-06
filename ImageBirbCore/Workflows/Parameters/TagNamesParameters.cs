@@ -2,7 +2,7 @@
 
 namespace ImageBirb.Core.Workflows.Parameters
 {
-    public class TagNamesParameters : WorkflowParameters
+    internal class TagNamesParameters : WorkflowParameters
     {
         public List<string> TagNames { get; }
 

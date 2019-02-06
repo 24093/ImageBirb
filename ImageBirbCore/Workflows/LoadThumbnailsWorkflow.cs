@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace ImageBirb.Core.Workflows
 {
-    public class LoadThumbnailsWorkflow : Workflow<ThumbnailsResult>
+    internal class LoadThumbnailsWorkflow : Workflow<ThumbnailsResult>
     {
         private readonly IDatabaseAdapter _databaseAdapter;
 

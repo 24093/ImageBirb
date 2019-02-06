@@ -1,6 +1,11 @@
-﻿namespace ImageBirb.Core.Workflows
+﻿using System;
+
+namespace ImageBirb.Core.Workflows
 {
-    public interface IWorkflow
+    internal interface IWorkflow
     {
+        Type ParameterType { get; }
+    
+        Type ResultType { get; }
     }
 }

@@ -5,7 +5,7 @@ using ImageBirb.Core.Workflows.Results;
 
 namespace ImageBirb.Core.Workflows
 {
-    public class ReadSettingsWorkflow : Workflow<SettingsResult>
+    internal class ReadSettingsWorkflow : Workflow<SettingsResult>
     {
         private readonly IFileSystemAdapter _fileSystemAdapter;
 

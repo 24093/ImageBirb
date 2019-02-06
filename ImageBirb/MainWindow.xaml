@@ -27,6 +27,7 @@
                 <ResourceDictionary Source="Views/SelectedImageView.xaml" />
                 <ResourceDictionary Source="Views/SelectedImageTagsView.xaml" />
                 <ResourceDictionary Source="Views/MainToolBar.xaml" />
+                <ResourceDictionary Source="Views/SettingsView.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>

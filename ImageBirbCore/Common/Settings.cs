@@ -2,6 +2,6 @@
 {
     public class Settings
     {
-        public string DatabaseFilename { get; set; }
+        
     }
 }

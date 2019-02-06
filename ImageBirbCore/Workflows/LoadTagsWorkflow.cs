@@ -6,7 +6,7 @@ using ImageBirb.Core.Workflows.Results;
 
 namespace ImageBirb.Core.Workflows
 {
-    public class LoadTagsWorkflow : Workflow<TagsResult>
+    internal class LoadTagsWorkflow : Workflow<TagsResult>
     {
         private readonly IDatabaseAdapter _databaseAdapter;
 

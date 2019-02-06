@@ -1,14 +1,13 @@
-﻿using ImageBirb.Core.Workflows.Parameters;
+﻿using ImageBirb.Core.Common;
+using ImageBirb.Core.Ports.Secondary;
+using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
-using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using ImageBirb.Core.Common;
-using ImageBirb.Core.Ports.Secondary;
 
 namespace ImageBirb.Core.Workflows
 {
-    public class UpdateSettingWorkflow : Workflow<KeyValueParameters, WorkflowResult>
+    internal class UpdateSettingWorkflow : Workflow<KeyValueParameters, WorkflowResult>
     {
         private readonly IFileSystemAdapter _fileSystemAdapter;
 

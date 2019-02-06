@@ -7,7 +7,7 @@ using ImageBirb.Core.Workflows.Results;
 
 namespace ImageBirb.Core.Workflows
 {
-    public class VerifyImageFileWorkflow : Workflow<FilenameParameters, IsBitmapImageResult>
+    internal class VerifyImageFileWorkflow : Workflow<FilenameParameters, IsBitmapImageResult>
     {
         private readonly IFileSystemAdapter _fileSystemAdapter;
         private readonly IImagingAdapter _imagingAdapter;

@@ -1,5 +1,6 @@
 using CommonServiceLocator;
 using GalaSoft.MvvmLight.Ioc;
+using ImageBirb.Core.Common;
 
 namespace ImageBirb.ViewModels
 {
@@ -7,7 +8,9 @@ namespace ImageBirb.ViewModels
     {
         public ViewModelLocator()
         {
-            var imageBirb = new Core.ImageBirb();
+            var databaseFilename = AppSettings.Get("DatabaseFilename", "ImageBirb.db");
+            var coreSettings = new CoreSettings {DatabaseFilename = databaseFilename};
+            var imageBirb = new Core.ImageBirb(coreSettings);
 
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 

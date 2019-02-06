@@ -19,8 +19,11 @@ namespace ImageBirb.Core.Adapters.Secondary
         
         private readonly LiteCollection<Image> _imageCollection;
 
+        public string ConnectionString { get; }
+
         public LiteDbAdapter(string databaseFilename)
         {
+            ConnectionString = databaseFilename;
             _db = new LiteDatabase(databaseFilename);
             _imageCollection = _db.GetCollection<Image>();
         }

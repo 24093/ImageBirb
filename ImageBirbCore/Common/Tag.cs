@@ -2,7 +2,7 @@
 
 namespace ImageBirb.Core.Common
 {
-    [DebuggerDisplay("{_debuggerDisplay,nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public class Tag
     {
         public string Name { get; set; }
@@ -15,6 +15,6 @@ namespace ImageBirb.Core.Common
             Count = count;
         }
 
-        private string _debuggerDisplay => Name;
+        private string DebuggerDisplay => Name;
     }
 }

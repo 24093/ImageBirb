@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ImageBirb.Core.Workflows
 {
-    public class AddTagWorkflow : Workflow<ImageIdTagParameters, WorkflowResult>
+    internal class AddTagWorkflow : Workflow<ImageIdTagParameters, WorkflowResult>
     {
         private readonly IDatabaseAdapter _databaseAdapter;
 

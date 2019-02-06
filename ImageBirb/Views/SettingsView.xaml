@@ -25,9 +25,12 @@
                                Grid.Row="0" />
 
                         <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Stretch"
                                     Grid.Column="1"
                                     Grid.Row="0">
-                            <TextBox Text="{Binding SettingsViewModel.DatabaseFilename, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <TextBox HorizontalAlignment="Stretch"
+                                     IsEnabled="False"
+                                     Text="{Binding SettingsViewModel.DatabaseFilename, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" />
                         </StackPanel>
 
                     </Grid>

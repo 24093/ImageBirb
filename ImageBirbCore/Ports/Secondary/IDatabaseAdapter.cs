@@ -7,6 +7,8 @@ namespace ImageBirb.Core.Ports.Secondary
 {
     public interface IDatabaseAdapter
     {
+        string ConnectionString { get; }
+
         Task<string> CreateImageId();
 
         Task AddImage(Image image);

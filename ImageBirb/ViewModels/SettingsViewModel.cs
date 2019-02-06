@@ -1,24 +1,22 @@
-﻿using ImageBirb.Core.Common;
-using ImageBirb.Core.Ports.Primary;
+﻿using ImageBirb.Core.Ports.Primary;
+using ImageBirb.Core.Workflows.Results;
+using System.Threading.Tasks;
 
 namespace ImageBirb.ViewModels
 {
     internal class SettingsViewModel : WorkflowViewModel
     {
-        private Settings _settings;
-
-        private string _databaseFilename;
-
-        public string DatabaseFilename
-        {
-            get => _databaseFilename;
-            set => Set(ref _databaseFilename, value);
-        }
+        public string DatabaseFilename {get; private set; }
 
         public SettingsViewModel (IWorkflowAdapter workflowAdapter)
             : base (workflowAdapter)
         {
-            
+            Task.Run(async () => await WorkflowAdapter.ReadConnectionString()).ContinueWith(OnConnectionStringReceived);
+        }
+
+        private void OnConnectionStringReceived(Task<ConnectionStringResult> obj)
+        {
+            DatabaseFilename = obj.Result.ConnectionString;
         }
     }
 }

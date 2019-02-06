@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ImageBirb.Core.Workflows
 {
-    public class AddImageWorkflow : Workflow<FilenameParameters, WorkflowResult>
+    internal class AddImageWorkflow : Workflow<FilenameParameters, WorkflowResult>
     {
         private readonly IDatabaseAdapter _databaseAdapter;
         private readonly IFileSystemAdapter _fileSystemAdapter;

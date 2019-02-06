@@ -5,7 +5,7 @@ using ImageBirb.Core.Workflows.Results;
 
 namespace ImageBirb.Core.Workflows
 {
-    public class RemoveTagWorkflow : Workflow<ImageIdTagParameters, WorkflowResult>
+    internal class RemoveTagWorkflow : Workflow<ImageIdTagParameters, WorkflowResult>
     {
         private readonly IDatabaseAdapter _databaseAdapter;
 

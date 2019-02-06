@@ -27,5 +27,7 @@ namespace ImageBirb.Core.Ports.Primary
         Task<SettingsResult> ReadSettings();
 
         Task<WorkflowResult> UpdateSetting(string key, object value);
+
+        Task<ConnectionStringResult> ReadConnectionString();
     }
 }

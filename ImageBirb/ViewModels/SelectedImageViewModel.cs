@@ -1,8 +1,6 @@
 using GalaSoft.MvvmLight.CommandWpf;
 using ImageBirb.Core.Common;
-using ImageBirb.Core.Extensions;
 using ImageBirb.Core.Ports.Primary;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -43,7 +41,9 @@ namespace ImageBirb.ViewModels
 
         private bool CanExecuteAddTagCommand(string tagName)
         {
-            return (!string.IsNullOrEmpty(tagName) && !SelectedImage.Tags.Contains(tagName));
+            return IsImageSelected && 
+                   !string.IsNullOrEmpty(tagName) && 
+                   !SelectedImage.Tags.Contains(tagName);
         }
 
         private async Task UpdateImage(Image image)

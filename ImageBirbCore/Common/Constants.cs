@@ -1,6 +1,4 @@
-﻿using SixLabors.Primitives;
-
-namespace ImageBirb.Core.Common
+﻿namespace ImageBirb.Core.Common
 {
     public static class Constants
     {
