@@ -6,6 +6,7 @@ namespace ImageBirb.ViewModels
 {
     /// <summary>
     /// Handles the state of the flyouts of the main window.
+    /// Contains no backend logic.
     /// </summary>
     internal class FlyoutViewModel : ViewModelBase
     {

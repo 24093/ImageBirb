@@ -3,6 +3,9 @@ using GalaSoft.MvvmLight;
 
 namespace ImageBirb.ViewModels
 {
+    /// <summary>
+    /// Handles the display of the main progress bar.
+    /// </summary>
     internal class ProgressBarViewModel : ViewModelBase
     {
         private int _value;

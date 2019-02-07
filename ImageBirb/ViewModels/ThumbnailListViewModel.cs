@@ -1,13 +1,12 @@
+using GalaSoft.MvvmLight.CommandWpf;
+using ImageBirb.Core.Common;
+using ImageBirb.Core.Extensions;
+using ImageBirb.Core.Ports.Primary;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using GalaSoft.MvvmLight.CommandWpf;
-using ImageBirb.Core.Common;
-using ImageBirb.Core.Extensions;
-using ImageBirb.Core.Ports.Primary;
-using ImageBirb.Core.Workflows.Results;
 
 namespace ImageBirb.ViewModels
 {
@@ -36,60 +35,46 @@ namespace ImageBirb.ViewModels
             set
             {
                 Set(ref _selectedThumbnail, value);
-
-                if (_selectedImageViewModel.ShowImageCommand.CanExecute(_selectedThumbnail))
-                {
-                    _selectedImageViewModel.ShowImageCommand.Execute(_selectedThumbnail);
-                }
+                _selectedImageViewModel.ShowImageCommand.Exec(_selectedThumbnail);
             }
         }
 
-        public ThumbnailListViewModel(IWorkflowAdapter workflowAdapter, SelectedImageViewModel selectedImageViewModel) 
-            : base(workflowAdapter)
+        public ThumbnailListViewModel(IWorkflowAdapter workflows, SelectedImageViewModel selectedImageViewModel) 
+            : base(workflows)
         {
             _selectedImageViewModel = selectedImageViewModel;
 
             Thumbnails = new ObservableCollection<Image>();
 
-            FilterThumbnailsByTagsCommand = new RelayCommand<IList>(async tags => await FilterThumbnailsByTags(tags));
-            UpdateThumbnailsCommand = new RelayCommand(async () => await UpdateThumbnails());
+            FilterThumbnailsByTagsCommand = new RelayCommand<IList>(ExecuteFilterThumbnailsByTagsCommand);
+            UpdateThumbnailsCommand = new RelayCommand(ExecuteUpdateThumbnailsCommand);
 
-            NextCommand = new RelayCommand(ShowNextImage);
-            PreviousCommand = new RelayCommand(ShowPreviousImage);
+            NextCommand = new RelayCommand(ExecuteNextCommand);
+            PreviousCommand = new RelayCommand(ExecutePreviousCommand);
         }
 
-        private async Task UpdateThumbnails()
+        private void ExecutePreviousCommand()
         {
-            var result = await WorkflowAdapter.LoadThumbnails();
-
-            if (result.IsSuccess)
+            if (SelectedThumbnail == null)
             {
-                Thumbnails.ReplaceItems(result.Thumbnails);
-            }
-        }
-
-        private async Task FilterThumbnailsByTags(IList tags)
-        {
-            var tagsList = tags.Cast<Tag>().Select(x => x.Name).ToList();
-
-            ThumbnailsResult result;
-
-            if (tagsList.Any())
-            {
-                result = await WorkflowAdapter.LoadThumbnailsByTags(tagsList);
+                SelectedThumbnail = Thumbnails.LastOrDefault();
             }
             else
             {
-                result = await WorkflowAdapter.LoadThumbnails();
-            }
+                var index = Thumbnails.IndexOf(SelectedThumbnail);
 
-            if (result.IsSuccess)
-            {
-                Thumbnails.ReplaceItems(result.Thumbnails);
+                if (index > 0)
+                {
+                    SelectedThumbnail = Thumbnails[--index];
+                }
+                else
+                {
+                    SelectedThumbnail = Thumbnails.LastOrDefault();
+                }
             }
         }
 
-        private void ShowNextImage()
+        private void ExecuteNextCommand()
         {
             if (SelectedThumbnail == null)
             {
@@ -110,25 +95,22 @@ namespace ImageBirb.ViewModels
             }
         }
 
-        private void ShowPreviousImage()
+        private async void ExecuteUpdateThumbnailsCommand()
         {
-            if (SelectedThumbnail == null)
-            {
-                SelectedThumbnail = Thumbnails.LastOrDefault();
-            }
-            else
-            {
-                var index = Thumbnails.IndexOf(SelectedThumbnail);
+            await UpdateThumbnails();
+        }
 
-                if (index > 0)
-                {
-                    SelectedThumbnail = Thumbnails[--index];
-                }
-                else
-                {
-                    SelectedThumbnail = Thumbnails.LastOrDefault();
-                }
-            }
+        private async void ExecuteFilterThumbnailsByTagsCommand(IList tags)
+        {
+            var tagsList = tags.Cast<Tag>().Select(x => x.Name).ToList();
+            var workflow = tagsList.Any() ? Workflows.LoadThumbnailsByTags(tagsList) : Workflows.LoadThumbnails();
+
+            await RunAsyncDispatch(workflow, r => Thumbnails.ReplaceItems(r.Thumbnails));
+        }
+
+        private async Task UpdateThumbnails()
+        {
+            await RunAsyncDispatch(Workflows.LoadThumbnails(), r => Thumbnails.ReplaceItems(r.Thumbnails));
         }
     }
 }

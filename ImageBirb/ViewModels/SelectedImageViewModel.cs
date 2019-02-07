@@ -29,14 +29,33 @@ namespace ImageBirb.ViewModels
 
         public ICommand ShowImageCommand { get; }
         
-        public SelectedImageViewModel(IWorkflowAdapter workflowAdapter, TagListViewModel tagListViewModel) 
-            : base(workflowAdapter)
+        public SelectedImageViewModel(IWorkflowAdapter workflows, TagListViewModel tagListViewModel) 
+            : base(workflows)
         {
             _tagListViewModel = tagListViewModel;
             
-            AddTagCommand = new RelayCommand<string>(async tagName => await AddTag(tagName), CanExecuteAddTagCommand);
-            RemoveTagCommand = new RelayCommand<string>(async tagName => await RemoveTag(tagName));
-            ShowImageCommand = new RelayCommand<Image>(async image => await UpdateImage(image));
+            AddTagCommand = new RelayCommand<string>(ExecuteAddTagCommand, CanExecuteAddTagCommand);
+            RemoveTagCommand = new RelayCommand<string>(ExecuteRemoveTagCommand);
+            ShowImageCommand = new RelayCommand<Image>(ExecuteShowImageCommand);
+        }
+
+        private async void ExecuteShowImageCommand(Image image)
+        {
+            await UpdateImage(image);
+        }
+
+        private async void ExecuteRemoveTagCommand(string tagName)
+        {
+            await RunAsync(Workflows.RemoveTag(SelectedImage?.ImageId, tagName));
+            await UpdateImage(SelectedImage);
+            UpdateTags();
+        }
+
+        private async void ExecuteAddTagCommand(string tagName)
+        {
+            await RunAsync(Workflows.AddTag(SelectedImage?.ImageId, tagName));
+            await UpdateImage(SelectedImage);
+            UpdateTags();
         }
 
         private bool CanExecuteAddTagCommand(string tagName)
@@ -54,34 +73,13 @@ namespace ImageBirb.ViewModels
                 return;
             }
 
-            var result = await WorkflowAdapter.LoadImage(image.ImageId);
-
-            if (result.IsSuccess)
-            {
-                SelectedImage = result.Image;
-            }
+            await RunAsync(Workflows.LoadImage(image.ImageId),
+                r => SelectedImage = r.Image);
         }
 
         private void UpdateTags()
         {
-            if (_tagListViewModel.UpdateTagsCommand.CanExecute(null))
-            {
-                _tagListViewModel.UpdateTagsCommand.Execute(null);
-            }
-        }
-
-        private async Task RemoveTag(string tagName)
-        {
-            await WorkflowAdapter.RemoveTag(SelectedImage?.ImageId, tagName);
-            await UpdateImage(SelectedImage);
-            UpdateTags();
-        }
-
-        private async Task AddTag(string tagName)
-        {
-            await WorkflowAdapter.AddTag(SelectedImage?.ImageId, tagName);
-            await UpdateImage(SelectedImage);
-            UpdateTags();
+            _tagListViewModel.UpdateTagsCommand.Exec(null);
         }
     }
 }

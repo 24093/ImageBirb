@@ -1,15 +1,14 @@
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using GalaSoft.MvvmLight.CommandWpf;
 using ImageBirb.Core.Common;
 using ImageBirb.Core.Extensions;
 using ImageBirb.Core.Ports.Primary;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace ImageBirb.ViewModels
 {
     /// <summary>
-    /// Handels the global tag list.
+    /// Handles the global tag list.
     /// </summary>
     internal class TagListViewModel : WorkflowViewModel
     {
@@ -17,22 +16,17 @@ namespace ImageBirb.ViewModels
 
         public ICommand UpdateTagsCommand { get; }
 
-        public TagListViewModel(IWorkflowAdapter workflowAdapter) 
-            : base(workflowAdapter)
+        public TagListViewModel(IWorkflowAdapter workflows) 
+            : base(workflows)
         {
             Tags = new ObservableCollection<Tag>();
 
-            UpdateTagsCommand = new RelayCommand(async () => await UpdateTags());
+            UpdateTagsCommand = new RelayCommand(ExecuteUpdateTagsCommand);
         }
 
-        private async Task UpdateTags()
+        private async void ExecuteUpdateTagsCommand()
         {
-            var result = await WorkflowAdapter.LoadTags();
-
-            if (result.IsSuccess)
-            {
-                Tags.ReplaceItems(result.Tags);
-            }
+            await RunAsyncDispatch(Workflows.LoadTags(), r => Tags.ReplaceItems(r.Tags));
         }
     }
 }

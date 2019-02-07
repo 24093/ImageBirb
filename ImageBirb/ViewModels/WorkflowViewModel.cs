@@ -3,6 +3,7 @@ using ImageBirb.Core.Ports.Primary;
 using ImageBirb.Core.Workflows.Results;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace ImageBirb.ViewModels
@@ -12,28 +13,77 @@ namespace ImageBirb.ViewModels
     /// </summary>
     internal abstract class WorkflowViewModel : ViewModelBase
     {
-        protected readonly IWorkflowAdapter WorkflowAdapter;
+        protected readonly IWorkflowAdapter Workflows;
 
-        protected WorkflowViewModel(IWorkflowAdapter workflowAdapter)
+        protected WorkflowViewModel(IWorkflowAdapter workflows)
         {
-            WorkflowAdapter = workflowAdapter;
+            Workflows = workflows;
         }
 
-        private static void VerifyWorkflowResult(WorkflowResult result)
+        protected static async Task RunAsync<TResult>(Task<TResult> workflow, Action<TResult> onSuccess = null, Action<TResult> onFailure = null)
+            where TResult : WorkflowResult
         {
-            if (!result.IsSuccess)
+            await workflow.ContinueWith(t =>
             {
-                var message = result.Exception?.Message;
-
-                if (Debugger.IsAttached)
+                if (t.Result.IsSuccess)
                 {
-                    message += Environment.NewLine + Environment.NewLine + result.Exception?.StackTrace;
+                    onSuccess?.Invoke(t.Result);
                 }
+                else
+                {
+                    (onFailure ?? DefaultOnFailure).Invoke(t.Result);
+                }
+            });
+        }
 
-                message = message?.Trim() ?? string.Empty;
+        protected static async Task RunAsyncDispatch<TResult>(Task<TResult> workflow, Action<TResult> onSuccess = null, Action<TResult> onFailure = null)
+            where TResult : WorkflowResult
+        {
+            var onSuccessDispatched = onSuccess;
+            var onFailureDispatched = (onFailure ?? DefaultOnFailure);
 
-                MessageBox.Show(message, result.ErrorCode.ToString(), MessageBoxButton.OK, MessageBoxImage.Error);
+            if (onSuccess != null)
+            {
+                onSuccessDispatched = r => Application.Current.Dispatcher.Invoke(() => onSuccess(r));
             }
+
+            if (onFailure != null)
+            {
+                onFailureDispatched = r => Application.Current.Dispatcher.Invoke(() => onFailure(r));
+            }
+
+            await RunAsync(workflow, onSuccessDispatched, onFailureDispatched);
+        }
+
+        protected static void Run<TResult>(Task<TResult> workflow, Action<TResult> onSuccess = null, Action<TResult> onFailure = null)
+            where TResult : WorkflowResult
+        {
+            Task.Run(async () => await workflow).ContinueWith(t =>
+            {
+                if (t.Result.IsSuccess)
+                {
+                    onSuccess?.Invoke(t.Result);
+                }
+                else
+                {
+                    (onFailure ?? DefaultOnFailure)?.Invoke(t.Result);
+                }
+            });
+        }
+        
+        private static void DefaultOnFailure<TResult>(TResult result)
+            where TResult : WorkflowResult
+        {
+            var message = result.Exception?.Message;
+
+            if (Debugger.IsAttached)
+            {
+                message += Environment.NewLine + Environment.NewLine + result.Exception?.StackTrace;
+            }
+
+            message = message?.Trim() ?? string.Empty;
+
+            MessageBox.Show(message, result.ErrorCode.ToString(), MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

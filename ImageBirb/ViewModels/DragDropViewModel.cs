@@ -14,8 +14,8 @@ namespace ImageBirb.ViewModels
 
         private readonly ProgressBarViewModel _progressBarViewModel;
         
-        public DragDropViewModel(IWorkflowAdapter workflowAdapter, ThumbnailListViewModel thumbnailListViewModel, ProgressBarViewModel progressBarViewModel)
-            :base(workflowAdapter)
+        public DragDropViewModel(IWorkflowAdapter workflows, ThumbnailListViewModel thumbnailListViewModel, ProgressBarViewModel progressBarViewModel)
+            :base(workflows)
         {
             _thumbnailListViewModel = thumbnailListViewModel;
             _progressBarViewModel = progressBarViewModel;
@@ -27,7 +27,7 @@ namespace ImageBirb.ViewModels
 
             if (!string.IsNullOrEmpty(filename))
             {
-                var result = Task.Run(async () => await WorkflowAdapter.VerifyImageFile(filename)).Result;
+                var result = Task.Run(async () => await Workflows.VerifyImageFile(filename)).Result;
 
                 if (result.IsSuccess && result.IsBitmapImage)
                 {
@@ -51,7 +51,7 @@ namespace ImageBirb.ViewModels
         
             foreach (var filename in fileList)
             {
-                var task = Task.Run(async () => await WorkflowAdapter.AddImage(filename));
+                var task = Task.Run(async () => await Workflows.AddImage(filename));
                 task.Wait();
 
                 _progressBarViewModel.Value++;
@@ -59,10 +59,7 @@ namespace ImageBirb.ViewModels
             
             _progressBarViewModel.Visibility = Visibility.Collapsed;
 
-            if (_thumbnailListViewModel.UpdateThumbnailsCommand.CanExecute(null))
-            {
-                _thumbnailListViewModel.UpdateThumbnailsCommand.Execute(null);
-            }        
+            _thumbnailListViewModel.UpdateThumbnailsCommand.Exec(null);
         }
     }
 }

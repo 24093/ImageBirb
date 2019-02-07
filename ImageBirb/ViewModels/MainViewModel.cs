@@ -23,7 +23,7 @@ namespace ImageBirb.ViewModels
         public SettingsViewModel SettingsViewModel { get; }
 
         public MainViewModel(
-            IWorkflowAdapter workflowAdapter,
+            IWorkflowAdapter workflows,
             DragDropViewModel dragDropViewModel,
             TagListViewModel tagListViewModel,
             ThumbnailListViewModel thumbnailListViewModel,
@@ -31,7 +31,7 @@ namespace ImageBirb.ViewModels
             FlyoutViewModel flyoutViewModel,
             ImageManagementViewModel imageManagementViewModel,
             SettingsViewModel settingsViewModel)
-            : base(workflowAdapter)
+            : base(workflows)
         {
             _dragDropViewModel = dragDropViewModel;
             TagListViewModel = tagListViewModel;

@@ -1,14 +1,15 @@
 using GalaSoft.MvvmLight.CommandWpf;
 using ImageBirb.Core.Ports.Primary;
-using Microsoft.Win32;
+using MahApps.Metro.Controls.Dialogs;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
 
 namespace ImageBirb.ViewModels
 {
+    /// <summary>
+    /// Handles image management tasks like adding and deleting images.
+    /// </summary>
     internal class ImageManagementViewModel : WorkflowViewModel
     {
         private readonly SelectedImageViewModel _selectedImageViewModel;
@@ -24,40 +25,44 @@ namespace ImageBirb.ViewModels
         public ICommand RemoveImageCommand { get; }
 
         public ImageManagementViewModel(
-            IWorkflowAdapter workflowAdapter, 
+            IWorkflowAdapter workflows, 
             SelectedImageViewModel selectedImageViewModel, 
             ThumbnailListViewModel thumbnailListViewModel,
             ProgressBarViewModel progressBarViewModel, 
             DialogViewModel dialogViewModel)
-            : base(workflowAdapter)
+            : base(workflows)
         {
             _selectedImageViewModel = selectedImageViewModel;
             _thumbnailListViewModel = thumbnailListViewModel;
             ProgressBarViewModel = progressBarViewModel;
             _dialogViewModel = dialogViewModel;
 
-            AddImageFromFileCommand = new RelayCommand(async () => await AddFilesFromOpenFileDialog());
-            RemoveImageCommand = new RelayCommand<string>(async imageId => await RemoveSelectedImage(imageId), 
-                imageId => _selectedImageViewModel.IsImageSelected);
+            AddImageFromFileCommand = new RelayCommand(ExecuteAddImageFromFileCommand);
+            RemoveImageCommand = new RelayCommand<string>(ExecuteRemoveImageCommand, CanExecuteRemoveImageCommand);
         }
 
-        private async Task RemoveSelectedImage(string imageId)
+        private bool CanExecuteRemoveImageCommand(string imageId)
+        {
+            return _selectedImageViewModel.IsImageSelected;
+        }
+
+        private async void ExecuteRemoveImageCommand(string imageId)
         {
             var dialogResult = await _dialogViewModel.ShowDialog("Delete image",
                 "This will delete the currently selected image. Continue?",
                 MessageDialogStyle.AffirmativeAndNegative);
-            
+
             if (dialogResult == MessageDialogResult.Affirmative)
             {
-                await WorkflowAdapter.RemoveImage(imageId);
+                await Workflows.RemoveImage(imageId);
 
-                _selectedImageViewModel.ShowImageCommand.Execute(null);
+                _selectedImageViewModel.ShowImageCommand.Exec(null);
 
-                _thumbnailListViewModel.UpdateThumbnailsCommand.Execute(null);
+                _thumbnailListViewModel.UpdateThumbnailsCommand.Exec(null);
             }
         }
 
-        private async Task AddFilesFromOpenFileDialog()
+        private async void ExecuteAddImageFromFileCommand()
         {
             var (dialogResult, fileNames) = _dialogViewModel.ShowOpenImageFilesDialog();
 
@@ -69,15 +74,14 @@ namespace ImageBirb.ViewModels
 
                 foreach (var filename in fileNames)
                 {
-                    await WorkflowAdapter.AddImage(filename);
-                    ProgressBarViewModel.Value++;
+                    await RunAsync(Workflows.AddImage(filename), r => ProgressBarViewModel.Value++);
                 }
 
                 await Task.Delay(500);
                 ProgressBarViewModel.Visibility = Visibility.Collapsed;
             }
 
-            _thumbnailListViewModel.UpdateThumbnailsCommand.Execute(null);
+            _thumbnailListViewModel.UpdateThumbnailsCommand.Exec(null);
         }
     }
 }

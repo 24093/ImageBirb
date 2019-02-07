@@ -4,6 +4,10 @@ using System.Threading.Tasks;
 
 namespace ImageBirb.Core.Ports.Primary
 {
+    /// <summary>
+    /// This adapter hides the actual workflows from the user and
+    /// only exposes the results.
+    /// </summary>
     public interface IWorkflowAdapter
     {
         Task<WorkflowResult> AddImage(string filename);
