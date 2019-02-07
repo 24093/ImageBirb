@@ -2,6 +2,7 @@ using GongSolutions.Wpf.DragDrop;
 using ImageBirb.Core.Ports.Primary;
 using System.Threading.Tasks;
 using System.Windows;
+using ImageBirb.Common;
 
 namespace ImageBirb.ViewModels
 {
@@ -59,7 +60,7 @@ namespace ImageBirb.ViewModels
             
             _progressBarViewModel.Visibility = Visibility.Collapsed;
 
-            _thumbnailListViewModel.UpdateThumbnailsCommand.Exec(null);
+            _thumbnailListViewModel.UpdateThumbnailsCommand.Exec();
         }
     }
 }

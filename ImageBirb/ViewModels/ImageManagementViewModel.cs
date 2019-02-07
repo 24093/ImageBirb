@@ -4,6 +4,7 @@ using MahApps.Metro.Controls.Dialogs;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using ImageBirb.Common;
 
 namespace ImageBirb.ViewModels
 {
@@ -56,9 +57,9 @@ namespace ImageBirb.ViewModels
             {
                 await Workflows.RemoveImage(imageId);
 
-                _selectedImageViewModel.ShowImageCommand.Exec(null);
+                _selectedImageViewModel.ShowImageCommand.Exec();
 
-                _thumbnailListViewModel.UpdateThumbnailsCommand.Exec(null);
+                _thumbnailListViewModel.UpdateThumbnailsCommand.Exec();
             }
         }
 
