@@ -1,10 +1,10 @@
 using GalaSoft.MvvmLight.CommandWpf;
+using ImageBirb.Common;
 using ImageBirb.Core.Common;
 using ImageBirb.Core.Ports.Primary;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using ImageBirb.Common;
 
 namespace ImageBirb.ViewModels
 {
@@ -47,7 +47,6 @@ namespace ImageBirb.ViewModels
             get => _scaleY;
             set => Set(ref _scaleY, value);
         }
-
         public ICommand AddTagCommand { get; }
 
         public ICommand RemoveTagCommand { get; }

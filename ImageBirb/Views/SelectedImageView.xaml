@@ -19,17 +19,21 @@
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <Image Grid.Column="0"
-                                   Grid.ColumnSpan="2"
-                                   Grid.Row="0"
-                                   Grid.RowSpan="2"
-                                   Source="{Binding SelectedImageViewModel.SelectedImage.ImageData, RelativeSource={RelativeSource TemplatedParent}}">
-                                <Image.RenderTransform>
-                                    <ScaleTransform ScaleX="{Binding SelectedImageViewModel.ScaleX, RelativeSource={RelativeSource TemplatedParent}}" 
-                                                    ScaleY="{Binding SelectedImageViewModel.ScaleY, RelativeSource={RelativeSource TemplatedParent}}" />
-                                </Image.RenderTransform>
-                            </Image>
+                            <Border Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Grid.Row="0"
+                                    Grid.RowSpan="2">
 
+                                <Image RenderTransformOrigin="0.5, 0.5"
+                                       Source="{Binding SelectedImageViewModel.SelectedImage.ImageData, RelativeSource={RelativeSource TemplatedParent}}">
+                                    <Image.RenderTransform>
+                                        <ScaleTransform ScaleX="{Binding SelectedImageViewModel.ScaleX, RelativeSource={RelativeSource TemplatedParent}}" 
+                                                        ScaleY="{Binding SelectedImageViewModel.ScaleY, RelativeSource={RelativeSource TemplatedParent}}" />
+                                    </Image.RenderTransform>
+                                </Image>
+
+                            </Border>
+                            
                             <Grid Grid.Column="0"
                                   Grid.Row="0"
                                   Background="Transparent"
