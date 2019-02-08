@@ -3,7 +3,6 @@ using ImageBirb.Common;
 using ImageBirb.Core.Common;
 using ImageBirb.Core.Ports.Primary;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 
 namespace ImageBirb.ViewModels
