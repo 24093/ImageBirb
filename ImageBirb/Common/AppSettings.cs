@@ -1,6 +1,6 @@
 using System.Configuration;
 
-namespace ImageBirb
+namespace ImageBirb.Common
 {
     internal static class AppSettings
     {

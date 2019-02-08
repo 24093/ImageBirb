@@ -84,7 +84,7 @@
     <Compile Include="Controls\SettingsView.cs" />
     <Compile Include="Controls\TagsListView.cs" />
     <Compile Include="Controls\ThumbnailsListView.cs" />
-    <Compile Include="AppSettings.cs" />
+    <Compile Include="Common\AppSettings.cs" />
     <Compile Include="Common\CommandExtensions.cs" />
     <Compile Include="ViewModels\DialogViewModel.cs" />
     <Compile Include="ViewModels\DragDropViewModel.cs" />
