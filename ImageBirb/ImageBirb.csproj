@@ -178,6 +178,9 @@
     <PackageReference Include="MahApps.Metro.IconPacks.FontAwesome">
       <Version>3.0.0-alpha0103</Version>
     </PackageReference>
+    <PackageReference Include="Wpf.Controls.PanAndZoom">
+      <Version>1.0.3</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
