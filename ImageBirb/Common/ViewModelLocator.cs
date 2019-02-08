@@ -1,8 +1,9 @@
 using CommonServiceLocator;
 using GalaSoft.MvvmLight.Ioc;
 using ImageBirb.Core.Common;
+using ImageBirb.ViewModels;
 
-namespace ImageBirb.ViewModels
+namespace ImageBirb.Common
 {
     internal class ViewModelLocator
     {

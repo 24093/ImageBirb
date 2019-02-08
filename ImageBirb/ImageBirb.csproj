@@ -85,21 +85,18 @@
     <Compile Include="Controls\TagsListView.cs" />
     <Compile Include="Controls\ThumbnailsListView.cs" />
     <Compile Include="AppSettings.cs" />
-    <Compile Include="Common\AsyncCommand.cs" />
     <Compile Include="Common\CommandExtensions.cs" />
     <Compile Include="ViewModels\DialogViewModel.cs" />
     <Compile Include="ViewModels\DragDropViewModel.cs" />
     <Compile Include="ViewModels\FlyoutViewModel.cs" />
-    <Compile Include="Common\IAsyncCommand.cs" />
     <Compile Include="ViewModels\ImageManagementViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\ProgressBarViewModel.cs" />
     <Compile Include="ViewModels\SelectedImageViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\TagListViewModel.cs" />
-    <Compile Include="Common\TaskExtensions.cs" />
     <Compile Include="ViewModels\ThumbnailListViewModel.cs" />
-    <Compile Include="ViewModels\ViewModelLocator.cs" />
+    <Compile Include="Common\ViewModelLocator.cs" />
     <Compile Include="ViewModels\WorkflowViewModel.cs" />
     <Page Include="Views\SelectedImageTagsView.xaml">
       <Generator>MSBuild:Compile</Generator>

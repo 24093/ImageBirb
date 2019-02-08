@@ -15,10 +15,6 @@ namespace ImageBirb.ViewModels
     {
         private Image _selectedImage;
 
-        private double _scaleX;
-
-        private double _scaleY;
-
         private readonly TagListViewModel _tagListViewModel;
 
         public Image SelectedImage
@@ -28,34 +24,16 @@ namespace ImageBirb.ViewModels
             {
                 Set(ref _selectedImage, value);
                 RaisePropertyChanged(nameof(IsImageSelected));
-                RaisePropertyChanged(nameof(ZoomControlVisibility));
             }
         }
 
         public bool IsImageSelected => SelectedImage != null;
 
-        public Visibility ZoomControlVisibility => IsImageSelected ? Visibility.Visible : Visibility.Collapsed;
-
-        public double ScaleX
-        {
-            get => _scaleX;
-            set => Set(ref _scaleX, value);
-        }
-
-        public double ScaleY
-        {
-            get => _scaleY;
-            set => Set(ref _scaleY, value);
-        }
         public ICommand AddTagCommand { get; }
 
         public ICommand RemoveTagCommand { get; }
 
         public ICommand ShowImageCommand { get; }
-
-        public ICommand ZoomInCommand { get; }
-
-        public ICommand ZoomOutCommand { get; }
         
         public SelectedImageViewModel(IWorkflowAdapter workflows, TagListViewModel tagListViewModel) 
             : base(workflows)
@@ -65,23 +43,6 @@ namespace ImageBirb.ViewModels
             AddTagCommand = new RelayCommand<string>(ExecuteAddTagCommand, CanExecuteAddTagCommand);
             RemoveTagCommand = new RelayCommand<string>(ExecuteRemoveTagCommand);
             ShowImageCommand = new RelayCommand<Image>(ExecuteShowImageCommand);
-            ZoomInCommand = new RelayCommand(ExecuteZoomInCommand);
-            ZoomOutCommand = new RelayCommand(ExecuteZoomOutCommand);
-
-            ScaleX = 1;
-            ScaleY = 1;
-        }
-
-        private void ExecuteZoomOutCommand()
-        {
-            ScaleX -= 0.1;
-            ScaleY -= 0.1;
-        }
-
-        private void ExecuteZoomInCommand()
-        {
-            ScaleX += 0.1;
-            ScaleY += 0.1;
         }
 
         private async void ExecuteShowImageCommand(Image image)

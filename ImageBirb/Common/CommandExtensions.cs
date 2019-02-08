@@ -20,13 +20,5 @@ namespace ImageBirb.Common
                 command.Execute(parameter);
             }
         }
-
-        public static async Task Exec<T>(this IAsyncCommand<T> command, T parameter)
-        {
-            if (command.CanExecute(parameter))
-            {
-                await command.ExecuteAsync(parameter);
-            }
-        }
     }
 }

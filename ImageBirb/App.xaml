@@ -3,12 +3,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:viewModels="clr-namespace:ImageBirb.ViewModels"
+             xmlns:common="clr-namespace:ImageBirb.Common"
              StartupUri="MainWindow.xaml"
              d1p1:Ignorable="d">
     <Application.Resources>
         <ResourceDictionary>
-            <viewModels:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
+            <common:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
