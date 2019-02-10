@@ -14,8 +14,6 @@ namespace ImageBirb.Core.Ports.Primary
 
         Task<WorkflowResult> RemoveImage(string imageId);
 
-        Task<ThumbnailsResult> LoadThumbnails();
-
         Task<ImageResult> LoadImage(string imageId);
 
         Task<IsBitmapImageResult> VerifyImageFile(string filename);
@@ -26,11 +24,7 @@ namespace ImageBirb.Core.Ports.Primary
 
         Task<TagsResult> LoadTags();
 
-        Task<ThumbnailsResult> LoadThumbnailsByTags(List<string> tagNames);
-
-        Task<SettingsResult> ReadSettings();
-
-        Task<WorkflowResult> UpdateSetting(string key, object value);
+        Task<ThumbnailsResult> LoadThumbnails(List<string> tagNames);
 
         Task<ConnectionStringResult> ReadConnectionString();
     }

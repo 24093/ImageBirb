@@ -11,6 +11,11 @@ namespace ImageBirb.Core.Adapters.Primary
     {
         private readonly WorkflowHost _workflows;
 
+        public WorkflowAdapter(WorkflowHost workflows)
+        {
+            _workflows = workflows;
+        }
+
         public async Task<WorkflowResult> AddImage(string filename)
         {
             return await _workflows.Run<AddImageWorkflow, FilenameParameters, WorkflowResult>(new FilenameParameters(filename));
@@ -19,11 +24,6 @@ namespace ImageBirb.Core.Adapters.Primary
         public async Task<WorkflowResult> RemoveImage(string imageId)
         {
             return await _workflows.Run<RemoveImageWorkflow, ImageIdParameters, WorkflowResult>(new ImageIdParameters(imageId));
-        }
-
-        public async Task<ThumbnailsResult> LoadThumbnails()
-        {
-            return await _workflows.Run<LoadThumbnailsWorkflow, ThumbnailsResult>();
         }
 
         public async Task<ImageResult> LoadImage(string imageId)
@@ -51,29 +51,14 @@ namespace ImageBirb.Core.Adapters.Primary
             return await _workflows.Run<LoadTagsWorkflow, TagsResult>();
         }
 
-        public async Task<ThumbnailsResult> LoadThumbnailsByTags(List<string> tagNames)
+        public async Task<ThumbnailsResult> LoadThumbnails(List<string> tagNames)
         {
-            return await _workflows.Run<LoadThumbnailsByTagsWorkflow, TagNamesParameters, ThumbnailsResult>(new TagNamesParameters(tagNames));
+            return await _workflows.Run<LoadThumbnailsWorkflow, TagNamesParameters, ThumbnailsResult>(new TagNamesParameters(tagNames));
         }
         
-        public async Task<SettingsResult> ReadSettings()
-        {
-            return await _workflows.Run<ReadSettingsWorkflow, SettingsResult>();
-        }
-
-        public async Task<WorkflowResult> UpdateSetting(string key, object value)
-        {
-            return await _workflows.Run<UpdateSettingWorkflow, KeyValueParameters, WorkflowResult>(new KeyValueParameters(key, value));
-        }
-
         public async Task<ConnectionStringResult> ReadConnectionString()
         {
             return await _workflows.Run<ReadConnectionStringWorkflow, ConnectionStringResult>();
-        }
-        
-        public WorkflowAdapter(WorkflowHost workflows)
-        {
-            _workflows = workflows;
         }
     }
 }

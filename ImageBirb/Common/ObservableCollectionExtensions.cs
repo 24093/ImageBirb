@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace ImageBirb.Core.Extensions
+namespace ImageBirb.Common
 {
     public static class ObservableCollectionExtensions
     {

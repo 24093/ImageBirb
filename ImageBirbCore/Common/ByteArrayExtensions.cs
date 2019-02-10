@@ -1,6 +1,6 @@
-﻿namespace ImageBirb.Core.Common
+﻿namespace ImageBirb.Core.Extensions
 {
-    public static class ByteArrayExtensions
+    internal static class ByteArrayExtensions
     {
         /// <summary>
         /// Compare two byte arrays.

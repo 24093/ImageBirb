@@ -65,25 +65,31 @@ namespace ImageBirb.Core.Adapters.Secondary
             });
         }
 
-        public async Task<IList<Image>> GetThumbnails(Predicate<Image> predicate = null)
+        public async Task<IList<Image>> GetThumbnails(IList<string> tagNames)
         {
             return await Task.Run(() =>
             {
-                IList<Image> allImages = _imageCollection.FindAll().ToList();
-                IList<Image> images = new List<Image>();
+                IList<Image> images;
 
-                foreach (var image in allImages)
+                var doFiltering = tagNames != null && tagNames.Any();
+
+                // Retrieve the image objects.
+                if (doFiltering)
                 {
-                    if (predicate != null && !predicate(image))
-                    {
-                        continue;
-                    }
+                    images = _imageCollection.Find(doc => doc.Tags.Intersect(tagNames).Any()).ToList();
+                }
+                else
+                {
+                    images = _imageCollection.FindAll().ToList();
+                }
 
+                // Add thumbnail data to images.
+                foreach (var image in images)
+                {
                     using (var ms = new MemoryStream())
                     {
                         _db.FileStorage.Download(FilePrefix + image.ImageId + ThumbnailPostfix, ms);
                         image.ThumbnailData = ms.ToArray();
-                        images.Add(image);
                     }
                 }
 
@@ -146,27 +152,16 @@ namespace ImageBirb.Core.Adapters.Secondary
             });
         }
 
-        public async Task<IDictionary<string, int>> GetTags()
+        public async Task<IList<Tag>> GetTags()
         {
             return await Task.Run(() =>
             {
-                var dict = new Dictionary<string, int>();
-                var images = _imageCollection.FindAll();
-
-                foreach (var image in images)
-                {
-                    foreach (var tag in image.Tags)
-                    {
-                        if (!dict.ContainsKey(tag))
-                        {
-                            dict.Add(tag, 0);
-                        }
-
-                        dict[tag]++;
-                    }
-                }
-
-                return dict;
+                return _imageCollection.FindAll()
+                    .SelectMany(x => x.Tags)
+                    .GroupBy(x => x)
+                    .Select(x => new Tag(x.Key, x.Count()))
+                    .OrderByDescending(x => x.Count)
+                    .ToList();
             });
         }
 

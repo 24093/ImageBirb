@@ -104,14 +104,15 @@ namespace ImageBirb.ViewModels
         private async void ExecuteFilterThumbnailsByTagsCommand(IList tags)
         {
             var tagsList = tags.Cast<Tag>().Select(x => x.Name).ToList();
-            var workflow = tagsList.Any() ? Workflows.LoadThumbnailsByTags(tagsList) : Workflows.LoadThumbnails();
 
-            await RunAsyncDispatch(workflow, r => Thumbnails.ReplaceItems(r.Thumbnails));
+            await RunAsyncDispatch(Workflows.LoadThumbnails(tagsList), 
+                r => Thumbnails.ReplaceItems(r.Thumbnails));
         }
 
         private async Task UpdateThumbnails()
         {
-            await RunAsyncDispatch(Workflows.LoadThumbnails(), r => Thumbnails.ReplaceItems(r.Thumbnails));
+            await RunAsyncDispatch(Workflows.LoadThumbnails(null), 
+                r => Thumbnails.ReplaceItems(r.Thumbnails));
         }
     }
 }

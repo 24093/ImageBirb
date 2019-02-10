@@ -1,5 +1,4 @@
 ﻿using ImageBirb.Core.Common;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -15,7 +14,7 @@ namespace ImageBirb.Core.Ports.Secondary
 
         Task RemoveImage(string imageId);
 
-        Task<IList<Image>> GetThumbnails(Predicate<Image> predicate = null);
+        Task<IList<Image>> GetThumbnails(IList<string> tagNames);
 
         Task<Image> GetImage(string imageId);
         
@@ -23,6 +22,6 @@ namespace ImageBirb.Core.Ports.Secondary
 
         Task RemoveTag(string imageId, string tagName);
 
-        Task<IDictionary<string, int>> GetTags();
+        Task<IList<Tag>> GetTags();
     }
 }

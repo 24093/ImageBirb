@@ -1,10 +1,11 @@
 ﻿using ImageBirb.Core.Ports.Secondary;
+using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
 using System.Threading.Tasks;
 
 namespace ImageBirb.Core.Workflows
 {
-    internal class LoadThumbnailsWorkflow : Workflow<ThumbnailsResult>
+    internal class LoadThumbnailsWorkflow : Workflow<TagNamesParameters, ThumbnailsResult>
     {
         private readonly IDatabaseAdapter _databaseAdapter;
 
@@ -13,9 +14,9 @@ namespace ImageBirb.Core.Workflows
             _databaseAdapter = databaseAdapter;
         }
 
-        protected override async Task<ThumbnailsResult> Run()
+        protected override async Task<ThumbnailsResult> Run(TagNamesParameters p)
         {
-            var thumbnails = await _databaseAdapter.GetThumbnails();
+            var thumbnails = await _databaseAdapter.GetThumbnails(p.TagNames);
             return new ThumbnailsResult(ResultState.Success, thumbnails);
         }
     }
