@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ImageBirb.Core.Workflows
 {
-    internal class WorkflowHost
+    internal class WorkflowHost : IWorkflowHost
     {
         private readonly IList<IWorkflow> _workflows;
 
@@ -21,7 +21,7 @@ namespace ImageBirb.Core.Workflows
             where TResult : WorkflowResult
         {
             var workflow = _workflows.OfType<TWorkflow>().Single();
-            var result = await workflow.RunWorkflow(parameters);
+            var result = await workflow.Run(parameters);
             return result;
         }
 
@@ -30,7 +30,7 @@ namespace ImageBirb.Core.Workflows
             where TResult : WorkflowResult
         {
             var workflow = _workflows.OfType<TWorkflow>().Single();
-            var result = await workflow.RunWorkflow();
+            var result = await workflow.Run();
             return result;
         }
     }

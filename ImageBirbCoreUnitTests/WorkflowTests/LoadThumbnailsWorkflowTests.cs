@@ -38,7 +38,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var parameters = new TagNamesParameters(null);
 
             // act
-            var result = await workflow.RunWorkflow(parameters);
+            var result = await workflow.Run(parameters);
 
             // assert
             Assert.Equal(ResultState.Success, result.State);
@@ -54,12 +54,12 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var parameters = new TagNamesParameters(new List<string>());
 
             // act
-            var result = await workflow.RunWorkflow(parameters);
+            var result = await workflow.Run(parameters);
 
             // assert
             Assert.Equal(ResultState.Success, result.State);
             Assert.Equal(3, result.Thumbnails.Count);
-            _databaseAdapter.Verify(x => x.GetThumbnails(null), Times.Once());
+            _databaseAdapter.Verify(x => x.GetThumbnails(It.IsAny<IList<string>>()), Times.Once());
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var parameters = new TagNamesParameters(new List<string> {"a", "b"});
 
             // act
-            var result = await workflow.RunWorkflow(parameters);
+            var result = await workflow.Run(parameters);
 
             // assert
             Assert.Equal(ResultState.Success, result.State);
@@ -84,13 +84,13 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
         {
             // arrange
             var databaseAdapter = new Mock<IDatabaseAdapter>();
-            databaseAdapter.Setup(x => x.GetThumbnails(null)).ThrowsAsync(new WorkflowTestException());
+            databaseAdapter.Setup(x => x.GetThumbnails(It.IsAny<IList<string>>())).ThrowsAsync(new WorkflowTestException());
 
             var workflow = new LoadThumbnailsWorkflow(databaseAdapter.Object);
             var parameters = new TagNamesParameters(new List<string>());
 
             // act
-            var result = await workflow.RunWorkflow(parameters);
+            var result = await workflow.Run(parameters);
 
             // assert
             Assert.Equal(ResultState.Error, result.State);

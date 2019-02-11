@@ -14,7 +14,7 @@ namespace ImageBirb.Core.Workflows
             _databaseAdapter = databaseAdapter;
         }
 
-        protected override async Task<ImageResult> Run(ImageIdParameters p)
+        protected override async Task<ImageResult> RunImpl(ImageIdParameters p)
         {
             var image = await _databaseAdapter.GetImage(p.ImageId);
             return new ImageResult(ResultState.Success, image);

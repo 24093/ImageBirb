@@ -19,7 +19,7 @@ namespace ImageBirb.Core.Workflows
             _imagingAdapter = imagingAdapter;
         }
 
-        protected override async Task<WorkflowResult> Run(FilenameParameters p)
+        protected override async Task<WorkflowResult> RunImpl(FilenameParameters p)
         {
             var imageId = await _databaseAdapter.CreateImageId();
             var imageData = await _fileSystemAdapter.ReadBinaryFile(p.Filename);

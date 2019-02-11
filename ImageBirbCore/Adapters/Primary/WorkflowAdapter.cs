@@ -9,9 +9,9 @@ namespace ImageBirb.Core.Adapters.Primary
 {
     internal class WorkflowAdapter : IWorkflowAdapter
     {
-        private readonly WorkflowHost _workflows;
+        private readonly IWorkflowHost _workflows;
 
-        public WorkflowAdapter(WorkflowHost workflows)
+        public WorkflowAdapter(IWorkflowHost workflows)
         {
             _workflows = workflows;
         }

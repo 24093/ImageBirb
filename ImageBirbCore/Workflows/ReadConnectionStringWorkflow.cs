@@ -13,10 +13,13 @@ namespace ImageBirb.Core.Workflows
             _databaseAdapter = databaseAdapter;
         }
 
-        protected override async Task<ConnectionStringResult> Run()
+        protected override async Task<ConnectionStringResult> RunImpl()
         {
-            var connectionString = _databaseAdapter.ConnectionString;
-            return new ConnectionStringResult(ResultState.Success, connectionString);
+            return await Task.Run(() =>
+            {
+                var connectionString = _databaseAdapter.ConnectionString;
+                return new ConnectionStringResult(ResultState.Success, connectionString);
+            });
         }
     }
 }

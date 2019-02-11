@@ -14,7 +14,7 @@ namespace ImageBirb.Core.Workflows
             _databaseAdapter = databaseAdapter;
         }
 
-        protected override async Task<WorkflowResult> Run(ImageIdTagParameters p)
+        protected override async Task<WorkflowResult> RunImpl(ImageIdTagParameters p)
         {
             if (string.IsNullOrEmpty(p.ImageId))
             {

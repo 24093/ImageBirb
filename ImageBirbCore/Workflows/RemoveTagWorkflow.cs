@@ -14,7 +14,7 @@ namespace ImageBirb.Core.Workflows
             _databaseAdapter = databaseAdapter;
         }
 
-        protected override async Task<WorkflowResult> Run(ImageIdTagParameters p)
+        protected override async Task<WorkflowResult> RunImpl(ImageIdTagParameters p)
         {
             await _databaseAdapter.RemoveTag(p.ImageId, p.TagName);
             return new WorkflowResult(ResultState.Success);

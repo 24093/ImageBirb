@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("ImageBirbCoreUnitTests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 namespace ImageBirb.Core
 {
     /// <summary>

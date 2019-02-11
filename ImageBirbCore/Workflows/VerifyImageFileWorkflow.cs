@@ -18,7 +18,7 @@ namespace ImageBirb.Core.Workflows
             _imagingAdapter = imagingAdapter;
         }
 
-        protected override async Task<IsBitmapImageResult> Run(FilenameParameters p)
+        protected override async Task<IsBitmapImageResult> RunImpl(FilenameParameters p)
         {
             var validFormats = new[]
             {

@@ -31,7 +31,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var parameters = new ImageIdTagParameters(_imageId, _tagName);
 
             // act
-            var result = await workflow.RunWorkflow(parameters);
+            var result = await workflow.Run(parameters);
 
             // assert
             Assert.Equal(ResultState.Success, result.State);
@@ -46,7 +46,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var parameters = new ImageIdTagParameters(_imageId, null);
 
             // act
-            var result = await workflow.RunWorkflow(parameters);
+            var result = await workflow.Run(parameters);
 
             // assert
             Assert.Equal(ResultState.Error, result.State);
@@ -63,7 +63,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var parameters = new ImageIdTagParameters(null, _tagName);
 
             // act
-            var result = await workflow.RunWorkflow(parameters);
+            var result = await workflow.Run(parameters);
 
             // assert
             Assert.Equal(ResultState.Error, result.State);
@@ -82,7 +82,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var parameters = new ImageIdTagParameters(_imageId, _tagName);
 
             // act
-            var result = await workflow.RunWorkflow(parameters);
+            var result = await workflow.Run(parameters);
 
             // assert
             Assert.Equal(ResultState.Error, result.State);

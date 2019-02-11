@@ -9,15 +9,11 @@ namespace ImageBirb.Core.Workflows
         where TParameters : WorkflowParameters
         where TResult : WorkflowResult
     {
-        public Type ParameterType => typeof(TParameters);
-
-        public Type ResultType => typeof(TResult);
-
-        public async Task<TResult> RunWorkflow(TParameters p)
+        public async Task<TResult> Run(TParameters p)
         {
             try
             {
-                return await Run(p);
+                return await RunImpl(p);
             }
             catch (Exception ex)
             {
@@ -25,21 +21,17 @@ namespace ImageBirb.Core.Workflows
             }
         }
 
-        protected abstract Task<TResult> Run(TParameters p);
+        protected abstract Task<TResult> RunImpl(TParameters p);
     }
 
     internal abstract class Workflow<TResult> : IWorkflow
         where TResult : WorkflowResult
     {
-        public Type ParameterType => null;
-
-        public Type ResultType => typeof(TResult);
-        
-        public async Task<TResult> RunWorkflow()
+        public async Task<TResult> Run()
         {
             try
             {
-                return await Run();
+                return await RunImpl();
             }
             catch (Exception ex)
             {
@@ -47,6 +39,6 @@ namespace ImageBirb.Core.Workflows
             }
         }
 
-        protected abstract Task<TResult> Run();
+        protected abstract Task<TResult> RunImpl();
     }
 }

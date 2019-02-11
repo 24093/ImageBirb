@@ -9,47 +9,44 @@ using Xunit;
 
 namespace ImageBirbCoreUnitTests.WorkflowTests
 {
-    public class LoadImageWorkflowTests
+    public class RemoveImageWorkflowTests
     {
-        private readonly Image _image;
+        private readonly string _imageId;
 
         private readonly Mock<IDatabaseAdapter> _databaseAdapter;
-
-        public LoadImageWorkflowTests()
+        
+        public RemoveImageWorkflowTests()
         {
-            _image = new Image
-            {
-                ImageId = "123"
-            };
+            _imageId = "123";
 
             _databaseAdapter = new Mock<IDatabaseAdapter>();
-            _databaseAdapter.Setup(x => x.GetImage(_image.ImageId)).ReturnsAsync(_image);
+            _databaseAdapter.Setup(x => x.RemoveImage(It.IsAny<string>())).Returns(Task.CompletedTask);
         }
 
         [Fact]
-        public async Task SuccessfullyLoadsImage()
+        public async Task SuccessfullyRemovesImage()
         {
             // arrange
-            var workflow = new LoadImageWorkflow(_databaseAdapter.Object);
-            var parameters = new ImageIdParameters(_image.ImageId);
+            var workflow = new RemoveImageWorkflow(_databaseAdapter.Object);
+            var parameters = new ImageIdParameters(_imageId);
 
             // act
             var result = await workflow.Run(parameters);
 
             // assert
             Assert.Equal(ResultState.Success, result.State);
-            _databaseAdapter.Verify(x => x.GetImage(_image.ImageId), Times.Once());
+            _databaseAdapter.Verify(x => x.RemoveImage(_imageId), Times.Once());
         }
 
         [Fact]
-        public async Task ImageFailsToBeLoaded()
+        public async Task ImageFailsToBeRemoved()
         {
             // arrange
             var databaseAdapter = new Mock<IDatabaseAdapter>();
-            databaseAdapter.Setup(x => x.GetImage(It.IsAny<string>())).ThrowsAsync(new WorkflowTestException());
+            databaseAdapter.Setup(x => x.RemoveImage(It.IsAny<string>())).ThrowsAsync(new WorkflowTestException());
 
-            var workflow = new LoadImageWorkflow(databaseAdapter.Object);
-            var parameters = new ImageIdParameters(_image.ImageId);
+            var workflow = new RemoveImageWorkflow(databaseAdapter.Object);
+            var parameters = new ImageIdParameters(_imageId);
 
             // act
             var result = await workflow.Run(parameters);

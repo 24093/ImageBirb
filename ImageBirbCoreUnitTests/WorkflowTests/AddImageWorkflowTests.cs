@@ -47,7 +47,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var parameters = new FilenameParameters("kuckuck.jpg");
 
             // act
-            var result = await workflow.RunWorkflow(parameters);
+            var result = await workflow.Run(parameters);
 
             // assert
             Assert.Equal(ResultState.Success, result.State);
@@ -66,7 +66,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var parameters = new FilenameParameters("kuckuck.jpg");
 
             // act
-            var result = await workflow.RunWorkflow(parameters);
+            var result = await workflow.Run(parameters);
 
             // assert
             Assert.Equal(ResultState.Error, result.State);
@@ -86,7 +86,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var parameters = new FilenameParameters("kuckuck.jpg");
 
             // act
-            var result = await workflow.RunWorkflow(parameters);
+            var result = await workflow.Run(parameters);
 
             // assert
             Assert.Equal(ResultState.Error, result.State);
@@ -106,7 +106,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var parameters = new FilenameParameters("kuckuck.jpg");
 
             // act
-            var result = await workflow.RunWorkflow(parameters);
+            var result = await workflow.Run(parameters);
 
             // assert
             Assert.Equal(ResultState.Error, result.State);

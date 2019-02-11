@@ -1,4 +1,3 @@
-using ImageBirb.Core.Common;
 using ImageBirb.Core.Ports.Secondary;
 using ImageBirb.Core.Workflows;
 using ImageBirb.Core.Workflows.Parameters;
@@ -9,47 +8,46 @@ using Xunit;
 
 namespace ImageBirbCoreUnitTests.WorkflowTests
 {
-    public class LoadImageWorkflowTests
+    public class RemoveTagWorkflowTests
     {
-        private readonly Image _image;
+        private readonly string _imageId;
+        private readonly string _tagName;
 
         private readonly Mock<IDatabaseAdapter> _databaseAdapter;
-
-        public LoadImageWorkflowTests()
+        
+        public RemoveTagWorkflowTests()
         {
-            _image = new Image
-            {
-                ImageId = "123"
-            };
+            _imageId = "123";
+            _tagName = "taggg";
 
             _databaseAdapter = new Mock<IDatabaseAdapter>();
-            _databaseAdapter.Setup(x => x.GetImage(_image.ImageId)).ReturnsAsync(_image);
+            _databaseAdapter.Setup(x => x.RemoveTag(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.CompletedTask);
         }
 
         [Fact]
-        public async Task SuccessfullyLoadsImage()
+        public async Task SuccessfullyRemovesImage()
         {
             // arrange
-            var workflow = new LoadImageWorkflow(_databaseAdapter.Object);
-            var parameters = new ImageIdParameters(_image.ImageId);
+            var workflow = new RemoveTagWorkflow(_databaseAdapter.Object);
+            var parameters = new ImageIdTagParameters(_imageId, _tagName);
 
             // act
             var result = await workflow.Run(parameters);
 
             // assert
             Assert.Equal(ResultState.Success, result.State);
-            _databaseAdapter.Verify(x => x.GetImage(_image.ImageId), Times.Once());
+            _databaseAdapter.Verify(x => x.RemoveTag(_imageId, _tagName), Times.Once());
         }
 
         [Fact]
-        public async Task ImageFailsToBeLoaded()
+        public async Task TageFailsToBeRemoved()
         {
             // arrange
             var databaseAdapter = new Mock<IDatabaseAdapter>();
-            databaseAdapter.Setup(x => x.GetImage(It.IsAny<string>())).ThrowsAsync(new WorkflowTestException());
+            databaseAdapter.Setup(x => x.RemoveTag(It.IsAny<string>(), It.IsAny<string>())).ThrowsAsync(new WorkflowTestException());
 
-            var workflow = new LoadImageWorkflow(databaseAdapter.Object);
-            var parameters = new ImageIdParameters(_image.ImageId);
+            var workflow = new RemoveTagWorkflow(databaseAdapter.Object);
+            var parameters = new ImageIdTagParameters(_imageId, _tagName);
 
             // act
             var result = await workflow.Run(parameters);
