@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using ImageBirb.Core.Common;
+﻿using ImageBirb.Core.Common;
 using ImageBirb.Core.Ports.Secondary;
 using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
+using System.Threading.Tasks;
 
 namespace ImageBirb.Core.Workflows
 {
@@ -20,19 +19,10 @@ namespace ImageBirb.Core.Workflows
 
         protected override async Task<IsBitmapImageResult> RunImpl(FilenameParameters p)
         {
-            var validFormats = new[]
-            {
-                ImageFormat.Jpeg,
-                ImageFormat.Png,
-                ImageFormat.Bmp
-            };
-
             var imageData = await _fileSystemAdapter.ReadBinaryFile(p.Filename);
             var imageFormat = await _imagingAdapter.GetImageFormat(imageData);
-
-            var isValidFormat = validFormats.Contains(imageFormat);
-
-            return new IsBitmapImageResult(ResultState.Success, isValidFormat);
+            
+            return new IsBitmapImageResult(ResultState.Success, imageFormat != ImageFormat.None);
         }
     }
 }
