@@ -2,12 +2,12 @@
 using System.Threading.Tasks;
 using ImageBirb.Core.Common;
 
-namespace ImageBirb.Core.Ports.Secondary.DatabaseAdapter
+namespace ImageBirb.Core.Ports.Secondary
 {
     /// <summary>
     /// Database module that handles tags.
     /// </summary>
-    public interface ITagManagement
+    public interface ITagManagementAdapter
     {
         /// <summary>
         /// Add a tag to an image.

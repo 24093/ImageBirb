@@ -1,20 +1,16 @@
-using ImageBirb.Core.Ports.Secondary.DatabaseAdapter;
 using ImageBirb.Core.Workflows;
 using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
 using Moq;
 using System.Threading.Tasks;
+using ImageBirb.Core.Ports.Secondary;
 using Xunit;
 
 namespace ImageBirbCoreUnitTests.WorkflowTests
 {
     public class AddTagWorkflowTests
     {
-        private readonly DatabaseAdapterMock _databaseAdapterMock;
-
-        private Mock<IDatabaseAdapter> _databaseAdapter => _databaseAdapterMock.DatabaseAdapter;
-
-        private Mock<ITagManagement> _tagManagement => _databaseAdapterMock.TagManagement;
+        private readonly Mock<ITagManagementAdapter> _tagManagementAdapter;
 
         private readonly string _imageId;
 
@@ -22,7 +18,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
         
         public AddTagWorkflowTests()
         {
-            _databaseAdapterMock = new DatabaseAdapterMock();
+            _tagManagementAdapter = new Mock<ITagManagementAdapter>();
 
             _imageId = "123";
             _tagName = "tag333";
@@ -32,7 +28,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
         public async Task SuccessfullyAddsTag()
         {
             // arrange
-            var workflow = new AddTagWorkflow(_databaseAdapter.Object);
+            var workflow = new AddTagWorkflow(_tagManagementAdapter.Object);
             var parameters = new ImageIdTagParameters(_imageId, _tagName);
 
             // act
@@ -40,14 +36,14 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
 
             // assert
             Assert.Equal(ResultState.Success, result.State);
-            _tagManagement.Verify(x => x.AddTag(_imageId, _tagName), Times.Once());
+            _tagManagementAdapter.Verify(x => x.AddTag(_imageId, _tagName), Times.Once());
         }
 
         [Fact]
         public async Task InvalidTagName()
         {
             // arrange
-            var workflow = new AddTagWorkflow(_databaseAdapter.Object);
+            var workflow = new AddTagWorkflow(_tagManagementAdapter.Object);
             var parameters = new ImageIdTagParameters(_imageId, null);
 
             // act
@@ -56,7 +52,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             // assert
             Assert.Equal(ResultState.Error, result.State);
             Assert.Equal(ErrorCode.InvalidParameter, result.ErrorCode);
-            _tagManagement.Verify(x => x.AddTag(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _tagManagementAdapter.Verify(x => x.AddTag(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
 
@@ -64,7 +60,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
         public async Task InvalidImageId()
         {
             // arrange
-            var workflow = new AddTagWorkflow(_databaseAdapter.Object);
+            var workflow = new AddTagWorkflow(_tagManagementAdapter.Object);
             var parameters = new ImageIdTagParameters(null, _tagName);
 
             // act
@@ -73,17 +69,17 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             // assert
             Assert.Equal(ResultState.Error, result.State);
             Assert.Equal(ErrorCode.InvalidParameter, result.ErrorCode);
-            _tagManagement.Verify(x => x.AddTag(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _tagManagementAdapter.Verify(x => x.AddTag(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
         public async Task TagFailsToBeAdded()
         {
             // arrange
-            var databaseAdapterMock = new DatabaseAdapterMock();
-            databaseAdapterMock.TagManagement.Setup(x => x.AddTag(It.IsAny<string>(), It.IsAny<string>())).ThrowsAsync(new WorkflowTestException());
+            var tagManagementAdapter = new Mock<ITagManagementAdapter>();
+            tagManagementAdapter.Setup(x => x.AddTag(It.IsAny<string>(), It.IsAny<string>())).ThrowsAsync(new WorkflowTestException());
 
-            var workflow = new AddTagWorkflow(databaseAdapterMock.DatabaseAdapter.Object);
+            var workflow = new AddTagWorkflow(tagManagementAdapter.Object);
             var parameters = new ImageIdTagParameters(_imageId, _tagName);
 
             // act

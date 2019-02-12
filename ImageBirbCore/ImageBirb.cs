@@ -10,15 +10,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using ImageBirb.Core.Adapters.Secondary.LiteDbAdapter;
-using ImageBirb.Core.Ports.Secondary.DatabaseAdapter;
 
 [assembly: InternalsVisibleTo("ImageBirbCoreUnitTests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 namespace ImageBirb.Core
 {
     /// <summary>
-    /// Construct and wire the application elements.
+    /// Construction root: Construct and wire the application elements.
     /// </summary>
     public class ImageBirb
     {
@@ -65,15 +63,36 @@ namespace ImageBirb.Core
 
         private void RegisterSecondaryAdapters(ContainerBuilder builder)
         {
-            builder.RegisterType<DefaultFileSystemAdapter>().As<IFileSystemAdapter>();
-            builder.RegisterType<ImageSharpAdapter>().As<IImagingAdapter>();
-            builder.RegisterType<LiteDbAdapter>().As<IDatabaseAdapter>().SingleInstance()
+            // Register default file system adapter.
+            builder.RegisterType<DefaultFileSystemAdapter>()
+                .As<IFileSystemAdapter>();
+
+            // Register ImageSharp imaging adapter.
+            builder.RegisterType<ImageSharpAdapter>()
+                .As<IImagingAdapter>();
+
+            // Register LiteDB database adapter as IDatabaseAdaper and as LiteDbAdapter.
+            builder.RegisterType<LiteDbAdapter>()
+                .SingleInstance()
+                .As<IDatabaseAdapter>()
+                .AsSelf()
                 .WithParameter("databaseFilename", _coreSettings.DatabaseFilename);
+
+            // Register LiteDB image management adapter.
+            builder.RegisterType<LiteDbImageManagementAdapter>()
+                .As<IImageManagementAdapter>();
+
+            // Register LiteDB tag management adapter.
+            builder.RegisterType<LiteDbTagManagementAdapter>()
+                .As<ITagManagementAdapter>();
         }
 
         private void RegisterPrimaryAdapters(ContainerBuilder builder)
         {
-            builder.RegisterType<WorkflowAdapter>().As<IWorkflowAdapter>().SingleInstance();
+            // Register the workflow facade.
+            builder.RegisterType<WorkflowAdapter>()
+                .As<IWorkflowAdapter>()
+                .SingleInstance();
         }
 
         private void RegisterWorkflows(ContainerBuilder builder)

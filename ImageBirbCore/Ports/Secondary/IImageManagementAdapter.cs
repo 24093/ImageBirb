@@ -2,12 +2,12 @@
 using System.Threading.Tasks;
 using ImageBirb.Core.Common;
 
-namespace ImageBirb.Core.Ports.Secondary.DatabaseAdapter
+namespace ImageBirb.Core.Ports.Secondary
 {
     /// <summary>
     /// Database module that handles images.
     /// </summary>
-    public interface IImageManagement
+    public interface IImageManagementAdapter
     {
         /// <summary>
         /// Creates an image id for a new image.

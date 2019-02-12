@@ -1,19 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using ImageBirb.Core.Common;
+using ImageBirb.Core.Ports.Secondary;
+using LiteDB;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ImageBirb.Core.Common;
-using ImageBirb.Core.Ports.Secondary.DatabaseAdapter;
-using LiteDB;
 
-namespace ImageBirb.Core.Adapters.Secondary.LiteDbAdapter
+namespace ImageBirb.Core.Adapters.Secondary
 {
-    internal class LiteDbTagManagement : ITagManagement
+    internal class LiteDbTagManagementAdapter : ITagManagementAdapter
     {
         private readonly LiteCollection<Image> _imageCollection;
 
-        public LiteDbTagManagement(LiteDatabase liteDatabase)
+        public LiteDbTagManagementAdapter(LiteDbAdapter liteDbAdapter)
         {
-            _imageCollection = liteDatabase.GetCollection<Image>();
+            _imageCollection = liteDbAdapter.ImageCollection;
         }
 
         public async Task AddTag(string imageId, string tagName)
@@ -50,6 +50,8 @@ namespace ImageBirb.Core.Adapters.Secondary.LiteDbAdapter
         {
             return await Task.Run(() =>
             {
+                // Fancy typed LINQ statement, that selects all tags
+                // from all images and counts and sorts them.
                 return _imageCollection.FindAll()
                     .SelectMany(x => x.Tags)
                     .GroupBy(x => x)

@@ -1,5 +1,5 @@
 using ImageBirb.Core.Common;
-using ImageBirb.Core.Ports.Secondary.DatabaseAdapter;
+using ImageBirb.Core.Ports.Secondary;
 using ImageBirb.Core.Workflows;
 using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
@@ -13,11 +13,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
     {
         private readonly Image _image;
 
-        private readonly DatabaseAdapterMock _databaseAdapterMock;
-
-        private Mock<IDatabaseAdapter> _databaseAdapter => _databaseAdapterMock.DatabaseAdapter;
-
-        private Mock<IImageManagement> _imageManagement => _databaseAdapterMock.ImageManagement;
+        private readonly Mock<IImageManagementAdapter> _imageManagementAdapter;
 
         public LoadImageWorkflowTests()
         {
@@ -26,15 +22,15 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
                 ImageId = "123"
             };
 
-            _databaseAdapterMock = new DatabaseAdapterMock();
-            _imageManagement.Setup(x => x.GetImage(_image.ImageId)).ReturnsAsync(_image);
+            _imageManagementAdapter = new Mock<IImageManagementAdapter>();
+            _imageManagementAdapter.Setup(x => x.GetImage(_image.ImageId)).ReturnsAsync(_image);
         }
 
         [Fact]
         public async Task SuccessfullyLoadsImage()
         {
             // arrange
-            var workflow = new LoadImageWorkflow(_databaseAdapter.Object);
+            var workflow = new LoadImageWorkflow(_imageManagementAdapter.Object);
             var parameters = new ImageIdParameters(_image.ImageId);
 
             // act
@@ -42,17 +38,17 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
 
             // assert
             Assert.Equal(ResultState.Success, result.State);
-            _imageManagement.Verify(x => x.GetImage(_image.ImageId), Times.Once());
+            _imageManagementAdapter.Verify(x => x.GetImage(_image.ImageId), Times.Once());
         }
 
         [Fact]
         public async Task ImageFailsToBeLoaded()
         {
             // arrange
-            var databaseAdapterMock = new DatabaseAdapterMock();
-            databaseAdapterMock.ImageManagement.Setup(x => x.GetImage(It.IsAny<string>())).ThrowsAsync(new WorkflowTestException());
+            var imageManagementAdapter = new Mock<IImageManagementAdapter>();
+            imageManagementAdapter.Setup(x => x.GetImage(It.IsAny<string>())).ThrowsAsync(new WorkflowTestException());
 
-            var workflow = new LoadImageWorkflow(databaseAdapterMock.DatabaseAdapter.Object);
+            var workflow = new LoadImageWorkflow(imageManagementAdapter.Object);
             var parameters = new ImageIdParameters(_image.ImageId);
 
             // act

@@ -1,18 +1,17 @@
-﻿using ImageBirb.Core.Ports.Secondary;
-using ImageBirb.Core.Workflows.Parameters;
+﻿using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
 using System.Threading.Tasks;
-using ImageBirb.Core.Ports.Secondary.DatabaseAdapter;
+using ImageBirb.Core.Ports.Secondary;
 
 namespace ImageBirb.Core.Workflows
 {
     internal class AddTagWorkflow : Workflow<ImageIdTagParameters, WorkflowResult>
     {
-        private readonly IDatabaseAdapter _databaseAdapter;
+        private readonly ITagManagementAdapter _tagManagementAdapter;
 
-        public AddTagWorkflow(IDatabaseAdapter databaseAdapter)
+        public AddTagWorkflow(ITagManagementAdapter tagManagementAdapter)
         {
-            _databaseAdapter = databaseAdapter;
+            _tagManagementAdapter = tagManagementAdapter;
         }
 
         protected override async Task<WorkflowResult> RunImpl(ImageIdTagParameters p)
@@ -27,7 +26,7 @@ namespace ImageBirb.Core.Workflows
                 return WorkflowResult.CreateInvalidParameterResult(nameof(p.TagName));
             }
 
-            await _databaseAdapter.TagManagement.AddTag(p.ImageId, p.TagName);
+            await _tagManagementAdapter.AddTag(p.ImageId, p.TagName);
             return new WorkflowResult(ResultState.Success);
         }
     }

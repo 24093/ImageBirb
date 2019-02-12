@@ -4,10 +4,8 @@ using ImageBirb.Core.Workflows;
 using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
 using Moq;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ImageBirb.Core.Ports.Secondary.DatabaseAdapter;
 using Xunit;
 
 namespace ImageBirbCoreUnitTests.WorkflowTests
@@ -16,11 +14,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
     {
         private readonly IList<Image> _thumbnails;
 
-        private readonly DatabaseAdapterMock _databaseAdapterMock;
-
-        private Mock<IDatabaseAdapter> _databaseAdapter => _databaseAdapterMock.DatabaseAdapter;
-
-        private Mock<IImageManagement> _imageManagement => _databaseAdapterMock.ImageManagement;
+        private readonly Mock<IImageManagementAdapter> _imageManagementAdapter;
 
         public LoadThumbnailsWorkflowTests()
         {
@@ -31,15 +25,15 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
                 new Image {ImageId = "3", ThumbnailData = new byte[] {5, 6}, Tags = new List<string> {"b", "c"}}
             };
 
-            _databaseAdapterMock = new DatabaseAdapterMock();
-            _imageManagement.Setup(x => x.GetThumbnails(It.IsAny<IList<string>>())).ReturnsAsync(_thumbnails);
+            _imageManagementAdapter = new Mock<IImageManagementAdapter>();
+            _imageManagementAdapter.Setup(x => x.GetThumbnails(It.IsAny<IList<string>>())).ReturnsAsync(_thumbnails);
         }
 
         [Fact]
         public async Task SuccessfullyLoadsAllThumbnailsWithNullParameter()
         {
             // arrange
-            var workflow = new LoadThumbnailsWorkflow(_databaseAdapter.Object);
+            var workflow = new LoadThumbnailsWorkflow(_imageManagementAdapter.Object);
             var parameters = new TagNamesParameters(null);
 
             // act
@@ -48,14 +42,14 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             // assert
             Assert.Equal(ResultState.Success, result.State);
             Assert.Equal(3, result.Thumbnails.Count);
-            _imageManagement.Verify(x => x.GetThumbnails(null), Times.Once());
+            _imageManagementAdapter.Verify(x => x.GetThumbnails(null), Times.Once());
         }
 
         [Fact]
         public async Task SuccessfullyLoadsAllThumbnailsWithEmptyParameter()
         {
             // arrange
-            var workflow = new LoadThumbnailsWorkflow(_databaseAdapter.Object);
+            var workflow = new LoadThumbnailsWorkflow(_imageManagementAdapter.Object);
             var parameters = new TagNamesParameters(new List<string>());
 
             // act
@@ -64,17 +58,17 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             // assert
             Assert.Equal(ResultState.Success, result.State);
             Assert.Equal(3, result.Thumbnails.Count);
-            _imageManagement.Verify(x => x.GetThumbnails(It.IsAny<IList<string>>()), Times.Once());
+            _imageManagementAdapter.Verify(x => x.GetThumbnails(It.IsAny<IList<string>>()), Times.Once());
         }
 
         [Fact]
         public async Task SuccessfullyLoadsAllThumbnailsWithFilter()
         {
             // arrange
-            var databaseAdapterMock = new DatabaseAdapterMock();
-            databaseAdapterMock.ImageManagement.Setup(x => x.GetThumbnails(null)).ThrowsAsync(new WorkflowTestException());
+            var imageManagementAdapter = new Mock<IImageManagementAdapter>();
+            imageManagementAdapter.Setup(x => x.GetThumbnails(null)).ThrowsAsync(new WorkflowTestException());
 
-            var workflow = new LoadThumbnailsWorkflow(databaseAdapterMock.DatabaseAdapter.Object);
+            var workflow = new LoadThumbnailsWorkflow(imageManagementAdapter.Object);
             var parameters = new TagNamesParameters(new List<string> {"a", "b"});
 
             // act
@@ -88,10 +82,10 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
         public async Task ThumbnailsFailToLoad()
         {
             // arrange
-            var databaseAdapterMock = new DatabaseAdapterMock();
-            databaseAdapterMock.ImageManagement.Setup(x => x.GetThumbnails(It.IsAny<IList<string>>())).ThrowsAsync(new WorkflowTestException());
+            var imageManagementAdapter = new Mock<IImageManagementAdapter>();
+            imageManagementAdapter.Setup(x => x.GetThumbnails(It.IsAny<IList<string>>())).ThrowsAsync(new WorkflowTestException());
 
-            var workflow = new LoadThumbnailsWorkflow(databaseAdapterMock.DatabaseAdapter.Object);
+            var workflow = new LoadThumbnailsWorkflow(imageManagementAdapter.Object);
             var parameters = new TagNamesParameters(new List<string>());
 
             // act

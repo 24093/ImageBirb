@@ -1,23 +1,22 @@
-﻿using System.Threading.Tasks;
-using ImageBirb.Core.Ports.Secondary;
-using ImageBirb.Core.Ports.Secondary.DatabaseAdapter;
-using ImageBirb.Core.Workflows.Parameters;
+﻿using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
+using System.Threading.Tasks;
+using ImageBirb.Core.Ports.Secondary;
 
 namespace ImageBirb.Core.Workflows
 {
     internal class RemoveTagWorkflow : Workflow<ImageIdTagParameters, WorkflowResult>
     {
-        private readonly IDatabaseAdapter _databaseAdapter;
+        private readonly ITagManagementAdapter _tagManagementAdapter;
 
-        public RemoveTagWorkflow(IDatabaseAdapter databaseAdapter)
+        public RemoveTagWorkflow(ITagManagementAdapter tagManagementAdapter)
         {
-            _databaseAdapter = databaseAdapter;
+            _tagManagementAdapter = tagManagementAdapter;
         }
 
         protected override async Task<WorkflowResult> RunImpl(ImageIdTagParameters p)
         {
-            await _databaseAdapter.TagManagement.RemoveTag(p.ImageId, p.TagName);
+            await _tagManagementAdapter.RemoveTag(p.ImageId, p.TagName);
             return new WorkflowResult(ResultState.Success);
         }
     }

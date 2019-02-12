@@ -1,28 +1,28 @@
-﻿using System;
+﻿using ImageBirb.Core.Common;
+using ImageBirb.Core.Ports.Secondary;
+using LiteDB;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using ImageBirb.Core.Common;
-using ImageBirb.Core.Ports.Secondary.DatabaseAdapter;
-using LiteDB;
 
-namespace ImageBirb.Core.Adapters.Secondary.LiteDbAdapter
+namespace ImageBirb.Core.Adapters.Secondary
 {
-    internal class LiteDbImageManagement : IImageManagement
+    internal class LiteDbImageManagementAdapter : IImageManagementAdapter
     {
         private const string FilePrefix = "$/images/";
 
         private const string ThumbnailPostfix = "_thumb";
 
-        private readonly LiteDatabase _db;
+        private readonly LiteStorage _fileStorage;
 
         private readonly LiteCollection<Image> _imageCollection;
 
-        public LiteDbImageManagement(LiteDatabase liteDatabase)
+        public LiteDbImageManagementAdapter(LiteDbAdapter liteDbAdapter)
         {
-            _db = liteDatabase;
-            _imageCollection = _db.GetCollection<Image>();
+            _fileStorage = liteDbAdapter.FileStorage;
+            _imageCollection = liteDbAdapter.ImageCollection;
         }
 
         public async Task<string> CreateImageId()
@@ -38,12 +38,12 @@ namespace ImageBirb.Core.Adapters.Secondary.LiteDbAdapter
 
                 using (var ms = new MemoryStream(image.ImageData))
                 {
-                    _db.FileStorage.Upload(fileId, fileId, ms);
+                    _fileStorage.Upload(fileId, fileId, ms);
                 }
 
                 using (var ms = new MemoryStream(image.ThumbnailData))
                 {
-                    _db.FileStorage.Upload(fileId + ThumbnailPostfix, fileId + ThumbnailPostfix, ms);
+                    _fileStorage.Upload(fileId + ThumbnailPostfix, fileId + ThumbnailPostfix, ms);
                 }
 
                 _imageCollection.Insert(image);
@@ -57,8 +57,8 @@ namespace ImageBirb.Core.Adapters.Secondary.LiteDbAdapter
                 _imageCollection.Delete(doc => doc.ImageId == imageId);
 
                 var fileId = FilePrefix + imageId;
-                _db.FileStorage.Delete(fileId);
-                _db.FileStorage.Delete(fileId + ThumbnailPostfix);
+                _fileStorage.Delete(fileId);
+                _fileStorage.Delete(fileId + ThumbnailPostfix);
             });
         }
 
@@ -85,7 +85,7 @@ namespace ImageBirb.Core.Adapters.Secondary.LiteDbAdapter
                 {
                     using (var ms = new MemoryStream())
                     {
-                        _db.FileStorage.Download(FilePrefix + image.ImageId + ThumbnailPostfix, ms);
+                        _fileStorage.Download(FilePrefix + image.ImageId + ThumbnailPostfix, ms);
                         image.ThumbnailData = ms.ToArray();
                     }
                 }
@@ -104,13 +104,13 @@ namespace ImageBirb.Core.Adapters.Secondary.LiteDbAdapter
                 {
                     using (var ms = new MemoryStream())
                     {
-                        _db.FileStorage.Download(FilePrefix + image.ImageId + ThumbnailPostfix, ms);
+                        _fileStorage.Download(FilePrefix + image.ImageId + ThumbnailPostfix, ms);
                         image.ThumbnailData = ms.ToArray();
                     }
 
                     using (var ms = new MemoryStream())
                     {
-                        _db.FileStorage.Download(FilePrefix + imageId, ms);
+                        _fileStorage.Download(FilePrefix + imageId, ms);
                         image.ImageData = ms.ToArray();
                     }
                 }

@@ -1,50 +1,46 @@
 using ImageBirb.Core.Common;
-using ImageBirb.Core.Ports.Secondary.DatabaseAdapter;
 using ImageBirb.Core.Workflows;
 using ImageBirb.Core.Workflows.Results;
 using Moq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ImageBirb.Core.Ports.Secondary;
 using Xunit;
 
 namespace ImageBirbCoreUnitTests.WorkflowTests
 {
     public class LoadTagsWorkflowTests
     {
-        private readonly DatabaseAdapterMock _databaseAdapterMock;
-
-        private Mock<IDatabaseAdapter> _databaseAdapter => _databaseAdapterMock.DatabaseAdapter;
-
-        private Mock<ITagManagement> _tagManagement => _databaseAdapterMock.TagManagement;
+        private readonly Mock<ITagManagementAdapter> _tagManagementAdapter;
 
         public LoadTagsWorkflowTests()
         {
-            _databaseAdapterMock = new DatabaseAdapterMock();
-            _tagManagement.Setup(x => x.GetTags()).ReturnsAsync(new List<Tag>());
+            _tagManagementAdapter = new Mock<ITagManagementAdapter>();
+            _tagManagementAdapter.Setup(x => x.GetTags()).ReturnsAsync(new List<Tag>());
         }
 
         [Fact]
         public async Task SuccessfullyLoadsTags()
         {
             // arrange
-            var workflow = new LoadTagsWorkflow(_databaseAdapter.Object);
+            var workflow = new LoadTagsWorkflow(_tagManagementAdapter.Object);
 
             // act
             var result = await workflow.Run();
 
             // assert
             Assert.Equal(ResultState.Success, result.State);
-            _tagManagement.Verify(x => x.GetTags(), Times.Once());
+            _tagManagementAdapter.Verify(x => x.GetTags(), Times.Once());
         }
 
         [Fact]
         public async Task TagsFailToBeLoaded()
         {
             // arrange
-            var databaseAdapterMock = new DatabaseAdapterMock();
-            databaseAdapterMock.TagManagement.Setup(x => x.GetTags()).ThrowsAsync(new WorkflowTestException());
+            var tagManagementAdapter = new Mock<ITagManagementAdapter>();
+            tagManagementAdapter.Setup(x => x.GetTags()).ThrowsAsync(new WorkflowTestException());
 
-            var workflow = new LoadTagsWorkflow(databaseAdapterMock.DatabaseAdapter.Object);
+            var workflow = new LoadTagsWorkflow(tagManagementAdapter.Object);
 
             // act
             var result = await workflow.Run();

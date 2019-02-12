@@ -3,7 +3,6 @@ using ImageBirb.Core.Workflows;
 using ImageBirb.Core.Workflows.Results;
 using Moq;
 using System.Threading.Tasks;
-using ImageBirb.Core.Ports.Secondary.DatabaseAdapter;
 using Xunit;
 
 namespace ImageBirbCoreUnitTests.WorkflowTests
@@ -11,6 +10,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
     public class ReadConnectionStringWorkflowTests
     {
         private readonly string _connectionString;
+
         private readonly Mock<IDatabaseAdapter> _databaseAdapter;
 
         public ReadConnectionStringWorkflowTests()

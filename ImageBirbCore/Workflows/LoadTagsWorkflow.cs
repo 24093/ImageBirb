@@ -1,25 +1,23 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ImageBirb.Core.Common;
-using ImageBirb.Core.Ports.Secondary;
-using ImageBirb.Core.Ports.Secondary.DatabaseAdapter;
+﻿using ImageBirb.Core.Common;
 using ImageBirb.Core.Workflows.Results;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using ImageBirb.Core.Ports.Secondary;
 
 namespace ImageBirb.Core.Workflows
 {
     internal class LoadTagsWorkflow : Workflow<TagsResult>
     {
-        private readonly IDatabaseAdapter _databaseAdapter;
+        private readonly ITagManagementAdapter _tagManagementAdapter;
 
-        public LoadTagsWorkflow(IDatabaseAdapter databaseAdapter)
+        public LoadTagsWorkflow(ITagManagementAdapter tagManagementAdapter)
         {
-            _databaseAdapter = databaseAdapter;
+            _tagManagementAdapter = tagManagementAdapter;
         }
 
         protected override async Task<TagsResult> RunImpl()
         {
-            var tags = new List<Tag>(await _databaseAdapter.TagManagement.GetTags());
+            var tags = new List<Tag>(await _tagManagementAdapter.GetTags());
 
             // Sort tags by count, highest value first.
             tags.Sort((x, y) => -1 * x.Count.CompareTo(y.Count));
