@@ -1,4 +1,4 @@
-using ImageBirb.Core.Ports.Secondary;
+using ImageBirb.Core.Ports.Secondary.DatabaseAdapter;
 using ImageBirb.Core.Workflows;
 using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
@@ -10,7 +10,11 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
 {
     public class AddTagWorkflowTests
     {
-        private readonly Mock<IDatabaseAdapter> _databaseAdapter;
+        private readonly DatabaseAdapterMock _databaseAdapterMock;
+
+        private Mock<IDatabaseAdapter> _databaseAdapter => _databaseAdapterMock.DatabaseAdapter;
+
+        private Mock<ITagManagement> _tagManagement => _databaseAdapterMock.TagManagement;
 
         private readonly string _imageId;
 
@@ -18,7 +22,8 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
         
         public AddTagWorkflowTests()
         {
-            _databaseAdapter = new Mock<IDatabaseAdapter>();
+            _databaseAdapterMock = new DatabaseAdapterMock();
+
             _imageId = "123";
             _tagName = "tag333";
         }
@@ -35,7 +40,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
 
             // assert
             Assert.Equal(ResultState.Success, result.State);
-            _databaseAdapter.Verify(x => x.AddTag(_imageId, _tagName), Times.Once());
+            _tagManagement.Verify(x => x.AddTag(_imageId, _tagName), Times.Once());
         }
 
         [Fact]
@@ -51,7 +56,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             // assert
             Assert.Equal(ResultState.Error, result.State);
             Assert.Equal(ErrorCode.InvalidParameter, result.ErrorCode);
-            _databaseAdapter.Verify(x => x.AddTag(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _tagManagement.Verify(x => x.AddTag(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
 
@@ -68,17 +73,17 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             // assert
             Assert.Equal(ResultState.Error, result.State);
             Assert.Equal(ErrorCode.InvalidParameter, result.ErrorCode);
-            _databaseAdapter.Verify(x => x.AddTag(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _tagManagement.Verify(x => x.AddTag(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
         public async Task TagFailsToBeAdded()
         {
             // arrange
-            var databaseAdapter = new Mock<IDatabaseAdapter>();
-            databaseAdapter.Setup(x => x.AddTag(It.IsAny<string>(), It.IsAny<string>())).ThrowsAsync(new WorkflowTestException());
+            var databaseAdapterMock = new DatabaseAdapterMock();
+            databaseAdapterMock.TagManagement.Setup(x => x.AddTag(It.IsAny<string>(), It.IsAny<string>())).ThrowsAsync(new WorkflowTestException());
 
-            var workflow = new AddTagWorkflow(databaseAdapter.Object);
+            var workflow = new AddTagWorkflow(databaseAdapterMock.DatabaseAdapter.Object);
             var parameters = new ImageIdTagParameters(_imageId, _tagName);
 
             // act
@@ -88,7 +93,6 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             Assert.Equal(ResultState.Error, result.State);
             Assert.Equal(ErrorCode.WorkflowInternalError, result.ErrorCode);
             Assert.IsType<WorkflowTestException>(result.Exception);
-            _databaseAdapter.Verify(x => x.AddTag(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
     }
 }

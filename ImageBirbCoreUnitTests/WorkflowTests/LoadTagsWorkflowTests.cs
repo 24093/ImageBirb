@@ -1,5 +1,5 @@
 using ImageBirb.Core.Common;
-using ImageBirb.Core.Ports.Secondary;
+using ImageBirb.Core.Ports.Secondary.DatabaseAdapter;
 using ImageBirb.Core.Workflows;
 using ImageBirb.Core.Workflows.Results;
 using Moq;
@@ -11,12 +11,16 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
 {
     public class LoadTagsWorkflowTests
     {
-        private readonly Mock<IDatabaseAdapter> _databaseAdapter;
+        private readonly DatabaseAdapterMock _databaseAdapterMock;
+
+        private Mock<IDatabaseAdapter> _databaseAdapter => _databaseAdapterMock.DatabaseAdapter;
+
+        private Mock<ITagManagement> _tagManagement => _databaseAdapterMock.TagManagement;
 
         public LoadTagsWorkflowTests()
         {
-            _databaseAdapter = new Mock<IDatabaseAdapter>();
-            _databaseAdapter.Setup(x => x.GetTags()).ReturnsAsync(new List<Tag>());
+            _databaseAdapterMock = new DatabaseAdapterMock();
+            _tagManagement.Setup(x => x.GetTags()).ReturnsAsync(new List<Tag>());
         }
 
         [Fact]
@@ -30,17 +34,17 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
 
             // assert
             Assert.Equal(ResultState.Success, result.State);
-            _databaseAdapter.Verify(x => x.GetTags(), Times.Once());
+            _tagManagement.Verify(x => x.GetTags(), Times.Once());
         }
 
         [Fact]
         public async Task TagsFailToBeLoaded()
         {
             // arrange
-            var databaseAdapter = new Mock<IDatabaseAdapter>();
-            databaseAdapter.Setup(x => x.GetTags()).ThrowsAsync(new WorkflowTestException());
+            var databaseAdapterMock = new DatabaseAdapterMock();
+            databaseAdapterMock.TagManagement.Setup(x => x.GetTags()).ThrowsAsync(new WorkflowTestException());
 
-            var workflow = new LoadTagsWorkflow(databaseAdapter.Object);
+            var workflow = new LoadTagsWorkflow(databaseAdapterMock.DatabaseAdapter.Object);
 
             // act
             var result = await workflow.Run();

@@ -3,6 +3,7 @@ using ImageBirb.Core.Ports.Secondary;
 using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
 using System.Threading.Tasks;
+using ImageBirb.Core.Ports.Secondary.DatabaseAdapter;
 
 namespace ImageBirb.Core.Workflows
 {
@@ -21,7 +22,7 @@ namespace ImageBirb.Core.Workflows
 
         protected override async Task<WorkflowResult> RunImpl(FilenameParameters p)
         {
-            var imageId = await _databaseAdapter.CreateImageId();
+            var imageId = await _databaseAdapter.ImageManagement.CreateImageId();
             var imageData = await _fileSystemAdapter.ReadBinaryFile(p.Filename);
             var thumbnailData = await _imagingAdapter.CreateThumbnail(imageData);
 
@@ -32,7 +33,7 @@ namespace ImageBirb.Core.Workflows
                 ThumbnailData = thumbnailData
             };
 
-            await _databaseAdapter.AddImage(image);
+            await _databaseAdapter.ImageManagement.AddImage(image);
 
             return new WorkflowResult(ResultState.Success);
         }

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ImageBirb.Core.Common;
 using ImageBirb.Core.Ports.Secondary;
+using ImageBirb.Core.Ports.Secondary.DatabaseAdapter;
 using ImageBirb.Core.Workflows.Results;
 
 namespace ImageBirb.Core.Workflows
@@ -18,7 +19,7 @@ namespace ImageBirb.Core.Workflows
 
         protected override async Task<TagsResult> RunImpl()
         {
-            var tags = new List<Tag>(await _databaseAdapter.GetTags());
+            var tags = new List<Tag>(await _databaseAdapter.TagManagement.GetTags());
 
             // Sort tags by count, highest value first.
             tags.Sort((x, y) => -1 * x.Count.CompareTo(y.Count));

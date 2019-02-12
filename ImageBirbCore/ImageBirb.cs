@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using ImageBirb.Core.Adapters.Secondary.LiteDbAdapter;
+using ImageBirb.Core.Ports.Secondary.DatabaseAdapter;
 
 [assembly: InternalsVisibleTo("ImageBirbCoreUnitTests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]

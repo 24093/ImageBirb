@@ -5,6 +5,7 @@ using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
 using Moq;
 using System.Threading.Tasks;
+using ImageBirb.Core.Ports.Secondary.DatabaseAdapter;
 using Xunit;
 
 namespace ImageBirbCoreUnitTests.WorkflowTests
@@ -13,14 +14,18 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
     {
         private readonly string _imageId;
 
-        private readonly Mock<IDatabaseAdapter> _databaseAdapter;
+        private readonly DatabaseAdapterMock _databaseAdapterMock;
+
+        private Mock<IDatabaseAdapter> _databaseAdapter => _databaseAdapterMock.DatabaseAdapter;
+
+        private Mock<IImageManagement> _imageManagement => _databaseAdapterMock.ImageManagement;
         
         public RemoveImageWorkflowTests()
         {
             _imageId = "123";
 
-            _databaseAdapter = new Mock<IDatabaseAdapter>();
-            _databaseAdapter.Setup(x => x.RemoveImage(It.IsAny<string>())).Returns(Task.CompletedTask);
+            _databaseAdapterMock = new DatabaseAdapterMock();
+            _imageManagement.Setup(x => x.RemoveImage(It.IsAny<string>())).Returns(Task.CompletedTask);
         }
 
         [Fact]
@@ -35,17 +40,17 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
 
             // assert
             Assert.Equal(ResultState.Success, result.State);
-            _databaseAdapter.Verify(x => x.RemoveImage(_imageId), Times.Once());
+            _imageManagement.Verify(x => x.RemoveImage(_imageId), Times.Once());
         }
 
         [Fact]
         public async Task ImageFailsToBeRemoved()
         {
             // arrange
-            var databaseAdapter = new Mock<IDatabaseAdapter>();
-            databaseAdapter.Setup(x => x.RemoveImage(It.IsAny<string>())).ThrowsAsync(new WorkflowTestException());
+            var databaseAdapterMock = new DatabaseAdapterMock();
+            databaseAdapterMock.ImageManagement.Setup(x => x.RemoveImage(It.IsAny<string>())).ThrowsAsync(new WorkflowTestException());
 
-            var workflow = new RemoveImageWorkflow(databaseAdapter.Object);
+            var workflow = new RemoveImageWorkflow(databaseAdapterMock.DatabaseAdapter.Object);
             var parameters = new ImageIdParameters(_imageId);
 
             // act

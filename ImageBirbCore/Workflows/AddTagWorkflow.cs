@@ -2,6 +2,7 @@
 using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
 using System.Threading.Tasks;
+using ImageBirb.Core.Ports.Secondary.DatabaseAdapter;
 
 namespace ImageBirb.Core.Workflows
 {
@@ -26,7 +27,7 @@ namespace ImageBirb.Core.Workflows
                 return WorkflowResult.CreateInvalidParameterResult(nameof(p.TagName));
             }
 
-            await _databaseAdapter.AddTag(p.ImageId, p.TagName);
+            await _databaseAdapter.TagManagement.AddTag(p.ImageId, p.TagName);
             return new WorkflowResult(ResultState.Success);
         }
     }

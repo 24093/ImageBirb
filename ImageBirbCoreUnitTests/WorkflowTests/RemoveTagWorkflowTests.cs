@@ -4,6 +4,7 @@ using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
 using Moq;
 using System.Threading.Tasks;
+using ImageBirb.Core.Ports.Secondary.DatabaseAdapter;
 using Xunit;
 
 namespace ImageBirbCoreUnitTests.WorkflowTests
@@ -13,15 +14,19 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
         private readonly string _imageId;
         private readonly string _tagName;
 
-        private readonly Mock<IDatabaseAdapter> _databaseAdapter;
+        private readonly DatabaseAdapterMock _databaseAdapterMock;
+
+        private Mock<IDatabaseAdapter> _databaseAdapter => _databaseAdapterMock.DatabaseAdapter;
+
+        private Mock<ITagManagement> _tagManagement => _databaseAdapterMock.TagManagement;
         
         public RemoveTagWorkflowTests()
         {
             _imageId = "123";
             _tagName = "taggg";
 
-            _databaseAdapter = new Mock<IDatabaseAdapter>();
-            _databaseAdapter.Setup(x => x.RemoveTag(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.CompletedTask);
+            _databaseAdapterMock = new DatabaseAdapterMock();
+            _tagManagement.Setup(x => x.RemoveTag(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.CompletedTask);
         }
 
         [Fact]
@@ -36,17 +41,17 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
 
             // assert
             Assert.Equal(ResultState.Success, result.State);
-            _databaseAdapter.Verify(x => x.RemoveTag(_imageId, _tagName), Times.Once());
+            _tagManagement.Verify(x => x.RemoveTag(_imageId, _tagName), Times.Once());
         }
 
         [Fact]
         public async Task TageFailsToBeRemoved()
         {
             // arrange
-            var databaseAdapter = new Mock<IDatabaseAdapter>();
-            databaseAdapter.Setup(x => x.RemoveTag(It.IsAny<string>(), It.IsAny<string>())).ThrowsAsync(new WorkflowTestException());
+            var databaseAdapterMock = new DatabaseAdapterMock();
+            databaseAdapterMock.TagManagement.Setup(x => x.RemoveTag(It.IsAny<string>(), It.IsAny<string>())).ThrowsAsync(new WorkflowTestException());
 
-            var workflow = new RemoveTagWorkflow(databaseAdapter.Object);
+            var workflow = new RemoveTagWorkflow(databaseAdapterMock.DatabaseAdapter.Object);
             var parameters = new ImageIdTagParameters(_imageId, _tagName);
 
             // act

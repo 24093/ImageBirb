@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using ImageBirb.Core.Ports.Secondary;
+using ImageBirb.Core.Ports.Secondary.DatabaseAdapter;
 using ImageBirb.Core.Workflows.Results;
 
 namespace ImageBirb.Core.Workflows

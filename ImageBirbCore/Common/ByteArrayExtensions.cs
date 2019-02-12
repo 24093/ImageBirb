@@ -1,4 +1,4 @@
-﻿namespace ImageBirb.Core.Extensions
+﻿namespace ImageBirb.Core.Common
 {
     internal static class ByteArrayExtensions
     {

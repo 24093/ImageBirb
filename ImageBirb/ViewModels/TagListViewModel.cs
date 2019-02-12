@@ -1,6 +1,5 @@
 using GalaSoft.MvvmLight.CommandWpf;
 using ImageBirb.Core.Common;
-using ImageBirb.Core.Extensions;
 using ImageBirb.Core.Ports.Primary;
 using System.Collections.ObjectModel;
 using System.Windows.Input;

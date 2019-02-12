@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using ImageBirb.Core.Ports.Secondary;
+using ImageBirb.Core.Ports.Secondary.DatabaseAdapter;
 using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
 
@@ -16,7 +17,7 @@ namespace ImageBirb.Core.Workflows
 
         protected override async Task<WorkflowResult> RunImpl(ImageIdParameters p)
         {
-            await _databaseAdapter.RemoveImage(p.ImageId);
+            await _databaseAdapter.ImageManagement.RemoveImage(p.ImageId);
             return new WorkflowResult(ResultState.Success);
         }
     }
