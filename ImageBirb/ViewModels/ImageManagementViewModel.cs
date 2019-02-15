@@ -64,8 +64,8 @@ namespace ImageBirb.ViewModels
 
         private async void ExecuteAddImageFromFileCommand()
         {
-            //var (dialogResult, directory) = _dialogViewModel.ShowSelectDirectoryDialog();
-            var (dialogResult, directory) = _dialogViewModel.ShowOpenImageFilesDialog();
+            var (dialogResult, directory) = _dialogViewModel.ShowSelectDirectoryDialog();
+            //var (dialogResult, directory) = _dialogViewModel.ShowOpenImageFilesDialog();
 
             if (dialogResult == CommonFileDialogResult.Ok)
             {

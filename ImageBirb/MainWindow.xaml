@@ -39,6 +39,7 @@
         <KeyBinding Key="T" Modifiers="Control" Command="{Binding FlyoutViewModel.ToggleTagListCommand}"/>
         <KeyBinding Key="T" Modifiers="Shift" Command="{Binding FlyoutViewModel.ToggleTagListCommand}"/>
         <KeyBinding Key="T" Modifiers="Alt" Command="{Binding FlyoutViewModel.ToggleTagListCommand}"/>
+        <KeyBinding Key="R" Command="{Binding ThumbnailListViewModel.RandomCommand}"/>
     </Window.InputBindings>
 
     <mah:MetroWindow.Flyouts>

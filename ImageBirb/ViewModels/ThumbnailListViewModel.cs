@@ -1,12 +1,13 @@
 using GalaSoft.MvvmLight.CommandWpf;
+using ImageBirb.Common;
 using ImageBirb.Core.Common;
 using ImageBirb.Core.Ports.Primary;
+using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ImageBirb.Common;
 
 namespace ImageBirb.ViewModels
 {
@@ -29,6 +30,8 @@ namespace ImageBirb.ViewModels
 
         public ICommand PreviousCommand { get; }
 
+        public ICommand RandomCommand { get; }
+
         public Image SelectedThumbnail
         {
             get => _selectedThumbnail;
@@ -48,9 +51,17 @@ namespace ImageBirb.ViewModels
 
             FilterThumbnailsByTagsCommand = new RelayCommand<IList>(ExecuteFilterThumbnailsByTagsCommand);
             UpdateThumbnailsCommand = new RelayCommand(ExecuteUpdateThumbnailsCommand);
-
             NextCommand = new RelayCommand(ExecuteNextCommand);
             PreviousCommand = new RelayCommand(ExecutePreviousCommand);
+            RandomCommand = new RelayCommand(ExecuteRandomCommand);
+        }
+
+        private void ExecuteRandomCommand()
+        {
+            var random = new Random();
+            var index = random.Next(0, Thumbnails.Count - 1);
+
+            SelectedThumbnail = Thumbnails[index];
         }
 
         private void ExecutePreviousCommand()

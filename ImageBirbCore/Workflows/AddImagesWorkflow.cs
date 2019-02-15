@@ -39,13 +39,31 @@ namespace ImageBirb.Core.Workflows
                 }
 
                 // Add all files.
-                AddImages(filenames);
+                // If the number of images is below a threshold, 
+                // go without parallel working to save the overhead.
+                if (filenames.Count > 10)
+                {
+                    AddImagesParallel(filenames);
+                }
+                else
+                {
+                    foreach (var filename in filenames)
+                    {
+                        await AddImage(filename);
+                    }
+                }
 
                 return new WorkflowResult(ResultState.Success);
             });
         }
 
-        private void AddImages(IList<string> filenames)
+        /// <summary>
+        /// Add images to the DB.
+        /// This is done in parallel to speed up adding of
+        /// many images.
+        /// </summary>
+        /// <param name="filenames">List of image file names.</param>
+        private void AddImagesParallel(IList<string> filenames)
         {
             var exceptions = new ConcurrentQueue<Exception>();
             var i = 0;
@@ -54,22 +72,8 @@ namespace ImageBirb.Core.Workflows
             {
                 try
                 {
-                    var imageId = await _imageManagementAdapter.CreateImageId();
-                    var imageData = await _fileSystemAdapter.ReadBinaryFile(filename);
-                    var thumbnailData = await _imagingAdapter.CreateThumbnail(imageData);
-
-                    var image = new Image
-                    {
-                        ImageId = imageId,
-                        ImageData = imageData,
-                        ThumbnailData = thumbnailData,
-                        Filename = filename
-                    };
-
-                    await _imageManagementAdapter.AddImage(image);
-
+                    await AddImage(filename);
                     RaiseProgressChanged(ProgressType.ImageAdded, ++i, filenames.Count);
-
                 }
                 catch (Exception ex)
                 {
@@ -81,6 +85,27 @@ namespace ImageBirb.Core.Workflows
             {
                 throw new AggregateException(exceptions);
             }
+        }
+
+        /// <summary>
+        /// Add a single image to the DB.
+        /// </summary>
+        /// <param name="filename">Filename of the image.</param>
+        private async Task AddImage(string filename)
+        {
+            var imageId = await _imageManagementAdapter.CreateImageId();
+            var imageData = await _fileSystemAdapter.ReadBinaryFile(filename);
+            var thumbnailData = await _imagingAdapter.CreateThumbnail(imageData);
+
+            var image = new Image
+            {
+                ImageId = imageId,
+                ImageData = imageData,
+                ThumbnailData = thumbnailData,
+                Filename = filename
+            };
+
+            await _imageManagementAdapter.AddImage(image);
         }
     }
 }
