@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace ImageBirb.Controls
 {
-    internal class ThumbnailsListView : ListView
+    internal class ThumbnailsListView : ListBox
     {
         public static readonly DependencyProperty SelectedImageViewModelProperty = DependencyProperty.Register(
             "SelectedImageViewModel", typeof(SelectedImageViewModel), typeof(ThumbnailsListView), new PropertyMetadata(default(SelectedImageViewModel)));
@@ -31,7 +31,7 @@ namespace ImageBirb.Controls
 
         private static void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var listView = (ListView) e.OriginalSource;
+            var listView = (ListBox) e.OriginalSource;
 
             if (listView != null && 
                 e.AddedItems.Count > 0 && 

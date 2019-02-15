@@ -7,21 +7,21 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ThumbnailsListView">
-                    <ListView Name="ThumbnailsListView"
+                    <ListBox Name="ThumbnailsListView"
                               HorizontalAlignment="Stretch" 
                               VerticalAlignment="Stretch"
                               ScrollViewer.VerticalScrollBarVisibility="Visible"
                               SelectedItem="{Binding ThumbnailListViewModel.SelectedThumbnail, RelativeSource={RelativeSource TemplatedParent}}"
                               ItemsSource="{Binding ThumbnailListViewModel.Thumbnails, RelativeSource={RelativeSource TemplatedParent}}">
-                        <ListView.ItemTemplate>
+                        <ListBox.ItemTemplate>
                             <DataTemplate DataType="{x:Type common:Image}">
                                 <Image Name="ThumbnailImage"
                                        Source="{Binding ThumbnailData}"
                                        Width="{Binding Source={x:Static common:Constants.ThumbnailWidth}}"
                                        Height="{Binding Source={x:Static common:Constants.ThumbnailHeight}}" />
                             </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
