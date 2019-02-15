@@ -17,6 +17,8 @@ namespace ImageBirb.Core.Common
         [BsonIgnore]
         public byte[] ThumbnailData { get; set; }
 
+        public string Filename { get; set; }
+
         public List<string> Tags { get; set; } = new List<string>();
 
         public bool Equals(Image image)
@@ -24,6 +26,7 @@ namespace ImageBirb.Core.Common
             return image.ImageId == this.ImageId &&
                    image.ImageData.UnsafeCompare(this.ImageData) &&
                    image.ThumbnailData.UnsafeCompare(this.ThumbnailData) &&
+                   image.Filename == this.Filename &&
                    image.Tags.SequenceEqual(this.Tags);
         }
     }

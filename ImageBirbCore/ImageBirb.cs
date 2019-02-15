@@ -47,7 +47,7 @@ namespace ImageBirb.Core
 
         private void ExposePrimaryAdapters()
         {
-            // Construct workflow collection.
+            // Construct workflow host.
             IList<IWorkflow> workflows = new List<IWorkflow>();
 
             foreach (var workflowType in _workflowTypes)
@@ -55,10 +55,10 @@ namespace ImageBirb.Core
                 workflows.Add((IWorkflow)_container.Resolve(workflowType));
             }
             
-            var workflowCollection = new WorkflowHost(workflows);
+            var workflowHost = new WorkflowHost(workflows);
 
             // Resolve workflow adapter.
-            WorkflowAdapter = _container.Resolve<IWorkflowAdapter>(new NamedParameter("workflows", workflowCollection));
+            WorkflowAdapter = _container.Resolve<IWorkflowAdapter>(new NamedParameter("workflows", workflowHost));
         }
 
         private void RegisterSecondaryAdapters(ContainerBuilder builder)
@@ -67,8 +67,8 @@ namespace ImageBirb.Core
             builder.RegisterType<DefaultFileSystemAdapter>()
                 .As<IFileSystemAdapter>();
 
-            // Register ImageSharp imaging adapter.
-            builder.RegisterType<ImageSharpAdapter>()
+            // Register ImageMagick imaging adapter.
+            builder.RegisterType<ImageMagickAdapter>()
                 .As<IImagingAdapter>();
 
             // Register LiteDB database adapter as IDatabaseAdaper and as LiteDbAdapter.

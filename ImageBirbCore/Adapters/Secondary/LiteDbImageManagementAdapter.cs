@@ -36,10 +36,10 @@ namespace ImageBirb.Core.Adapters.Secondary
             {
                 var fileId = FilePrefix + image.ImageId;
 
-                using (var ms = new MemoryStream(image.ImageData))
-                {
-                    _fileStorage.Upload(fileId, fileId, ms);
-                }
+                //using (var ms = new MemoryStream(image.ImageData))
+                //{
+                //    _fileStorage.Upload(fileId, fileId, ms);
+                //}
 
                 using (var ms = new MemoryStream(image.ThumbnailData))
                 {
@@ -108,11 +108,11 @@ namespace ImageBirb.Core.Adapters.Secondary
                         image.ThumbnailData = ms.ToArray();
                     }
 
-                    using (var ms = new MemoryStream())
-                    {
-                        _fileStorage.Download(FilePrefix + imageId, ms);
-                        image.ImageData = ms.ToArray();
-                    }
+                    //using (var ms = new MemoryStream())
+                    //{
+                    //    _fileStorage.Download(FilePrefix + imageId, ms);
+                    //    image.ImageData = ms.ToArray();
+                    //}
                 }
 
                 return image;

@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using ImageBirb.Core.Ports.Secondary;
 using ImageBirb.Core.Workflows;
 using ImageBirb.Core.Workflows.Parameters;
@@ -9,7 +12,7 @@ using Xunit;
 
 namespace ImageBirbCoreUnitTests.WorkflowTests
 {
-    public class AddImageWorkflowTests
+    public class AddImagesWorkflowTests
     {
         private readonly Image _image;
 
@@ -19,13 +22,14 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
 
         private readonly Mock<IImagingAdapter> _imagingAdapter;
 
-        public AddImageWorkflowTests()
+        public AddImagesWorkflowTests()
         {
             _image = new Image
             {
                 ImageId = "123",
                 ImageData = new byte[] {1, 2},
-                ThumbnailData = new byte[] {3, 4}
+                ThumbnailData = new byte[] {3, 4},
+                Filename = "kuckuck.jpg"
             };
 
             _imageManagementAdapter = new Mock<IImageManagementAdapter>();
@@ -43,8 +47,8 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
         public async Task SuccessfullyAddsImage()
         {
             // arrange
-            var workflow = new AddImageWorkflow(_imageManagementAdapter.Object, _fileSystemAdapter.Object, _imagingAdapter.Object);
-            var parameters = new FilenameParameters("kuckuck.jpg");
+            var workflow = new AddImagesWorkflow(_imageManagementAdapter.Object, _fileSystemAdapter.Object, _imagingAdapter.Object);
+            var parameters = new FilenamesParameters(new List<string> {_image.Filename});
 
             // act
             var result = await workflow.Run(parameters);
@@ -62,8 +66,8 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             imageManagementAdapter.Setup(x => x.CreateImageId()).ThrowsAsync(new WorkflowTestException());
             imageManagementAdapter.Setup(x => x.AddImage(It.IsAny<Image>())).Returns(Task.CompletedTask);
 
-            var workflow = new AddImageWorkflow(imageManagementAdapter.Object, _fileSystemAdapter.Object, _imagingAdapter.Object);
-            var parameters = new FilenameParameters("kuckuck.jpg");
+            var workflow = new AddImagesWorkflow(imageManagementAdapter.Object, _fileSystemAdapter.Object, _imagingAdapter.Object);
+            var parameters = new FilenamesParameters(new List<string> {_image.Filename});
 
             // act
             var result = await workflow.Run(parameters);
@@ -71,7 +75,10 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             // assert
             Assert.Equal(ResultState.Error, result.State);
             Assert.Equal(ErrorCode.WorkflowInternalError, result.ErrorCode);
-            Assert.IsType<WorkflowTestException>(result.Exception);
+            Assert.IsType<AggregateException>(result.Exception);
+
+            var exception = result.Exception as AggregateException;
+            Assert.IsType<WorkflowTestException>(exception.InnerExceptions.First());
             imageManagementAdapter.Verify(x => x.AddImage(It.IsAny<Image>()), Times.Never);
         }
 
@@ -82,8 +89,8 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var fileSystemAdapter = new Mock<IFileSystemAdapter>();
             fileSystemAdapter.Setup(x => x.ReadBinaryFile(It.IsAny<string>())).ThrowsAsync(new WorkflowTestException());
 
-            var workflow = new AddImageWorkflow(_imageManagementAdapter.Object, fileSystemAdapter.Object, _imagingAdapter.Object);
-            var parameters = new FilenameParameters("kuckuck.jpg");
+            var workflow = new AddImagesWorkflow(_imageManagementAdapter.Object, fileSystemAdapter.Object, _imagingAdapter.Object);
+            var parameters = new FilenamesParameters(new List<string> {_image.Filename});
 
             // act
             var result = await workflow.Run(parameters);
@@ -91,7 +98,10 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             // assert
             Assert.Equal(ResultState.Error, result.State);
             Assert.Equal(ErrorCode.WorkflowInternalError, result.ErrorCode);
-            Assert.IsType<WorkflowTestException>(result.Exception);
+            Assert.IsType<AggregateException>(result.Exception);
+
+            var exception = result.Exception as AggregateException;
+            Assert.IsType<WorkflowTestException>(exception.InnerExceptions.First());
             _imageManagementAdapter.Verify(x => x.AddImage(It.IsAny<Image>()), Times.Never);
         }
 
@@ -102,8 +112,8 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var imagingAdapter = new Mock<IImagingAdapter>();
             imagingAdapter.Setup(x => x.CreateThumbnail(It.IsAny<byte[]>())).ThrowsAsync(new WorkflowTestException());
 
-            var workflow = new AddImageWorkflow(_imageManagementAdapter.Object, _fileSystemAdapter.Object, imagingAdapter.Object);
-            var parameters = new FilenameParameters("kuckuck.jpg");
+            var workflow = new AddImagesWorkflow(_imageManagementAdapter.Object, _fileSystemAdapter.Object, imagingAdapter.Object);
+            var parameters = new FilenamesParameters(new List<string> {_image.Filename});
 
             // act
             var result = await workflow.Run(parameters);
@@ -111,7 +121,10 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             // assert
             Assert.Equal(ResultState.Error, result.State);
             Assert.Equal(ErrorCode.WorkflowInternalError, result.ErrorCode);
-            Assert.IsType<WorkflowTestException>(result.Exception);
+            Assert.IsType<AggregateException>(result.Exception);
+
+            var exception = result.Exception as AggregateException;
+            Assert.IsType<WorkflowTestException>(exception.InnerExceptions.First());
             _imageManagementAdapter.Verify(x => x.AddImage(It.IsAny<Image>()), Times.Never);
         }
     }

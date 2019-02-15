@@ -1,4 +1,3 @@
-using GongSolutions.Wpf.DragDrop;
 using ImageBirb.Core.Ports.Primary;
 
 namespace ImageBirb.ViewModels
@@ -6,10 +5,8 @@ namespace ImageBirb.ViewModels
     /// <summary>
     /// Root view model. Creates child view models.
     /// </summary>
-    internal class MainViewModel : WorkflowViewModel, IDropTarget
+    internal class MainViewModel : WorkflowViewModel
     {
-        private readonly DragDropViewModel _dragDropViewModel;
-
         public TagListViewModel TagListViewModel { get; }
 
         public ThumbnailListViewModel ThumbnailListViewModel { get; }
@@ -24,7 +21,6 @@ namespace ImageBirb.ViewModels
 
         public MainViewModel(
             IWorkflowAdapter workflows,
-            DragDropViewModel dragDropViewModel,
             TagListViewModel tagListViewModel,
             ThumbnailListViewModel thumbnailListViewModel,
             SelectedImageViewModel selectedImageViewModel,
@@ -33,23 +29,12 @@ namespace ImageBirb.ViewModels
             SettingsViewModel settingsViewModel)
             : base(workflows)
         {
-            _dragDropViewModel = dragDropViewModel;
             TagListViewModel = tagListViewModel;
             ThumbnailListViewModel = thumbnailListViewModel;
             SelectedImageViewModel = selectedImageViewModel;
             FlyoutViewModel = flyoutViewModel;
             ImageManagementViewModel = imageManagementViewModel;
             SettingsViewModel = settingsViewModel;
-        }
-
-        public void DragOver(IDropInfo dropInfo)
-        {
-            _dragDropViewModel.DragOver(dropInfo);
-        }
-        
-        public void Drop(IDropInfo dropInfo)
-        {
-            _dragDropViewModel.Drop(dropInfo);
         }
     }
 }

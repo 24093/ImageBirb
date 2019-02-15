@@ -2,6 +2,7 @@
 using ImageBirb.Core.Workflows.Results;
 using System;
 using System.Threading.Tasks;
+using ImageBirb.Core.Common;
 
 namespace ImageBirb.Core.Workflows
 {
@@ -9,6 +10,8 @@ namespace ImageBirb.Core.Workflows
         where TParameters : WorkflowParameters
         where TResult : WorkflowResult
     {
+        public event EventHandler<ProgressChangedEventArgs> ProgressChanged;
+        
         public async Task<TResult> Run(TParameters p)
         {
             try
@@ -22,11 +25,18 @@ namespace ImageBirb.Core.Workflows
         }
 
         protected abstract Task<TResult> RunImpl(TParameters p);
+
+        protected void RaiseProgressChanged(ProgressType type, int progress, int max = 100)
+        {
+            ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(type, progress, max));
+        }
     }
 
     internal abstract class Workflow<TResult> : IWorkflow
         where TResult : WorkflowResult
     {
+        public event EventHandler<ProgressChangedEventArgs> ProgressChanged;
+
         public async Task<TResult> Run()
         {
             try
@@ -40,5 +50,10 @@ namespace ImageBirb.Core.Workflows
         }
 
         protected abstract Task<TResult> RunImpl();
+
+        protected void RaiseProgressChanged(ProgressType type, int progress, int max = 100)
+        {
+            ProgressChanged?.Invoke(this, new ProgressChangedEventArgs(type, progress, max));
+        }
     }
 }

@@ -15,22 +15,29 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
 
         private readonly Mock<IImageManagementAdapter> _imageManagementAdapter;
 
+        private readonly Mock<IFileSystemAdapter> _fileSystemAdapter;
+
         public LoadImageWorkflowTests()
         {
             _image = new Image
             {
-                ImageId = "123"
+                ImageId = "123",
+                ImageData = new byte[] { 1, 2 },
+                Filename = "123.bmp"
             };
 
             _imageManagementAdapter = new Mock<IImageManagementAdapter>();
             _imageManagementAdapter.Setup(x => x.GetImage(_image.ImageId)).ReturnsAsync(_image);
+
+            _fileSystemAdapter = new Mock<IFileSystemAdapter>();
+            _fileSystemAdapter.Setup(x => x.ReadBinaryFile(It.IsAny<string>())).ReturnsAsync(_image.ImageData);
         }
 
         [Fact]
         public async Task SuccessfullyLoadsImage()
         {
             // arrange
-            var workflow = new LoadImageWorkflow(_imageManagementAdapter.Object);
+            var workflow = new LoadImageWorkflow(_imageManagementAdapter.Object, _fileSystemAdapter.Object);
             var parameters = new ImageIdParameters(_image.ImageId);
 
             // act
@@ -39,6 +46,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             // assert
             Assert.Equal(ResultState.Success, result.State);
             _imageManagementAdapter.Verify(x => x.GetImage(_image.ImageId), Times.Once());
+            _fileSystemAdapter.Verify(x => x.ReadBinaryFile(_image.Filename), Times.Once);
         }
 
         [Fact]
@@ -48,7 +56,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var imageManagementAdapter = new Mock<IImageManagementAdapter>();
             imageManagementAdapter.Setup(x => x.GetImage(It.IsAny<string>())).ThrowsAsync(new WorkflowTestException());
 
-            var workflow = new LoadImageWorkflow(imageManagementAdapter.Object);
+            var workflow = new LoadImageWorkflow(imageManagementAdapter.Object, _fileSystemAdapter.Object);
             var parameters = new ImageIdParameters(_image.ImageId);
 
             // act

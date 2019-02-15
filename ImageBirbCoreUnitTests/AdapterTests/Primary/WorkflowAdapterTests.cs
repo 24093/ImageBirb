@@ -12,19 +12,19 @@ namespace ImageBirbCoreUnitTests.AdapterTests.Primary
     public class WorkflowAdapterTests
     {
         [Fact]
-        public async Task AddImageRunsAddImageWorkflow()
+        public async Task AddImagesRunsAddImagesWorkflow()
         {
             // arrange
             var workflowHost = new Mock<IWorkflowHost>();
             var workflowAdapter = new WorkflowAdapter(workflowHost.Object);
             
             // act
-            await workflowAdapter.AddImage("123.bmp");
+            await workflowAdapter.AddImages(new List<string> {"123.bmp"});
 
             // assert
             workflowHost.Verify(
-                x => x.Run<AddImageWorkflow, FilenameParameters, WorkflowResult>(
-                    It.Is<FilenameParameters>(y => y.Filename == "123.bmp")), 
+                x => x.Run<AddImagesWorkflow, FilenamesParameters, WorkflowResult>(
+                    It.Is<FilenamesParameters>(y => y.Filenames[0] == "123.bmp")), 
                 Times.Once);
         }
 
@@ -62,23 +62,6 @@ namespace ImageBirbCoreUnitTests.AdapterTests.Primary
                 Times.Once);
         }
         
-        [Fact]
-        public async Task VerifyImageFileRunsVerifyImageFileWorkflow()
-        {
-            // arrange
-            var workflowHost = new Mock<IWorkflowHost>();
-            var workflowAdapter = new WorkflowAdapter(workflowHost.Object);
-
-            // act
-            await workflowAdapter.VerifyImageFile("456766.jpg");
-
-            // assert
-            workflowHost.Verify(
-                x => x.Run<VerifyImageFileWorkflow, FilenameParameters, IsBitmapImageResult>(
-                    It.Is<FilenameParameters>(y => y.Filename == "456766.jpg")), 
-                Times.Once);
-        }
-
         [Fact]
         public async Task AddTagRunsAddTagWorkflow()
         {
@@ -135,7 +118,7 @@ namespace ImageBirbCoreUnitTests.AdapterTests.Primary
             var workflowAdapter = new WorkflowAdapter(workflowHost.Object);
 
             // act
-            await workflowAdapter.LoadThumbnails(new List<string> { "a", "b", "c" });
+            await workflowAdapter.LoadThumbnails(new List<string> {"a", "b", "c"});
 
             // assert
             workflowHost.Verify(

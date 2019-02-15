@@ -9,14 +9,20 @@ namespace ImageBirb.Core.Workflows
     {
         private readonly IImageManagementAdapter _imageManagementAdapter;
 
-        public LoadImageWorkflow(IImageManagementAdapter imageManagementAdapter)
+        private readonly IFileSystemAdapter _fileSystemAdapter;
+
+        public LoadImageWorkflow(IImageManagementAdapter imageManagementAdapter, IFileSystemAdapter fileSystemAdapter)
         {
             _imageManagementAdapter = imageManagementAdapter;
+            _fileSystemAdapter = fileSystemAdapter;
         }
 
         protected override async Task<ImageResult> RunImpl(ImageIdParameters p)
         {
             var image = await _imageManagementAdapter.GetImage(p.ImageId);
+            var imageData = await _fileSystemAdapter.ReadBinaryFile(image.Filename);
+            image.ImageData = imageData;
+
             return new ImageResult(ResultState.Success, image);
         }
     }

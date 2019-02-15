@@ -1,24 +1,34 @@
-﻿using ImageBirb.Core.Ports.Primary;
+﻿using ImageBirb.Core.Common;
+using ImageBirb.Core.Ports.Primary;
 using ImageBirb.Core.Workflows;
 using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ImageBirb.Core.Adapters.Primary
 {
-    internal class WorkflowAdapter : IWorkflowAdapter
+    internal class WorkflowAdapter : IWorkflowAdapter, IDisposable
     {
+        public event EventHandler<ProgressChangedEventArgs> ProgressChanged;
+
         private readonly IWorkflowHost _workflows;
 
         public WorkflowAdapter(IWorkflowHost workflows)
         {
             _workflows = workflows;
+            _workflows.ProgressChanged += WorkflowsOnProgressChanged;
+        }
+        
+        public async Task<WorkflowResult> AddImages(IList<string> filenames)
+        {
+            return await _workflows.Run<AddImagesWorkflow, FilenamesParameters, WorkflowResult>(new FilenamesParameters(filenames));
         }
 
-        public async Task<WorkflowResult> AddImage(string filename)
+        public async Task<WorkflowResult> AddImages(string directory)
         {
-            return await _workflows.Run<AddImageWorkflow, FilenameParameters, WorkflowResult>(new FilenameParameters(filename));
+            return await _workflows.Run<AddImagesWorkflow, FilenamesParameters, WorkflowResult>(new FilenamesParameters(directory));
         }
 
         public async Task<WorkflowResult> RemoveImage(string imageId)
@@ -30,12 +40,7 @@ namespace ImageBirb.Core.Adapters.Primary
         {
             return await _workflows.Run<LoadImageWorkflow, ImageIdParameters, ImageResult>(new ImageIdParameters(imageId));
         }
-
-        public async Task<IsBitmapImageResult> VerifyImageFile(string filename)
-        {
-            return await _workflows.Run<VerifyImageFileWorkflow, FilenameParameters, IsBitmapImageResult>(new FilenameParameters(filename));
-        }
-
+        
         public async Task<WorkflowResult> AddTag(string imageId, string tagName)
         {
             return await _workflows.Run<AddTagWorkflow, ImageIdTagParameters, WorkflowResult>(new ImageIdTagParameters(imageId, tagName));
@@ -59,6 +64,16 @@ namespace ImageBirb.Core.Adapters.Primary
         public async Task<ConnectionStringResult> ReadConnectionString()
         {
             return await _workflows.Run<ReadConnectionStringWorkflow, ConnectionStringResult>();
+        }
+
+        public void Dispose()
+        {
+            _workflows.ProgressChanged -= WorkflowsOnProgressChanged;
+        }
+
+        private void WorkflowsOnProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            ProgressChanged?.Invoke(sender, e);
         }
     }
 }

@@ -1,18 +1,27 @@
-﻿using ImageBirb.Core.Workflows.Parameters;
+﻿using System;
+using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ImageBirb.Core.Common;
 
 namespace ImageBirb.Core.Workflows
 {
-    internal class WorkflowHost : IWorkflowHost
+    internal class WorkflowHost : IWorkflowHost, IDisposable
     {
         private readonly IList<IWorkflow> _workflows;
+
+        public event EventHandler<ProgressChangedEventArgs> ProgressChanged;
 
         public WorkflowHost(IList<IWorkflow> workflows)
         {
             _workflows = workflows;
+
+            foreach (var workflow in _workflows)
+            {
+                workflow.ProgressChanged += WorkflowOnProgressChanged;
+            }
         }
         
         public async Task<TResult> Run<TWorkflow, TParameters, TResult>(TParameters parameters)
@@ -20,7 +29,7 @@ namespace ImageBirb.Core.Workflows
             where TParameters : WorkflowParameters
             where TResult : WorkflowResult
         {
-            var workflow = _workflows.OfType<TWorkflow>().Single();
+            var workflow = Get<TWorkflow, TParameters, TResult>();
             var result = await workflow.Run(parameters);
             return result;
         }
@@ -29,9 +38,37 @@ namespace ImageBirb.Core.Workflows
             where TWorkflow : Workflow<TResult>
             where TResult : WorkflowResult
         {
-            var workflow = _workflows.OfType<TWorkflow>().Single();
+            var workflow = Get<TWorkflow, TResult>();
             var result = await workflow.Run();
             return result;
+        }
+
+        public TWorkflow Get<TWorkflow, TParameters, TResult>() 
+            where TWorkflow : Workflow<TParameters, TResult> 
+            where TParameters : WorkflowParameters 
+            where TResult : WorkflowResult
+        {
+            return _workflows.OfType<TWorkflow>().Single();
+        }
+
+        public TWorkflow Get<TWorkflow, TResult>() 
+            where TWorkflow : Workflow<TResult> 
+            where TResult : WorkflowResult
+        {
+            return _workflows.OfType<TWorkflow>().Single();
+        }
+
+        public void Dispose()
+        {
+            foreach (var workflow in _workflows)
+            {
+                workflow.ProgressChanged -= WorkflowOnProgressChanged;
+            }
+        }
+
+        private void WorkflowOnProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            ProgressChanged?.Invoke(sender, e);
         }
     }
 }

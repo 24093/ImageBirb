@@ -1,10 +1,11 @@
+using System.Threading.Tasks;
 using GalaSoft.MvvmLight.CommandWpf;
+using ImageBirb.Common;
+using ImageBirb.Core.Common;
 using ImageBirb.Core.Ports.Primary;
 using MahApps.Metro.Controls.Dialogs;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
-using ImageBirb.Common;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace ImageBirb.ViewModels
 {
@@ -19,8 +20,8 @@ namespace ImageBirb.ViewModels
 
         private readonly DialogViewModel _dialogViewModel;
 
-        public ProgressBarViewModel ProgressBarViewModel { get; }
-
+        private ProgressDialogController _progressDialogController;
+        
         public ICommand AddImageFromFileCommand { get; }
 
         public ICommand RemoveImageCommand { get; }
@@ -29,19 +30,17 @@ namespace ImageBirb.ViewModels
             IWorkflowAdapter workflows, 
             SelectedImageViewModel selectedImageViewModel, 
             ThumbnailListViewModel thumbnailListViewModel,
-            ProgressBarViewModel progressBarViewModel, 
             DialogViewModel dialogViewModel)
             : base(workflows)
         {
             _selectedImageViewModel = selectedImageViewModel;
             _thumbnailListViewModel = thumbnailListViewModel;
-            ProgressBarViewModel = progressBarViewModel;
             _dialogViewModel = dialogViewModel;
 
             AddImageFromFileCommand = new RelayCommand(ExecuteAddImageFromFileCommand);
             RemoveImageCommand = new RelayCommand<string>(ExecuteRemoveImageCommand, CanExecuteRemoveImageCommand);
         }
-
+        
         private bool CanExecuteRemoveImageCommand(string imageId)
         {
             return _selectedImageViewModel.IsImageSelected;
@@ -65,24 +64,38 @@ namespace ImageBirb.ViewModels
 
         private async void ExecuteAddImageFromFileCommand()
         {
-            var (dialogResult, fileNames) = _dialogViewModel.ShowOpenImageFilesDialog();
+            //var (dialogResult, directory) = _dialogViewModel.ShowSelectDirectoryDialog();
+            var (dialogResult, directory) = _dialogViewModel.ShowOpenImageFilesDialog();
 
-            if (dialogResult == true)
+            if (dialogResult == CommonFileDialogResult.Ok)
             {
-                ProgressBarViewModel.Value = 0;
-                ProgressBarViewModel.MaxValue = fileNames.Length;
-                ProgressBarViewModel.Visibility = Visibility.Visible;
-
-                foreach (var filename in fileNames)
-                {
-                    await RunAsync(Workflows.AddImage(filename), r => ProgressBarViewModel.Value++);
-                }
-
-                await Task.Delay(500);
-                ProgressBarViewModel.Visibility = Visibility.Collapsed;
+                _progressDialogController = await _dialogViewModel.ShowProgressDialog("Adding images...", string.Empty);
+                
+                await RunAsync(Workflows.AddImages(directory));
             }
+        }
 
-            _thumbnailListViewModel.UpdateThumbnailsCommand.Exec(null);
+        protected override async void WorkflowsOnProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (e.Type == ProgressType.ImageAdded)
+            {
+                await HandleImageAddedProgressChanged(e);
+            }
+        }
+
+        private async Task HandleImageAddedProgressChanged(ProgressChangedEventArgs e)
+        {
+            var progress = (double) e.Progress / e.Max;
+
+            _progressDialogController.SetProgress(progress);
+            _progressDialogController.SetMessage(e.Progress + " of " + e.Max);
+
+            if (e.Progress == e.Max)
+            {
+                await _progressDialogController.CloseAsync();
+
+                _thumbnailListViewModel.UpdateThumbnailsCommand.Exec();
+            }
         }
     }
 }

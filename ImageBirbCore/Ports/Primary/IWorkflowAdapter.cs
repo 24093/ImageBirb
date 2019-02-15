@@ -1,4 +1,6 @@
-﻿using ImageBirb.Core.Workflows.Results;
+﻿using ImageBirb.Core.Common;
+using ImageBirb.Core.Workflows.Results;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,11 +13,23 @@ namespace ImageBirb.Core.Ports.Primary
     public interface IWorkflowAdapter
     {
         /// <summary>
-        /// Add an image from a file on the local file system.
+        /// Event raised if a workflow's progress was changed.
         /// </summary>
-        /// <param name="filename">Full local file name.</param>
+        event EventHandler<ProgressChangedEventArgs> ProgressChanged;
+
+        /// <summary>
+        /// Add images from files on the local file system.
+        /// </summary>
+        /// <param name="filenames">Full local file names.</param>
         /// <returns>Standard WorkflowResult.</returns>
-        Task<WorkflowResult> AddImage(string filename);
+        Task<WorkflowResult> AddImages(IList<string> filenames);
+
+        /// <summary>
+        /// Add images from files on the local file system.
+        /// </summary>
+        /// <param name="directory">Directory to scan for files.</param>
+        /// <returns>Standard WorkflowResult.</returns>
+        Task<WorkflowResult> AddImages(string directory);
 
         /// <summary>
         /// Removes an image from the catalog.
@@ -30,13 +44,6 @@ namespace ImageBirb.Core.Ports.Primary
         /// <param name="imageId">ID of the image to be received.</param>
         /// <returns>Result containing the image.</returns>
         Task<ImageResult> LoadImage(string imageId);
-
-        /// <summary>
-        /// Verify that a local file is a supported image file.
-        /// </summary>
-        /// <param name="filename">Full local file name.</param>
-        /// <returns>Result containing information on support of the image format.</returns>
-        Task<IsBitmapImageResult> VerifyImageFile(string filename);
 
         /// <summary>
         /// Add a tag to an image.

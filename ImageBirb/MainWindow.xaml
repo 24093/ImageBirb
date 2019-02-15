@@ -8,15 +8,12 @@
                  xmlns:viewModels="clr-namespace:ImageBirb.ViewModels"
                  xmlns:dlg="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
                  xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-                 xmlns:dd="urn:gong-wpf-dragdrop"
                  mc:Ignorable="d"
                  Title="ImageBirb" 
                  Height="450" 
                  Width="800"
                  DataContext="{Binding Source={StaticResource Locator}, Path=MainViewModel}"
                  d:DataContext="{d:DesignInstance Type=viewModels:MainViewModel}"
-                 dd:DragDrop.IsDropTarget="True"
-                 dd:DragDrop.DropHandler="{Binding}"
                  dlg:DialogParticipation.Register="{Binding }">
 
     <Window.Resources>
@@ -112,17 +109,6 @@
                        Grid.Row="1"
                        Grid.Column="1"
                        MainViewModel="{Binding}" />
-
-        <mah:MetroProgressBar Name="MainProgressBar"
-                              Grid.Row="1"
-                              Grid.Column="0"
-                              Grid.ColumnSpan="2"
-                              DataContext="{Binding ImageManagementViewModel.ProgressBarViewModel}"
-                              Visibility="{Binding Visibility}"
-                              Value="{Binding Value}" 
-                              Minimum="0"
-                              VerticalAlignment="Bottom"
-                              Maximum="{Binding MaxValue}" />
     </Grid>
 
 </mah:MetroWindow>

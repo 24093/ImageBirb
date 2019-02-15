@@ -1,4 +1,5 @@
 using GalaSoft.MvvmLight;
+using ImageBirb.Core.Common;
 using ImageBirb.Core.Ports.Primary;
 using ImageBirb.Core.Workflows.Results;
 using System;
@@ -11,13 +12,22 @@ namespace ImageBirb.ViewModels
     /// <summary>
     /// Base view model for anything that needs access to the backend.
     /// </summary>
-    internal abstract class WorkflowViewModel : ViewModelBase
+    internal abstract class WorkflowViewModel : ViewModelBase, IDisposable
     {
         protected readonly IWorkflowAdapter Workflows;
 
         protected WorkflowViewModel(IWorkflowAdapter workflows)
         {
             Workflows = workflows;
+            Workflows.ProgressChanged += WorkflowsOnProgressChanged;
+        }
+
+        /// <summary>
+        /// Default implementation for progress changed event handler.
+        /// Override in concrete view model class to use it.
+        /// </summary>
+        protected virtual void WorkflowsOnProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
         }
 
         protected static async Task RunAsync<TResult>(Task<TResult> workflow, Action<TResult> onSuccess = null, Action<TResult> onFailure = null)
@@ -66,7 +76,7 @@ namespace ImageBirb.ViewModels
                 }
                 else
                 {
-                    (onFailure ?? DefaultOnFailure)?.Invoke(t.Result);
+                    (onFailure ?? DefaultOnFailure).Invoke(t.Result);
                 }
             });
         }
@@ -84,6 +94,11 @@ namespace ImageBirb.ViewModels
             message = message?.Trim() ?? string.Empty;
 
             MessageBox.Show(message, result.ErrorCode.ToString(), MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        public void Dispose()
+        {
+            Workflows.ProgressChanged -= WorkflowsOnProgressChanged;
         }
     }
 }

@@ -6,7 +6,7 @@ namespace ImageBirb.Core.Adapters.Secondary
 {
     internal class LiteDbAdapter : IDatabaseAdapter
     {
-        private LiteDatabase _liteDatabase;
+        private readonly LiteDatabase _liteDatabase;
 
         public LiteStorage FileStorage => _liteDatabase.FileStorage;
 
