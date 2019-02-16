@@ -55,14 +55,29 @@ namespace ImageBirb.Core.Workflows
                 }
                 else
                 {
-                    foreach (var filename in fileNames)
-                    {
-                        await AddImage(imageStorageType, ignoreSimilarImages, similarityThreshold, filename);
-                    }
+                    await AddImages(imageStorageType, ignoreSimilarImages, similarityThreshold, fileNames);
                 }
 
                 return new WorkflowResult(ResultState.Success);
             });
+        }
+
+        /// <summary>
+        /// Add images to the DB.
+        /// </summary>
+        /// <param name="imageStorageType">Specified image storage type.</param>
+        /// <param name="ignoreSimilarImages">States if images that are similar to existing ones are ignored.</param>
+        /// <param name="similarityThreshold">Threshold for similar images to be considered [0,1].</param>
+        /// <param name="fileNames">List of image file names.</param>
+        private async Task AddImages(ImageStorageType imageStorageType, bool ignoreSimilarImages, double similarityThreshold, IList<string> fileNames)
+        {
+            var i = 0;
+
+            foreach (var filename in fileNames)
+            {
+                await AddImage(imageStorageType, ignoreSimilarImages, similarityThreshold, filename);
+                RaiseProgressChanged(ProgressType.ImageAdded, ++i, fileNames.Count);
+            }
         }
 
         /// <summary>
