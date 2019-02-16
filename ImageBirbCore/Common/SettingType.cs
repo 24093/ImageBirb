@@ -1,6 +1,6 @@
-﻿namespace ImageBirb.Controls
+﻿namespace ImageBirb.Core.Common
 {
-    internal enum SettingType
+    public enum SettingType
     {
         None,
         AddFolders,

@@ -1,5 +1,5 @@
-﻿using ImageBirb.Common;
-using ImageBirb.Controls;
+﻿using ImageBirb.Controls;
+using ImageBirb.Core.Common;
 using ImageBirb.Core.Ports.Primary;
 using System.Collections.ObjectModel;
 
@@ -12,7 +12,7 @@ namespace ImageBirb.ViewModels
     {
         private bool _addFolders;
 
-        private ImageStorageChoice _selectedImageStorageChoice;
+        private ImageStorageType _selectedImageStorageType;
 
         public string DatabaseFilename {get; private set; }
 
@@ -22,37 +22,39 @@ namespace ImageBirb.ViewModels
             set
             {
                 Set(ref _addFolders, value);
-                Workflows.UpdateSettings(SettingType.AddFolders.ToString(), value.ToString());
+                UpdateSetting(SettingType.AddFolders, value);
             }
         }
 
-        public ObservableCollection<ImageStorageChoice> ImageStorageChoices { get; }
+        public ObservableCollection<ImageStorageType> ImageStorageChoices { get; }
 
-        public ImageStorageChoice SelectedImageStorageChoice
+        public ImageStorageType SelectedImageStorageType
         {
-            get => _selectedImageStorageChoice;
+            get => _selectedImageStorageType;
             set
             {
-                Set(ref _selectedImageStorageChoice, value);
-                Workflows.UpdateSettings(SettingType.ImageStorage.ToString(), value.ToString());
+                Set(ref _selectedImageStorageType, value);
+                UpdateSetting(SettingType.ImageStorage, value);
             }
         }
 
         public SettingsViewModel (IWorkflowAdapter workflows)
             : base (workflows)
         {
-            Run(Workflows.ReadConnectionString(), r => DatabaseFilename = r.ConnectionString);
-            Run(Workflows.ReadSetting(SettingType.AddFolders.ToString()), r => AddFolders = r.Setting.AsBool());
-            Run(Workflows.ReadSetting(SettingType.ImageStorage.ToString()), r => SelectedImageStorageChoice = r.Setting.AsEnum<ImageStorageChoice>());
-
-            ImageStorageChoices = new ObservableCollection<ImageStorageChoice>
+            ImageStorageChoices = new ObservableCollection<ImageStorageType>
             {
-                ImageStorageChoice.CopyToDataFolder,
-                ImageStorageChoice.CopyToDatabase,
-                ImageStorageChoice.LinkToSource
+                ImageStorageType.CopyToDatabase,
+                ImageStorageType.LinkToSource
             };
 
-            SelectedImageStorageChoice = ImageStorageChoice.LinkToSource;
+            Run(Workflows.ReadConnectionString(), r => DatabaseFilename = r.ConnectionString);
+            Run(Workflows.ReadSetting(SettingType.AddFolders.ToString()), r => AddFolders = r.Setting.AsBool());
+            Run(Workflows.ReadSetting(SettingType.ImageStorage.ToString()), r => SelectedImageStorageType = r.Setting.AsEnum<ImageStorageType>());
+        }
+
+        private void UpdateSetting<T>(SettingType type, T value)
+        {
+            Workflows.UpdateSettings(type.ToString(), value.ToString());
         }
     }
 }

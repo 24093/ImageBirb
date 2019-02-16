@@ -52,7 +52,7 @@
                         <mah:SplitButton Grid.Column="1"
                                          Grid.Row="4"
                                          ItemsSource="{Binding SettingsViewModel.ImageStorageChoices, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
-                                         SelectedItem="{Binding SettingsViewModel.SelectedImageStorageChoice, RelativeSource={RelativeSource TemplatedParent}}" />
+                                         SelectedItem="{Binding SettingsViewModel.SelectedImageStorageType, RelativeSource={RelativeSource TemplatedParent}}" />
 
                     </Grid>
 

@@ -23,7 +23,8 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             {
                 ImageId = "123",
                 ImageData = new byte[] { 1, 2 },
-                Filename = "123.bmp"
+                Filename = "123.bmp",
+                ImageStorageType = ImageStorageType.LinkToSource
             };
 
             _imageManagementAdapter = new Mock<IImageManagementAdapter>();

@@ -23,12 +23,12 @@ namespace ImageBirb.Core.Adapters.Primary
         
         public async Task<WorkflowResult> AddImages(IList<string> filenames)
         {
-            return await _workflows.Run<AddImagesWorkflow, FilenamesParameters, WorkflowResult>(new FilenamesParameters(filenames));
+            return await _workflows.Run<AddImagesWorkflow, AddImagesParameters, WorkflowResult>(new AddImagesParameters(filenames));
         }
 
         public async Task<WorkflowResult> AddImages(string directory)
         {
-            return await _workflows.Run<AddImagesWorkflow, FilenamesParameters, WorkflowResult>(new FilenamesParameters(directory));
+            return await _workflows.Run<AddImagesWorkflow, AddImagesParameters, WorkflowResult>(new AddImagesParameters(directory));
         }
 
         public async Task<WorkflowResult> RemoveImage(string imageId)

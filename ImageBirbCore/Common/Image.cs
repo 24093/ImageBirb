@@ -19,13 +19,16 @@ namespace ImageBirb.Core.Common
 
         public List<string> Tags { get; set; } = new List<string>();
 
+        public ImageStorageType ImageStorageType { get; set; }
+
         public bool Equals(Image image)
         {
             return image.ImageId == this.ImageId &&
                    image.ImageData.UnsafeCompare(this.ImageData) &&
                    image.ThumbnailData.UnsafeCompare(this.ThumbnailData) &&
                    image.Filename == this.Filename &&
-                   image.Tags.SequenceEqual(this.Tags);
+                   image.Tags.SequenceEqual(this.Tags) &&
+                   image.ImageStorageType == this.ImageStorageType;
         }
     }
 }

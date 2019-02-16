@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-using ImageBirb.Core.Common;
+﻿using ImageBirb.Core.Common;
 using ImageBirb.Core.Ports.Secondary;
 using LiteDB;
+using System.Threading.Tasks;
 
 namespace ImageBirb.Core.Adapters.Secondary
 {
@@ -28,6 +28,11 @@ namespace ImageBirb.Core.Adapters.Secondary
             {
                 return _settingsCollection.FindOne(doc => doc.Key == key);
             });
+        }
+
+        public async Task<Setting> GetSetting(SettingType type)
+        {
+            return await GetSetting(type.ToString());
         }
     }
 }

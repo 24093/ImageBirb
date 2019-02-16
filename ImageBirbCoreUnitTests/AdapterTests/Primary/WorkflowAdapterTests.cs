@@ -23,8 +23,8 @@ namespace ImageBirbCoreUnitTests.AdapterTests.Primary
 
             // assert
             workflowHost.Verify(
-                x => x.Run<AddImagesWorkflow, FilenamesParameters, WorkflowResult>(
-                    It.Is<FilenamesParameters>(y => y.Filenames[0] == "123.bmp")), 
+                x => x.Run<AddImagesWorkflow, AddImagesParameters, WorkflowResult>(
+                    It.Is<AddImagesParameters>(y => y.FileNames[0] == "123.bmp")), 
                 Times.Once);
         }
 
