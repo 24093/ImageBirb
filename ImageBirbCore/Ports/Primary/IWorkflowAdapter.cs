@@ -81,5 +81,19 @@ namespace ImageBirb.Core.Ports.Primary
         /// </summary>
         /// <returns>Result containing the connection string.</returns>
         Task<ConnectionStringResult> ReadConnectionString();
+
+        /// <summary>
+        /// Update a setting in the database.
+        /// </summary>
+        /// <param name="key">Setting identifier.</param>
+        /// <param name="value">Setting value.</param>
+        Task UpdateSettings(string key, string value);
+
+        /// <summary>
+        /// Read a setting from the database.
+        /// </summary>
+        /// <param name="key">Setting identifier.</param>
+        /// <returns>Setting containing value.</returns>
+        Task<SettingResult> ReadSetting(string key);
     }
 }

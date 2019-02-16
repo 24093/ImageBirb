@@ -7,8 +7,6 @@ namespace ImageBirb.Core.Common
     public class Image
     {
         [BsonId]
-        public int Id { get; set; }
-
         public string ImageId { get; set; }
 
         [BsonIgnore]

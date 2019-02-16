@@ -85,6 +85,10 @@ namespace ImageBirb.Core
             // Register LiteDB tag management adapter.
             builder.RegisterType<LiteDbTagManagementAdapter>()
                 .As<ITagManagementAdapter>();
+
+            // Register LiteDB settings management adapter.
+            builder.RegisterType<LiteDbSettingsManagementAdapter>()
+                .As<ISettingsManagementAdapter>();
         }
 
         private void RegisterPrimaryAdapters(ContainerBuilder builder)

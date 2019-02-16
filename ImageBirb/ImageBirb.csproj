@@ -75,11 +75,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\ImageStorageChoice.cs" />
     <Compile Include="Common\ObservableCollectionExtensions.cs" />
     <Compile Include="Controls\MainToolBar.cs" />
     <Compile Include="Controls\SelectedImageTagsView.cs" />
     <Compile Include="Controls\SelectedImageView.cs" />
     <Compile Include="Controls\SettingsView.cs" />
+    <Compile Include="Controls\SettingType.cs" />
     <Compile Include="Controls\TagsListView.cs" />
     <Compile Include="Controls\ThumbnailsListView.cs" />
     <Compile Include="Common\AppSettings.cs" />

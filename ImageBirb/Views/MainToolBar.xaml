@@ -45,7 +45,7 @@
                                 Margin="10, 0, 10, 0"
                                 Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
                                 Command="{Binding DataContext.FlyoutViewModel.ToggleSettingsCommand, RelativeSource={RelativeSource TemplatedParent}}"
-                                Content="{iconPacks:FontAwesome BarsSolid, Width=32, Height=32}" />
+                                Content="{iconPacks:FontAwesome CogSolid, Width=32, Height=32}" />
                     </DockPanel>
 
                 </ControlTemplate>

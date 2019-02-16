@@ -66,6 +66,16 @@ namespace ImageBirb.Core.Adapters.Primary
             return await _workflows.Run<ReadConnectionStringWorkflow, ConnectionStringResult>();
         }
 
+        public async Task UpdateSettings(string key, string value)
+        {
+            await _workflows.Run<UpdateSettingsWorkflow, SettingParameters, WorkflowResult>(new SettingParameters(key, value));
+        }
+
+        public async Task<SettingResult> ReadSetting(string key)
+        {
+            return await _workflows.Run<ReadSettingsWorkflow, KeyParameters, SettingResult>(new KeyParameters(key));
+        }
+
         public void Dispose()
         {
             _workflows.ProgressChanged -= WorkflowsOnProgressChanged;
