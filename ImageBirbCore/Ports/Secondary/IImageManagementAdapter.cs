@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ImageBirb.Core.Common;
 
@@ -40,5 +41,14 @@ namespace ImageBirb.Core.Ports.Secondary
         /// <param name="imageId">ID of the image.</param>
         /// <returns>Image object containing image and metadata.</returns>
         Task<Image> GetImage(string imageId);
+
+        /// <summary>
+        /// Finds any similar images in the database based on the fingerprint.
+        /// </summary>
+        /// <param name="fingerprint">The image's fingerprint.</param>
+        /// <param name="scoreFunc">Function to determine the similarity score.</param>
+        /// <param name="threshold">Threshold for images to be considered equal.</param>
+        /// <returns>List of similar images.</returns>
+        Task<IList<Image>> GetSimilarImages(string fingerprint, Func<string, string, Task<double>> scoreFunc, double threshold);
     }
 }

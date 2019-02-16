@@ -124,5 +124,27 @@ namespace ImageBirb.Core.Adapters.Secondary
                 return image;
             });
         }
+
+        public async Task<IList<Image>> GetSimilarImages(string fingerprint, Func<string, string, Task<double>> scoreFunc, double threshold)
+        {
+            return await Task.Run(async () =>
+            {
+                var images = _imageCollection.FindAll();
+
+                var similarImages = new List<Image>();
+
+                foreach (var image in images)
+                {
+                    var score = await scoreFunc(fingerprint, image.Fingerprint);
+
+                    if (score > threshold)
+                    {
+                        similarImages.Add(await GetImage(image.ImageId));
+                    }
+                }
+
+                return similarImages;
+            });
+        }
     }
 }

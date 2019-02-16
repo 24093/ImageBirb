@@ -21,6 +21,8 @@ namespace ImageBirb.Core.Common
 
         public ImageStorageType ImageStorageType { get; set; }
 
+        public string Fingerprint { get; set; }
+
         public bool Equals(Image image)
         {
             return image.ImageId == this.ImageId &&
@@ -28,7 +30,8 @@ namespace ImageBirb.Core.Common
                    image.ThumbnailData.UnsafeCompare(this.ThumbnailData) &&
                    image.Filename == this.Filename &&
                    image.Tags.SequenceEqual(this.Tags) &&
-                   image.ImageStorageType == this.ImageStorageType;
+                   image.ImageStorageType == this.ImageStorageType &&
+                   image.Fingerprint == this.Fingerprint;
         }
     }
 }

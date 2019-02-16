@@ -21,6 +21,10 @@
                             <RowDefinition Height="6" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="6" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="6" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="6" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
@@ -53,6 +57,28 @@
                                          Grid.Row="4"
                                          ItemsSource="{Binding SettingsViewModel.ImageStorageChoices, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
                                          SelectedItem="{Binding SettingsViewModel.SelectedImageStorageType, RelativeSource={RelativeSource TemplatedParent}}" />
+
+
+                        <Label Content="Ignore similar images"
+                               Grid.Column="0"
+                               Grid.Row="6" />
+
+                        <CheckBox Grid.Column="1"
+                                  Grid.Row="6"
+                                  IsChecked="{Binding SettingsViewModel.IgnoreSimilarImages, RelativeSource={RelativeSource TemplatedParent}}" />
+
+
+                        <Label Content="Similarity threshold"
+                               Grid.Column="0"
+                               Grid.Row="8" />
+
+                        <mah:NumericUpDown Grid.Column="1"
+                                           Grid.Row="8"
+                                           Minimum="0.00"
+                                           Maximum="1.00"
+                                           Interval="0.01"
+                                           StringFormat="F2"
+                                           Value="{Binding SettingsViewModel.SimilarityThreshold, RelativeSource={RelativeSource TemplatedParent}}" />
 
                     </Grid>
 

@@ -68,7 +68,7 @@ namespace ImageBirb.Core
                 .As<IFileSystemAdapter>();
 
             // Register ImageMagick imaging adapter.
-            builder.RegisterType<ImageMagickAdapter>()
+            builder.RegisterType<DefaultImagingAdapter>()
                 .As<IImagingAdapter>();
 
             // Register LiteDB database adapter as IDatabaseAdaper and as LiteDbAdapter.

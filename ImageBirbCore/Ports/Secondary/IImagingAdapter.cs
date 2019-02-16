@@ -14,5 +14,15 @@ namespace ImageBirb.Core.Ports.Secondary
         /// <param name="imageData">Full size image data.</param>
         /// <returns>Thumbnail image data.</returns>
         Task<byte[]> CreateThumbnail(byte[] imageData);
+
+        /// <summary>
+        /// Generates a fingerprint of the image which can
+        /// be used to compare it to others.
+        /// </summary>
+        /// <param name="imageData">Full size image data.</param>
+        /// <returns>Fingerprint string.</returns>
+        Task<string> CreateFingerprint(byte[] imageData);
+
+        Task<double> GetSimilarityScore(string fingerprint1, string fingerprint2);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using LiteDB;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace ImageBirb.Core.Common
 {
@@ -20,6 +21,17 @@ namespace ImageBirb.Core.Common
             }
 
             return false;
+        }
+
+        public double AsDouble()
+        {
+            if (!string.IsNullOrEmpty(Value) && 
+                double.TryParse(Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var result))
+            {
+                return result;
+            }
+
+            return 0;
         }
 
         public T AsEnum<T>() where T : struct

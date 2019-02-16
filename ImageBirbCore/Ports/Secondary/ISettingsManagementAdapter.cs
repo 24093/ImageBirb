@@ -12,7 +12,7 @@ namespace ImageBirb.Core.Ports.Secondary
         /// Store a setting.
         /// </summary>
         /// <param name="setting">The setting to be stored.</param>
-        Task UpdateSettings(Setting setting);
+        Task UpdateSetting(Setting setting);
 
         /// <summary>
         /// Get a setting by its key.

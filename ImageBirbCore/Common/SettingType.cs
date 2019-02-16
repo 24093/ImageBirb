@@ -4,6 +4,8 @@
     {
         None,
         AddFolders,
-        ImageStorage
+        ImageStorage,
+        IgnoreSimilarImages,
+        SimilarityThreshold
     }
 }
