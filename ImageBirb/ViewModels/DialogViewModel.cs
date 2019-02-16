@@ -1,10 +1,9 @@
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
-using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
-using Microsoft.Win32;
-using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace ImageBirb.ViewModels
 {
@@ -15,19 +14,17 @@ namespace ImageBirb.ViewModels
     {
         private MetroWindow _mainWindow => (MetroWindow) Application.Current.MainWindow;
 
-        public async Task<MessageDialogResult> ShowDialog(string title, string message,
-            MessageDialogStyle style = MessageDialogStyle.Affirmative, MetroDialogSettings settings = null)
+        public async Task<bool> ShowOkCancelDialog(string title, string message)
         {
-            return await _mainWindow.ShowMessageAsync(title, message, style, settings);
+            return await _mainWindow.ShowMessageAsync(title, message) == MessageDialogResult.Affirmative;
         }
 
-        public async Task<ProgressDialogController> ShowProgressDialog(string title, string message, bool isCancelable = false,
-            MetroDialogSettings settings = null)
+        public async Task<ProgressDialogController> ShowProgressDialog(string title, string message)
         {
-            return await _mainWindow.ShowProgressAsync(title, message, isCancelable, settings);
+            return await _mainWindow.ShowProgressAsync(title, message);
         }
 
-        public (CommonFileDialogResult DialogResult, IList<string> FileNames) ShowOpenFileDialog(bool multiselect, IList<CommonFileDialogFilter> filters)
+        private (bool IsOk, IList<string> FileNames) ShowOpenFileDialog(bool multiselect, IList<CommonFileDialogFilter> filters)
         {
             var dialog = new CommonOpenFileDialog { Multiselect = multiselect };
 
@@ -38,10 +35,10 @@ namespace ImageBirb.ViewModels
 
             var dialogResult = dialog.ShowDialog(_mainWindow);
             var filenames = dialogResult == CommonFileDialogResult.Ok ? new List<string>(dialog.FileNames) : null;
-            return (dialogResult, filenames);
+            return (dialogResult == CommonFileDialogResult.Ok, filenames);
         }
 
-        public (CommonFileDialogResult DialogResult, IList<string> FileNames) ShowOpenImageFilesDialog()
+        public (bool IsOk, IList<string> FileNames) ShowOpenImageFilesDialog()
         {
             return ShowOpenFileDialog(true, new List<CommonFileDialogFilter>
             {
@@ -50,13 +47,13 @@ namespace ImageBirb.ViewModels
             });
         }
 
-        public (CommonFileDialogResult DialogResult, string DirectoryName) ShowSelectDirectoryDialog()
+        public (bool IsOk, string DirectoryName) ShowSelectDirectoryDialog()
         {
             var dialog = new CommonOpenFileDialog {IsFolderPicker = true};
 
             var dialogResult = dialog.ShowDialog();
             var directoryName = dialogResult == CommonFileDialogResult.Ok ? dialog.FileName : null;
-            return (dialogResult, directoryName);
+            return (dialogResult == CommonFileDialogResult.Ok, directoryName);
         }
     }
 }

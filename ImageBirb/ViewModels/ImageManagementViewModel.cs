@@ -1,13 +1,12 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using GalaSoft.MvvmLight.CommandWpf;
 using ImageBirb.Common;
+using ImageBirb.Controls;
 using ImageBirb.Core.Common;
 using ImageBirb.Core.Ports.Primary;
 using MahApps.Metro.Controls.Dialogs;
-using System.Windows.Input;
-using ImageBirb.Controls;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace ImageBirb.ViewModels
 {
@@ -50,11 +49,10 @@ namespace ImageBirb.ViewModels
 
         private async void ExecuteRemoveImageCommand(string imageId)
         {
-            var dialogResult = await _dialogViewModel.ShowDialog("Delete image",
-                "This will delete the currently selected image. Continue?",
-                MessageDialogStyle.AffirmativeAndNegative);
+            var isOk = await _dialogViewModel.ShowOkCancelDialog("Delete image",
+                "This will delete the currently selected image. Continue?");
 
-            if (dialogResult == MessageDialogResult.Affirmative)
+            if (isOk)
             {
                 await Workflows.RemoveImage(imageId);
 
@@ -69,38 +67,38 @@ namespace ImageBirb.ViewModels
             await RunAsyncDispatch(Workflows.ReadSetting(SettingType.AddFolders.ToString()), async r =>
             {
                 var addingFolder = r.Setting.AsBool();
-                CommonFileDialogResult dialogResult;
-                string directory = null;
-                IList<string> files = null;
-
+                
                 if (addingFolder)
                 {
-                    var result = _dialogViewModel.ShowSelectDirectoryDialog();
-                    dialogResult = result.DialogResult;
-                    directory = result.DirectoryName;
+                    await AddImagesFromFolder();
                 }
                 else
                 {
-                    var result = _dialogViewModel.ShowOpenImageFilesDialog();
-                    dialogResult = result.DialogResult;
-                    files = result.FileNames;
-                }
-
-                if (dialogResult == CommonFileDialogResult.Ok)
-                {
-                    _progressDialogController =
-                        await _dialogViewModel.ShowProgressDialog("Adding images...", string.Empty);
-
-                    if (addingFolder)
-                    {
-                        await RunAsync(Workflows.AddImages(directory));
-                    }
-                    else
-                    {
-                        await RunAsync(Workflows.AddImages(files));
-                    }
+                    await AddImagesFromFiles();
                 }
             });
+        }
+
+        private async Task AddImagesFromFolder()
+        {
+            var result = _dialogViewModel.ShowSelectDirectoryDialog();
+       
+            if (result.IsOk)
+            {
+                _progressDialogController = await _dialogViewModel.ShowProgressDialog("Adding images...", string.Empty);
+                await RunAsync(Workflows.AddImages(result.DirectoryName));
+            }
+        }
+
+        private async Task AddImagesFromFiles()
+        {
+            var result = _dialogViewModel.ShowOpenImageFilesDialog();
+           
+            if (result.IsOk)
+            {
+                _progressDialogController = await _dialogViewModel.ShowProgressDialog("Adding images...", string.Empty);
+                await RunAsync(Workflows.AddImages(result.FileNames));
+            }
         }
 
         protected override async void WorkflowsOnProgressChanged(object sender, ProgressChangedEventArgs e)
