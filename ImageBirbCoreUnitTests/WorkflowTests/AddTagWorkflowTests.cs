@@ -50,7 +50,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var result = await workflow.Run(parameters);
 
             // assert
-            Assert.Equal(ResultState.Error, result.State);
+            Assert.Equal(ResultState.Failure, result.State);
             Assert.Equal(ErrorCode.InvalidParameter, result.ErrorCode);
             _tagManagementAdapter.Verify(x => x.AddTag(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
@@ -67,7 +67,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var result = await workflow.Run(parameters);
 
             // assert
-            Assert.Equal(ResultState.Error, result.State);
+            Assert.Equal(ResultState.Failure, result.State);
             Assert.Equal(ErrorCode.InvalidParameter, result.ErrorCode);
             _tagManagementAdapter.Verify(x => x.AddTag(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
@@ -86,7 +86,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var result = await workflow.Run(parameters);
 
             // assert
-            Assert.Equal(ResultState.Error, result.State);
+            Assert.Equal(ResultState.Failure, result.State);
             Assert.Equal(ErrorCode.WorkflowInternalError, result.ErrorCode);
             Assert.IsType<WorkflowTestException>(result.Exception);
         }

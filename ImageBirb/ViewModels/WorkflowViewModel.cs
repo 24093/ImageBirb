@@ -14,6 +14,8 @@ namespace ImageBirb.ViewModels
     /// </summary>
     internal abstract class WorkflowViewModel : ViewModelBase, IDisposable
     {
+        private static readonly NLog.Logger Log = NLog.LogManager.GetCurrentClassLogger();
+
         protected readonly IWorkflowAdapter Workflows;
 
         protected WorkflowViewModel(IWorkflowAdapter workflows)
@@ -23,14 +25,22 @@ namespace ImageBirb.ViewModels
         }
 
         /// <summary>
-        /// Default implementation for progress changed event handler.
+        /// Default empty implementation for progress changed event handler.
         /// Override in concrete view model class to use it.
         /// </summary>
         protected virtual void WorkflowsOnProgressChanged(object sender, ProgressChangedEventArgs e)
         {
         }
 
-        protected static async Task RunAsync<TResult>(Task<TResult> workflow, Action<TResult> onSuccess = null, Action<TResult> onFailure = null)
+        /// <summary>
+        /// Run a workflow. This is the default approach to run a workflow.
+        /// </summary>
+        /// <typeparam name="TResult">Workflow result type.</typeparam>
+        /// <param name="workflow">Workflow to run.</param>
+        /// <param name="onSuccess">Action to be called if workflow was successfully run.</param>
+        /// <param name="onFailure">Action to be called if workflow didn't run successfully.</param>
+        protected async Task RunAsync<TResult>(Task<TResult> workflow, Action<TResult> onSuccess = null,
+            Action<TResult> onFailure = null)
             where TResult : WorkflowResult
         {
             await workflow.ContinueWith(t =>
@@ -41,59 +51,61 @@ namespace ImageBirb.ViewModels
                 }
                 else
                 {
-                    (onFailure ?? DefaultOnFailure).Invoke(t.Result);
+                    (onFailure ?? DefaultWorkflowOnError).Invoke(t.Result);
                 }
             });
         }
 
-        protected static async Task RunAsyncDispatch<TResult>(Task<TResult> workflow, Action<TResult> onSuccess = null, Action<TResult> onFailure = null)
+        /// <summary>
+        /// Run a workflow. Use this to modify data in the UI thread in the result actions.
+        /// </summary>
+        /// <typeparam name="TResult">Workflow result type.</typeparam>
+        /// <param name="workflow">Workflow to run.</param>
+        /// <param name="onSuccess">Action to be called if workflow was successfully run.</param>
+        /// <param name="onFailure">Action to be called if workflow didn't run successfully.</param>
+        protected async Task RunAsyncDispatch<TResult>(Task<TResult> workflow, Action<TResult> onSuccess = null,
+            Action<TResult> onFailure = null)
             where TResult : WorkflowResult
         {
-            var onSuccessDispatched = onSuccess;
-            var onFailureDispatched = (onFailure ?? DefaultOnFailure);
-
+            Action<TResult> onSuccessDispatched = null;
+            Action<TResult> onFailureDispatched = r => Application.Current.Dispatcher.Invoke(() => (onFailure ?? DefaultWorkflowOnError)(r));
+            
             if (onSuccess != null)
             {
                 onSuccessDispatched = r => Application.Current.Dispatcher.Invoke(() => onSuccess(r));
             }
 
-            if (onFailure != null)
-            {
-                onFailureDispatched = r => Application.Current.Dispatcher.Invoke(() => onFailure(r));
-            }
-
             await RunAsync(workflow, onSuccessDispatched, onFailureDispatched);
         }
-
-        protected static void Run<TResult>(Task<TResult> workflow, Action<TResult> onSuccess = null, Action<TResult> onFailure = null)
-            where TResult : WorkflowResult
-        {
-            Task.Run(async () => await workflow).ContinueWith(t =>
-            {
-                if (t.Result.IsSuccess)
-                {
-                    onSuccess?.Invoke(t.Result);
-                }
-                else
-                {
-                    (onFailure ?? DefaultOnFailure).Invoke(t.Result);
-                }
-            });
-        }
         
-        private static void DefaultOnFailure<TResult>(TResult result)
+        /// <summary>
+        /// The default error handler. Shows a windows message box in debug mode.
+        /// </summary>
+        /// <typeparam name="TResult">Workflow result type.</typeparam>
+        /// <param name="result">The error result.</param>
+        private void DefaultWorkflowOnError<TResult>(TResult result)
             where TResult : WorkflowResult
         {
-            var message = result.Exception?.Message;
+            Log.Error(result.Exception);
 
             if (Debugger.IsAttached)
             {
-                message += Environment.NewLine + Environment.NewLine + result.Exception?.StackTrace;
+                var message = (result.Exception?.Message + Environment.NewLine + Environment.NewLine +
+                               result.Exception?.StackTrace).Trim();
+                MessageBox.Show(message, result.ErrorCode.ToString(), MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
-            message = message?.Trim() ?? string.Empty;
+            WorkflowOnError(result);
+        }
 
-            MessageBox.Show(message, result.ErrorCode.ToString(), MessageBoxButton.OK, MessageBoxImage.Error);
+        /// <summary>
+        /// Custom error handler to be implemented in concrete classes.
+        /// </summary>
+        /// <typeparam name="TResult">Workflow result type.</typeparam>
+        /// <param name="result">The error result.</param>
+        protected virtual void WorkflowOnError<TResult>(TResult result)
+            where TResult : WorkflowResult
+        {
         }
 
         public void Dispose()

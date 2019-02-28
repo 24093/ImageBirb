@@ -4,6 +4,6 @@
     {
         None,
         Success,
-        Error
+        Failure
     }
 }

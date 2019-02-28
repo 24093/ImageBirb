@@ -5,11 +5,11 @@ using ImageBirb.Core.Workflows.Results;
 
 namespace ImageBirb.Core.Workflows
 {
-    internal class UpdateSettingsWorkflow : Workflow<SettingParameters, WorkflowResult>
+    internal class UpdateSettingWorkflow : Workflow<SettingParameters, WorkflowResult>
     {
         private readonly ISettingsManagementAdapter _settingsManagementAdapter;
 
-        public UpdateSettingsWorkflow(ISettingsManagementAdapter settingsManagementAdapter)
+        public UpdateSettingWorkflow(ISettingsManagementAdapter settingsManagementAdapter)
         {
             _settingsManagementAdapter = settingsManagementAdapter;
         }

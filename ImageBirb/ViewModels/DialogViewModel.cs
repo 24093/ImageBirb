@@ -16,7 +16,8 @@ namespace ImageBirb.ViewModels
 
         public async Task<bool> ShowOkCancelDialog(string title, string message)
         {
-            return await _mainWindow.ShowMessageAsync(title, message) == MessageDialogResult.Affirmative;
+            return await _mainWindow.ShowMessageAsync(title, message, MessageDialogStyle.AffirmativeAndNegative) ==
+                   MessageDialogResult.Affirmative;
         }
 
         public async Task<ProgressDialogController> ShowProgressDialog(string title, string message)

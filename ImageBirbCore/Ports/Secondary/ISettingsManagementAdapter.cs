@@ -6,7 +6,7 @@ namespace ImageBirb.Core.Ports.Secondary
     /// <summary>
     /// Database module that handles settings. 
     /// </summary>
-    public interface ISettingsManagementAdapter
+    internal interface ISettingsManagementAdapter
     {
         /// <summary>
         /// Store a setting.

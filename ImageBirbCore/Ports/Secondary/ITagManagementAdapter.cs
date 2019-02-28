@@ -7,7 +7,7 @@ namespace ImageBirb.Core.Ports.Secondary
     /// <summary>
     /// Database module that handles tags.
     /// </summary>
-    public interface ITagManagementAdapter
+    internal interface ITagManagementAdapter
     {
         /// <summary>
         /// Add a tag to an image.

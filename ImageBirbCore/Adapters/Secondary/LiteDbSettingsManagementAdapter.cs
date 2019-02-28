@@ -55,7 +55,7 @@ namespace ImageBirb.Core.Adapters.Secondary
                     await CheckAndSetDefault(SettingType.AddFolders, false);
                     await CheckAndSetDefault(SettingType.ImageStorage, ImageStorageType.LinkToSource);
                     await CheckAndSetDefault(SettingType.IgnoreSimilarImages, true);
-                    await CheckAndSetDefault(SettingType.SimilarityThreshold, 0.5);
+                    await CheckAndSetDefault(SettingType.SimilarityThreshold, 0.9);
                 });
             }
         }

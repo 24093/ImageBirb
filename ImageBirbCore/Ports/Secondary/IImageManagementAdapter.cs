@@ -8,7 +8,7 @@ namespace ImageBirb.Core.Ports.Secondary
     /// <summary>
     /// Database module that handles images.
     /// </summary>
-    public interface IImageManagementAdapter
+    internal interface IImageManagementAdapter
     {
         /// <summary>
         /// Creates an image id for a new image.
@@ -49,6 +49,6 @@ namespace ImageBirb.Core.Ports.Secondary
         /// <param name="scoreFunc">Function to determine the similarity score.</param>
         /// <param name="threshold">Threshold for images to be considered equal.</param>
         /// <returns>List of similar images.</returns>
-        Task<IList<Image>> GetSimilarImages(string fingerprint, Func<string, string, Task<double>> scoreFunc, double threshold);
+        Task<IList<ImageSimilarity>> GetSimilarImages(string fingerprint, Func<string, string, Task<double>> scoreFunc, double threshold);
     }
 }

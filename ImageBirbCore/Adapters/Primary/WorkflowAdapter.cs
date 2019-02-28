@@ -23,12 +23,12 @@ namespace ImageBirb.Core.Adapters.Primary
         
         public async Task<WorkflowResult> AddImages(IList<string> filenames)
         {
-            return await _workflows.Run<AddImagesWorkflow, AddImagesParameters, WorkflowResult>(new AddImagesParameters(filenames));
+            return await _workflows.Run<AddImagesWorkflow, AddImagesParameters, AddImagesResult>(new AddImagesParameters(filenames));
         }
 
         public async Task<WorkflowResult> AddImages(string directory)
         {
-            return await _workflows.Run<AddImagesWorkflow, AddImagesParameters, WorkflowResult>(new AddImagesParameters(directory));
+            return await _workflows.Run<AddImagesWorkflow, AddImagesParameters, AddImagesResult>(new AddImagesParameters(directory));
         }
 
         public async Task<WorkflowResult> RemoveImage(string imageId)
@@ -66,14 +66,14 @@ namespace ImageBirb.Core.Adapters.Primary
             return await _workflows.Run<ReadConnectionStringWorkflow, ConnectionStringResult>();
         }
 
-        public async Task UpdateSettings(string key, string value)
+        public async Task UpdateSetting(string key, string value)
         {
-            await _workflows.Run<UpdateSettingsWorkflow, SettingParameters, WorkflowResult>(new SettingParameters(key, value));
+            await _workflows.Run<UpdateSettingWorkflow, SettingParameters, WorkflowResult>(new SettingParameters(key, value));
         }
 
         public async Task<SettingResult> ReadSetting(string key)
         {
-            return await _workflows.Run<ReadSettingsWorkflow, KeyParameters, SettingResult>(new KeyParameters(key));
+            return await _workflows.Run<ReadSettingWorkflow, KeyParameters, SettingResult>(new KeyParameters(key));
         }
 
         public void Dispose()

@@ -6,11 +6,11 @@ using ImageBirb.Core.Common;
 
 namespace ImageBirb.Core.Workflows
 {
-    internal class ReadSettingsWorkflow : Workflow<KeyParameters, SettingResult>
+    internal class ReadSettingWorkflow : Workflow<KeyParameters, SettingResult>
     {
         private readonly ISettingsManagementAdapter _settingsManagementAdapter;
 
-        public ReadSettingsWorkflow(ISettingsManagementAdapter settingsManagementAdapter)
+        public ReadSettingWorkflow(ISettingsManagementAdapter settingsManagementAdapter)
         {
             _settingsManagementAdapter = settingsManagementAdapter;
         }

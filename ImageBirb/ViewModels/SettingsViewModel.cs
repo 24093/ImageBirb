@@ -1,8 +1,8 @@
-﻿using ImageBirb.Controls;
-using ImageBirb.Core.Common;
+﻿using ImageBirb.Core.Common;
 using ImageBirb.Core.Ports.Primary;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Threading.Tasks;
 
 namespace ImageBirb.ViewModels
 {
@@ -11,6 +11,8 @@ namespace ImageBirb.ViewModels
     /// </summary>
     internal class SettingsViewModel : WorkflowViewModel
     {
+        private string _databaseFilename;
+
         private bool _addFolders;
 
         private bool _ignoreSimilarImages;
@@ -18,8 +20,12 @@ namespace ImageBirb.ViewModels
         private double _similarityThreshold;
 
         private ImageStorageType _selectedImageStorageType;
-        
-        public string DatabaseFilename {get; private set; }
+
+        public string DatabaseFilename
+        {
+            get => _databaseFilename;
+            private set => Set(ref _databaseFilename, value);
+        }
 
         public bool AddFolders
         {
@@ -51,7 +57,12 @@ namespace ImageBirb.ViewModels
             }
         }
 
-        public ObservableCollection<ImageStorageType> ImageStorageChoices { get; }
+        public ObservableCollection<ImageStorageType> ImageStorageChoices { get; } =
+            new ObservableCollection<ImageStorageType>
+            {
+                ImageStorageType.CopyToDatabase,
+                ImageStorageType.LinkToSource
+            };
 
         public ImageStorageType SelectedImageStorageType
         {
@@ -63,30 +74,32 @@ namespace ImageBirb.ViewModels
             }
         }
 
-        public SettingsViewModel (IWorkflowAdapter workflows)
-            : base (workflows)
+        public SettingsViewModel(IWorkflowAdapter workflows)
+            : base(workflows)
         {
-            ImageStorageChoices = new ObservableCollection<ImageStorageType>
-            {
-                ImageStorageType.CopyToDatabase,
-                ImageStorageType.LinkToSource
-            };
+        }
 
-            Run(Workflows.ReadConnectionString(), r => DatabaseFilename = r.ConnectionString);
-            Run(Workflows.ReadSetting(SettingType.AddFolders.ToString()), r => AddFolders = r.Setting.AsBool());
-            Run(Workflows.ReadSetting(SettingType.ImageStorage.ToString()), r => SelectedImageStorageType = r.Setting.AsEnum<ImageStorageType>());
-            Run(Workflows.ReadSetting(SettingType.IgnoreSimilarImages.ToString()), r => IgnoreSimilarImages = r.Setting.AsBool());
-            Run(Workflows.ReadSetting(SettingType.SimilarityThreshold.ToString()), r => SimilarityThreshold = r.Setting.AsDouble());
+        /// <summary>
+        /// Refresh the settings from the database.
+        /// Call this whenever the settings view becomes visible.
+        /// </summary>
+        public async Task ReadSettings()
+        {
+            await RunAsync(Workflows.ReadConnectionString(), r => DatabaseFilename = r.ConnectionString);
+            await RunAsync(Workflows.ReadSetting(SettingType.AddFolders.ToString()), r => AddFolders = r.Setting.AsBool());
+            await RunAsync(Workflows.ReadSetting(SettingType.ImageStorage.ToString()), r => SelectedImageStorageType = r.Setting.AsEnum<ImageStorageType>());
+            await RunAsync(Workflows.ReadSetting(SettingType.IgnoreSimilarImages.ToString()), r => IgnoreSimilarImages = r.Setting.AsBool());
+            await RunAsync(Workflows.ReadSetting(SettingType.SimilarityThreshold.ToString()), r => SimilarityThreshold = r.Setting.AsDouble());
         }
 
         private void UpdateSetting<T>(SettingType type, T value)
         {
-            Workflows.UpdateSettings(type.ToString(), value.ToString());
+            Workflows.UpdateSetting(type.ToString(), value.ToString());
         }
 
         private void UpdateSetting(SettingType type, double value)
         {
-            Workflows.UpdateSettings(type.ToString(), value.ToString(CultureInfo.InvariantCulture));
+            Workflows.UpdateSetting(type.ToString(), value.ToString(CultureInfo.InvariantCulture));
         }
     }
 }

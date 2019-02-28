@@ -6,7 +6,7 @@
     /// Management of different data types is split into
     /// separate adapters.
     /// </summary>
-    public interface IDatabaseAdapter
+    internal interface IDatabaseAdapter
     {
         /// <summary>
         /// The connection string used by the database.

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using System.Windows.Input;
@@ -17,6 +18,8 @@ namespace ImageBirb.ViewModels
         private bool _isSettingsFlyoutOpen;
 
         private readonly SelectedImageViewModel _selectedImageViewModel;
+
+        private readonly SettingsViewModel _settingsViewModel;
         
         public bool IsTagListFlyoutOpen
         {
@@ -42,9 +45,10 @@ namespace ImageBirb.ViewModels
 
         public ICommand ToggleSettingsCommand { get; }
 
-        public FlyoutViewModel(SelectedImageViewModel selectedImageViewModel)
+        public FlyoutViewModel(SelectedImageViewModel selectedImageViewModel, SettingsViewModel settingsViewModel)
         {
             _selectedImageViewModel = selectedImageViewModel;
+            _settingsViewModel = settingsViewModel;
 
             IsTagListFlyoutOpen = false;
             IsSelectedImageTagsFlyoutOpen = false;
@@ -52,11 +56,16 @@ namespace ImageBirb.ViewModels
 
             ToggleTagListCommand = new RelayCommand(ExecuteToggleTagListCommand);
             ToggleSelectedImageTagsCommand = new RelayCommand(ExecuteToggleSelectedImageTagsCommand, CanExecuteShowSelectedImageTagsCommand);
-            ToggleSettingsCommand = new RelayCommand(ExecuteToggleSettingsCommand);
+            ToggleSettingsCommand = new RelayCommand(async () => await ExecuteToggleSettingsCommand());
         }
 
-        private void ExecuteToggleSettingsCommand()
+        private async Task ExecuteToggleSettingsCommand()
         {
+            if (!IsSettingsFlyoutOpen)
+            {
+                await _settingsViewModel.ReadSettings();
+            }
+
             IsSettingsFlyoutOpen = !IsSettingsFlyoutOpen;
         }
 

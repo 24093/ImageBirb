@@ -46,7 +46,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var result = await workflow.Run();
 
             // assert
-            Assert.Equal(ResultState.Error, result.State);
+            Assert.Equal(ResultState.Failure, result.State);
             Assert.Equal(ErrorCode.WorkflowInternalError, result.ErrorCode);
             Assert.IsType<WorkflowTestException>(result.Exception);
         }

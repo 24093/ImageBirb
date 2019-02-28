@@ -23,8 +23,25 @@ namespace ImageBirbCoreUnitTests.AdapterTests.Primary
 
             // assert
             workflowHost.Verify(
-                x => x.Run<AddImagesWorkflow, AddImagesParameters, WorkflowResult>(
-                    It.Is<AddImagesParameters>(y => y.FileNames[0] == "123.bmp")), 
+                x => x.Run<AddImagesWorkflow, AddImagesParameters, AddImagesResult>(
+                    It.Is<AddImagesParameters>(y => y.FileNames[0] == "123.bmp" && y.AddFolder == false)), 
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task AddImagesWithDirectoryParamterRunsAddImagesWorkflow()
+        {
+            // arrange
+            var workflowHost = new Mock<IWorkflowHost>();
+            var workflowAdapter = new WorkflowAdapter(workflowHost.Object);
+
+            // act
+            await workflowAdapter.AddImages(@"C:\Images");
+
+            // assert
+            workflowHost.Verify(
+                x => x.Run<AddImagesWorkflow, AddImagesParameters, AddImagesResult>(
+                    It.Is<AddImagesParameters>(y => y.Directory == @"C:\Images" && y.AddFolder == true)),
                 Times.Once);
         }
 
@@ -140,6 +157,36 @@ namespace ImageBirbCoreUnitTests.AdapterTests.Primary
 
             // assert
             workflowHost.Verify(x => x.Run<ReadConnectionStringWorkflow, ConnectionStringResult>(), Times.Once);
+        }
+
+        [Fact]
+        public async Task UpdateSettingsRunsUpdateSettingWorkflow()
+        {
+            // arrange
+            var workflowHost = new Mock<IWorkflowHost>();
+            var workflowAdapter = new WorkflowAdapter(workflowHost.Object);
+
+            // act
+            await workflowAdapter.UpdateSetting("xy", "123");
+
+            // assert
+            workflowHost.Verify(x => x.Run<UpdateSettingWorkflow, SettingParameters, WorkflowResult>(
+                It.Is<SettingParameters>(y => y.Setting.Key == "xy" && y.Setting.Value == "123")), Times.Once);
+        }
+
+        [Fact]
+        public async Task ReadSettingRunsReadSettingWorkflow()
+        {
+            // arrange
+            var workflowHost = new Mock<IWorkflowHost>();
+            var workflowAdapter = new WorkflowAdapter(workflowHost.Object);
+
+            // act
+            await workflowAdapter.ReadSetting("xy");
+
+            // assert
+            workflowHost.Verify(x => x.Run<ReadSettingWorkflow, KeyParameters, SettingResult>(
+                It.Is<KeyParameters>(y => y.Key == "xy")), Times.Once);
         }
     }
 }

@@ -125,13 +125,12 @@ namespace ImageBirb.Core.Adapters.Secondary
             });
         }
 
-        public async Task<IList<Image>> GetSimilarImages(string fingerprint, Func<string, string, Task<double>> scoreFunc, double threshold)
+        public async Task<IList<ImageSimilarity>> GetSimilarImages(string fingerprint, Func<string, string, Task<double>> scoreFunc, double threshold)
         {
             return await Task.Run(async () =>
             {
                 var images = _imageCollection.FindAll();
-
-                var similarImages = new List<Image>();
+                var imageSimilarities = new List<ImageSimilarity>();
 
                 foreach (var image in images)
                 {
@@ -139,11 +138,11 @@ namespace ImageBirb.Core.Adapters.Secondary
 
                     if (score > threshold)
                     {
-                        similarImages.Add(await GetImage(image.ImageId));
+                        imageSimilarities.Add(new ImageSimilarity(image, score));
                     }
                 }
 
-                return similarImages;
+                return imageSimilarities;
             });
         }
     }

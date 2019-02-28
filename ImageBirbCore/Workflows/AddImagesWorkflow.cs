@@ -2,6 +2,7 @@
 using ImageBirb.Core.Ports.Secondary;
 using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
+using NLog;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -10,8 +11,10 @@ using System.Threading.Tasks;
 
 namespace ImageBirb.Core.Workflows
 {
-    internal class AddImagesWorkflow : Workflow<AddImagesParameters, WorkflowResult>
+    internal class AddImagesWorkflow : Workflow<AddImagesParameters, AddImagesResult>
     {
+        private new static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         private readonly IImageManagementAdapter _imageManagementAdapter;
         private readonly IFileSystemAdapter _fileSystemAdapter;
         private readonly IImagingAdapter _imagingAdapter;
@@ -26,7 +29,7 @@ namespace ImageBirb.Core.Workflows
             _settingsManagementAdapter = settingsManagementAdapter;
         }
 
-        protected override async Task<WorkflowResult> RunImpl(AddImagesParameters p)
+        protected override async Task<AddImagesResult> RunImpl(AddImagesParameters p)
         {
             return await Task.Run(async () =>
             {
@@ -49,16 +52,18 @@ namespace ImageBirb.Core.Workflows
                 // Add all files.
                 // If the number of images is below a threshold, 
                 // go without parallel working to save the overhead.
+                IList<string> ignoredImageFileNames;
+
                 if (fileNames.Count > 10)
                 {
-                    AddImagesParallel(imageStorageType, ignoreSimilarImages, similarityThreshold, fileNames);
+                    ignoredImageFileNames = AddImagesParallel(imageStorageType, ignoreSimilarImages, similarityThreshold, fileNames);
                 }
                 else
                 {
-                    await AddImages(imageStorageType, ignoreSimilarImages, similarityThreshold, fileNames);
+                    ignoredImageFileNames = await AddImages(imageStorageType, ignoreSimilarImages, similarityThreshold, fileNames);
                 }
 
-                return new WorkflowResult(ResultState.Success);
+                return new AddImagesResult(ResultState.Success, ignoredImageFileNames);
             });
         }
 
@@ -69,15 +74,26 @@ namespace ImageBirb.Core.Workflows
         /// <param name="ignoreSimilarImages">States if images that are similar to existing ones are ignored.</param>
         /// <param name="similarityThreshold">Threshold for similar images to be considered [0,1].</param>
         /// <param name="fileNames">List of image file names.</param>
-        private async Task AddImages(ImageStorageType imageStorageType, bool ignoreSimilarImages, double similarityThreshold, IList<string> fileNames)
+        /// <returns>List of ignored files.</returns>
+        private async Task<IList<string>> AddImages(ImageStorageType imageStorageType, bool ignoreSimilarImages, double similarityThreshold, IList<string> fileNames)
         {
             var i = 0;
 
-            foreach (var filename in fileNames)
+            var ignoredImageFileNames = new List<string>();
+
+            foreach (var fileName in fileNames)
             {
-                await AddImage(imageStorageType, ignoreSimilarImages, similarityThreshold, filename);
+                var added = await AddImage(imageStorageType, ignoreSimilarImages, similarityThreshold, fileName);
+
+                if (!added)
+                {
+                    ignoredImageFileNames.Add(fileName);
+                }
+
                 RaiseProgressChanged(ProgressType.ImageAdded, ++i, fileNames.Count);
             }
+
+            return ignoredImageFileNames;
         }
 
         /// <summary>
@@ -88,18 +104,26 @@ namespace ImageBirb.Core.Workflows
         /// <param name="imageStorageType">Specified image storage type.</param>
         /// <param name="ignoreSimilarImages">States if images that are similar to existing ones are ignored.</param>
         /// <param name="similarityThreshold">Threshold for similar images to be considered [0,1].</param>
-        /// <param name="filenames">List of image file names.</param>
-        private void AddImagesParallel(ImageStorageType imageStorageType, bool ignoreSimilarImages, double similarityThreshold, IList<string> filenames)
+        /// <param name="fileNames">List of image file names.</param>
+        /// <returns>List of ignored files.</returns>
+        private IList<string> AddImagesParallel(ImageStorageType imageStorageType, bool ignoreSimilarImages, double similarityThreshold, IList<string> fileNames)
         {
             var exceptions = new ConcurrentQueue<Exception>();
             var i = 0;
+            var ignoredImageFileNames = new List<string>();
 
-            Parallel.ForEach(filenames, async filename =>
+            Parallel.ForEach(fileNames, async fileName =>
             {
                 try
                 {
-                    await AddImage(imageStorageType, ignoreSimilarImages, similarityThreshold, filename);
-                    RaiseProgressChanged(ProgressType.ImageAdded, ++i, filenames.Count);
+                    var added = await AddImage(imageStorageType, ignoreSimilarImages, similarityThreshold, fileName);
+
+                    if (!added)
+                    {
+                        ignoredImageFileNames.Add(fileName);
+                    }
+
+                    RaiseProgressChanged(ProgressType.ImageAdded, ++i, fileNames.Count);
                 }
                 catch (Exception ex)
                 {
@@ -111,6 +135,8 @@ namespace ImageBirb.Core.Workflows
             {
                 throw new AggregateException(exceptions);
             }
+
+            return ignoredImageFileNames;
         }
 
         /// <summary>
@@ -120,7 +146,8 @@ namespace ImageBirb.Core.Workflows
         /// <param name="ignoreSimilarImages">States if images that are similar to existing ones are ignored.</param>
         /// <param name="similarityThreshold">Threshold for similar images to be considered [0,1].</param>
         /// <param name="filename">Filename of the image.</param>
-        private async Task AddImage(ImageStorageType imageStorageType, bool ignoreSimilarImages, double similarityThreshold, string filename)
+        /// <returns>True if image was added, false if image was ignored.</returns>
+        private async Task<bool> AddImage(ImageStorageType imageStorageType, bool ignoreSimilarImages, double similarityThreshold, string filename)
         {
             var imageId = await _imageManagementAdapter.CreateImageId();
             var imageData = await _fileSystemAdapter.ReadBinaryFile(filename);
@@ -137,7 +164,9 @@ namespace ImageBirb.Core.Workflows
                 // If any similar images were found, ignore this image.
                 if (similarImages.Any())
                 {
-                    return;
+                    Logger.Info("ignored image {0} from \"{1}\" because it is similar ({2}) to existing image (original source: \"{3}\")", 
+                        imageId, filename, similarImages.First().SimilarityScore, similarImages.First().Image.Filename);
+                    return false;
                 }
             }
 
@@ -153,6 +182,7 @@ namespace ImageBirb.Core.Workflows
             };
 
             await _imageManagementAdapter.AddImage(image);
+            return true;
         }
     }
 }

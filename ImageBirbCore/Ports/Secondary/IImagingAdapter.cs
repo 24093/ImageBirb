@@ -6,7 +6,7 @@ namespace ImageBirb.Core.Ports.Secondary
     /// This adapter handles all image inspection and
     /// manipulation tasks.
     /// </summary>
-    public interface IImagingAdapter
+    internal interface IImagingAdapter
     {
         /// <summary>
         /// Create a thumbnail from an image.
@@ -23,6 +23,12 @@ namespace ImageBirb.Core.Ports.Secondary
         /// <returns>Fingerprint string.</returns>
         Task<string> CreateFingerprint(byte[] imageData);
 
+        /// <summary>
+        /// Calculates a similarity score for two fingerprints.
+        /// </summary>
+        /// <param name="fingerprint1">First fingerprint.</param>
+        /// <param name="fingerprint2">Second fingerprint.</param>
+        /// <returns>Similarity score in [0,1]</returns>
         Task<double> GetSimilarityScore(string fingerprint1, string fingerprint2);
     }
 }

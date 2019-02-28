@@ -149,6 +149,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -173,6 +177,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell">
       <Version>1.1.3.3</Version>
+    </PackageReference>
+    <PackageReference Include="NLog">
+      <Version>4.5.11</Version>
     </PackageReference>
     <PackageReference Include="Wpf.Controls.PanAndZoom">
       <Version>1.0.3</Version>

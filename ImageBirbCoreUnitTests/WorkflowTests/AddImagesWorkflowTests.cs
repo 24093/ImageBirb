@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using ImageBirb.Core.Common;
 using ImageBirb.Core.Ports.Secondary;
 using ImageBirb.Core.Workflows;
 using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
 using Moq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using ImageBirb.Core.Common;
 using Xunit;
 
 namespace ImageBirbCoreUnitTests.WorkflowTests
@@ -47,6 +45,10 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             _settingsManagementAdapter = new Mock<ISettingsManagementAdapter>();
             _settingsManagementAdapter.Setup(x => x.GetSetting(SettingType.ImageStorage))
                 .ReturnsAsync(new Setting {Key = SettingType.ImageStorage.ToString(), Value = ImageStorageType.LinkToSource.ToString()});
+            _settingsManagementAdapter.Setup(x => x.GetSetting(SettingType.IgnoreSimilarImages))
+                .ReturnsAsync(new Setting { Key = SettingType.IgnoreSimilarImages.ToString(), Value = false.ToString() });
+            _settingsManagementAdapter.Setup(x => x.GetSetting(SettingType.SimilarityThreshold))
+                .ReturnsAsync(new Setting { Key = SettingType.SimilarityThreshold.ToString(), Value = "0.97" });
         }
 
         [Fact]
@@ -80,7 +82,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var result = await workflow.Run(parameters);
 
             // assert
-            Assert.Equal(ResultState.Error, result.State);
+            Assert.Equal(ResultState.Failure, result.State);
             Assert.Equal(ErrorCode.WorkflowInternalError, result.ErrorCode);
             Assert.IsType<WorkflowTestException>(result.Exception);
             imageManagementAdapter.Verify(x => x.AddImage(It.IsAny<Image>()), Times.Never);
@@ -101,7 +103,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var result = await workflow.Run(parameters);
 
             // assert
-            Assert.Equal(ResultState.Error, result.State);
+            Assert.Equal(ResultState.Failure, result.State);
             Assert.Equal(ErrorCode.WorkflowInternalError, result.ErrorCode);
             Assert.IsType<WorkflowTestException>(result.Exception);
             _imageManagementAdapter.Verify(x => x.AddImage(It.IsAny<Image>()), Times.Never);
@@ -122,7 +124,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var result = await workflow.Run(parameters);
 
             // assert
-            Assert.Equal(ResultState.Error, result.State);
+            Assert.Equal(ResultState.Failure, result.State);
             Assert.Equal(ErrorCode.WorkflowInternalError, result.ErrorCode);
             Assert.IsType<WorkflowTestException>(result.Exception);
             _imageManagementAdapter.Verify(x => x.AddImage(It.IsAny<Image>()), Times.Never);

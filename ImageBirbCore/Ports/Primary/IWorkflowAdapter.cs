@@ -87,7 +87,7 @@ namespace ImageBirb.Core.Ports.Primary
         /// </summary>
         /// <param name="key">Setting identifier.</param>
         /// <param name="value">Setting value.</param>
-        Task UpdateSettings(string key, string value);
+        Task UpdateSetting(string key, string value);
 
         /// <summary>
         /// Read a setting from the database.
