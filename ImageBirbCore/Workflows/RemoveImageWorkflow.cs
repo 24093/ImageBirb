@@ -17,7 +17,7 @@ namespace ImageBirb.Core.Workflows
         protected override async Task<WorkflowResult> RunImpl(ImageIdParameters p)
         {
             await _imageManagementAdapter.RemoveImage(p.ImageId);
-            return new WorkflowResult(ResultState.Success);
+            return new WorkflowResult();
         }
     }
 }

@@ -1,6 +1,5 @@
 using GalaSoft.MvvmLight.CommandWpf;
 using ImageBirb.Common;
-using ImageBirb.Core.Common;
 using ImageBirb.Core.Ports.Primary;
 using System;
 using System.Collections;
@@ -8,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using ImageBirb.Core.BusinessObjects;
 
 namespace ImageBirb.ViewModels
 {
@@ -116,13 +116,13 @@ namespace ImageBirb.ViewModels
             var tagsList = tags.Cast<Tag>().Select(x => x.Name).ToList();
 
             await RunAsyncDispatch(Workflows.LoadThumbnails(tagsList), 
-                r => Thumbnails.ReplaceItems(r.Thumbnails));
+                thumbnails => Thumbnails.ReplaceItems(thumbnails));
         }
 
         private async Task UpdateThumbnails()
         {
             await RunAsyncDispatch(Workflows.LoadThumbnails(null), 
-                r => Thumbnails.ReplaceItems(r.Thumbnails));
+                thumbnails => Thumbnails.ReplaceItems(thumbnails));
         }
     }
 }

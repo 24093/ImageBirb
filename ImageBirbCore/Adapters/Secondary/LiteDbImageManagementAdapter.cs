@@ -1,11 +1,11 @@
-﻿using ImageBirb.Core.Common;
-using ImageBirb.Core.Ports.Secondary;
+﻿using ImageBirb.Core.Ports.Secondary;
 using LiteDB;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ImageBirb.Core.BusinessObjects;
 
 namespace ImageBirb.Core.Adapters.Secondary
 {
@@ -125,7 +125,7 @@ namespace ImageBirb.Core.Adapters.Secondary
             });
         }
 
-        public async Task<IList<ImageSimilarity>> GetSimilarImages(string fingerprint, Func<string, string, Task<double>> scoreFunc, double threshold)
+        public async Task<IList<ImageSimilarity>> GetSimilarImages(string fingerprint, Scoring.ScoreFunc scoreFunc, double threshold)
         {
             return await Task.Run(async () =>
             {

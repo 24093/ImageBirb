@@ -1,6 +1,6 @@
-﻿namespace ImageBirb.Core.Common
+﻿namespace ImageBirb.Core.BusinessObjects
 {
-    internal class ImageSimilarity
+    public class ImageSimilarity
     {
         public Image Image { get; }
 

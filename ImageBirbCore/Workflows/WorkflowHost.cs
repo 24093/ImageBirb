@@ -1,10 +1,10 @@
-﻿using System;
-using ImageBirb.Core.Workflows.Parameters;
+﻿using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ImageBirb.Core.Common;
+using ImageBirb.Core.Ports.Primary;
 
 namespace ImageBirb.Core.Workflows
 {
@@ -31,6 +31,12 @@ namespace ImageBirb.Core.Workflows
         {
             var workflow = Get<TWorkflow, TParameters, TResult>();
             var result = await workflow.Run(parameters);
+
+            if (!result.IsSuccess)
+            {
+                throw new WorkflowException(result.ErrorCode, result.Exception);
+            }
+
             return result;
         }
 
@@ -40,6 +46,12 @@ namespace ImageBirb.Core.Workflows
         {
             var workflow = Get<TWorkflow, TResult>();
             var result = await workflow.Run();
+
+            if (!result.IsSuccess)
+            {
+                throw new WorkflowException(result.ErrorCode, result.Exception);
+            }
+
             return result;
         }
 

@@ -1,6 +1,6 @@
 using CommonServiceLocator;
 using GalaSoft.MvvmLight.Ioc;
-using ImageBirb.Core.Common;
+using ImageBirb.Core.BusinessObjects;
 using ImageBirb.ViewModels;
 
 namespace ImageBirb.Common

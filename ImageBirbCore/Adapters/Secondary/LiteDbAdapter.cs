@@ -1,4 +1,4 @@
-﻿using ImageBirb.Core.Common;
+﻿using ImageBirb.Core.BusinessObjects;
 using ImageBirb.Core.Ports.Secondary;
 using LiteDB;
 
@@ -20,6 +20,21 @@ namespace ImageBirb.Core.Adapters.Secondary
         {
             ConnectionString = databaseFilename;
             _liteDatabase = new LiteDatabase(databaseFilename);
+
+            MapTypes();
+        }
+
+        private void MapTypes()
+        {
+            var mapper = BsonMapper.Global;
+
+            mapper.Entity<Setting>()
+                .Id(x => x.Key);
+
+            mapper.Entity<Image>()
+                .Id(x => x.ImageId)
+                .Ignore(x => x.ImageData)
+                .Ignore(x => x.ThumbnailData);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace ImageBirb.Core.Workflows
         protected override async Task<ThumbnailsResult> RunImpl(TagNamesParameters p)
         {
             var thumbnails = await _imageManagementAdapter.GetThumbnails(p.TagNames);
-            return new ThumbnailsResult(ResultState.Success, thumbnails);
+            return new ThumbnailsResult(thumbnails);
         }
     }
 }

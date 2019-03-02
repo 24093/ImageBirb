@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ImageBirb.Core.Common;
+using ImageBirb.Core.BusinessObjects;
 
 namespace ImageBirb.Core.Ports.Secondary
 {

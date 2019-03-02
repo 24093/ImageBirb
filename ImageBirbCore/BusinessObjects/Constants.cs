@@ -1,4 +1,4 @@
-﻿namespace ImageBirb.Core.Common
+﻿namespace ImageBirb.Core.BusinessObjects
 {
     public static class Constants
     {

@@ -31,7 +31,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var result = await workflow.Run();
 
             // assert
-            Assert.Equal(ResultState.Success, result.State);
+            Assert.True(result.IsSuccess);
             Assert.Equal(_connectionString, result.ConnectionString);
         }
     }

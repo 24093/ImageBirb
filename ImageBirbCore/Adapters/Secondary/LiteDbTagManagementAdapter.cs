@@ -1,4 +1,4 @@
-﻿using ImageBirb.Core.Common;
+﻿using ImageBirb.Core.BusinessObjects;
 using ImageBirb.Core.Ports.Secondary;
 using LiteDB;
 using System.Collections.Generic;

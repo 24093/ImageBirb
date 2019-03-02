@@ -1,4 +1,4 @@
-﻿using ImageBirb.Core.Common;
+﻿using ImageBirb.Core.BusinessObjects;
 
 namespace ImageBirb.Core.Workflows.Parameters
 {

@@ -17,7 +17,7 @@ namespace ImageBirb.Core.Workflows
         protected override async Task<WorkflowResult> RunImpl(ImageIdTagParameters p)
         {
             await _tagManagementAdapter.RemoveTag(p.ImageId, p.TagName);
-            return new WorkflowResult(ResultState.Success);
+            return new WorkflowResult();
         }
     }
 }

@@ -1,9 +1,9 @@
 using GalaSoft.MvvmLight.CommandWpf;
-using ImageBirb.Core.Common;
+using ImageBirb.Common;
+using ImageBirb.Core.BusinessObjects;
 using ImageBirb.Core.Ports.Primary;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using ImageBirb.Common;
 
 namespace ImageBirb.ViewModels
 {
@@ -26,7 +26,7 @@ namespace ImageBirb.ViewModels
 
         private async void ExecuteUpdateTagsCommand()
         {
-            await RunAsyncDispatch(Workflows.LoadTags(), r => Tags.ReplaceItems(r.Tags));
+            await RunAsyncDispatch(Workflows.LoadTags(), tags => Tags.ReplaceItems(tags));
         }
     }
 }

@@ -1,4 +1,4 @@
-using ImageBirb.Core.Common;
+using System;
 using ImageBirb.Core.Ports.Secondary;
 using ImageBirb.Core.Workflows;
 using ImageBirb.Core.Workflows.Parameters;
@@ -6,6 +6,7 @@ using ImageBirb.Core.Workflows.Results;
 using Moq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ImageBirb.Core.BusinessObjects;
 using Xunit;
 
 namespace ImageBirbCoreUnitTests.WorkflowTests
@@ -20,7 +21,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
 
         private readonly Mock<IImagingAdapter> _imagingAdapter;
 
-        private readonly Mock<ISettingsManagementAdapter> _settingsManagementAdapter;
+        private readonly AddImagesParameters _addImagesParameters;
 
         public AddImagesWorkflowTests()
         {
@@ -36,33 +37,27 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             _imageManagementAdapter = new Mock<IImageManagementAdapter>();
             _imageManagementAdapter.Setup(x => x.CreateImageId()).ReturnsAsync(_image.ImageId);
             _imageManagementAdapter.Setup(x => x.AddImage(It.IsAny<Image>())).Returns(Task.CompletedTask);
+            _imageManagementAdapter.Setup(x => x.GetSimilarImages(It.IsAny<string>(), It.IsAny<Scoring.ScoreFunc>(), It.IsAny<double>())).ReturnsAsync(new List<ImageSimilarity>());
 
             _fileSystemAdapter = new Mock<IFileSystemAdapter>();
 
             _imagingAdapter = new Mock<IImagingAdapter>();
             _imagingAdapter.Setup(x => x.CreateThumbnail(It.IsAny<byte[]>())).ReturnsAsync(_image.ThumbnailData);
 
-            _settingsManagementAdapter = new Mock<ISettingsManagementAdapter>();
-            _settingsManagementAdapter.Setup(x => x.GetSetting(SettingType.ImageStorage))
-                .ReturnsAsync(new Setting {Key = SettingType.ImageStorage.ToString(), Value = ImageStorageType.LinkToSource.ToString()});
-            _settingsManagementAdapter.Setup(x => x.GetSetting(SettingType.IgnoreSimilarImages))
-                .ReturnsAsync(new Setting { Key = SettingType.IgnoreSimilarImages.ToString(), Value = false.ToString() });
-            _settingsManagementAdapter.Setup(x => x.GetSetting(SettingType.SimilarityThreshold))
-                .ReturnsAsync(new Setting { Key = SettingType.SimilarityThreshold.ToString(), Value = "0.97" });
+            _addImagesParameters = new AddImagesParameters(new List<string> { _image.Filename }, ImageStorageType.LinkToSource, true, 0.9);
         }
 
         [Fact]
         public async Task SuccessfullyAddsImage()
         {
             // arrange
-            var workflow = new AddImagesWorkflow(_imageManagementAdapter.Object, _fileSystemAdapter.Object, _imagingAdapter.Object, _settingsManagementAdapter.Object);
-            var parameters = new AddImagesParameters(new List<string> {_image.Filename});
+            var workflow = new AddImagesWorkflow(_imageManagementAdapter.Object, _fileSystemAdapter.Object, _imagingAdapter.Object);
 
             // act
-            var result = await workflow.Run(parameters);
+            var result = await workflow.Run(_addImagesParameters);
 
             // assert
-            Assert.Equal(ResultState.Success, result.State);
+            Assert.True(result.IsSuccess);
             _imageManagementAdapter.Verify(x => x.AddImage(It.Is<Image>(i => i.Equals(_image))), Times.Once());
         }
 
@@ -74,15 +69,13 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             imageManagementAdapter.Setup(x => x.CreateImageId()).ThrowsAsync(new WorkflowTestException());
             imageManagementAdapter.Setup(x => x.AddImage(It.IsAny<Image>())).Returns(Task.CompletedTask);
 
-            var workflow = new AddImagesWorkflow(imageManagementAdapter.Object, _fileSystemAdapter.Object,
-                _imagingAdapter.Object, _settingsManagementAdapter.Object);
-            var parameters = new AddImagesParameters(new List<string> {_image.Filename});
+            var workflow = new AddImagesWorkflow(imageManagementAdapter.Object, _fileSystemAdapter.Object, _imagingAdapter.Object);
 
             // act
-            var result = await workflow.Run(parameters);
+            var result = await workflow.Run(_addImagesParameters);
 
             // assert
-            Assert.Equal(ResultState.Failure, result.State);
+            Assert.False(result.IsSuccess);
             Assert.Equal(ErrorCode.WorkflowInternalError, result.ErrorCode);
             Assert.IsType<WorkflowTestException>(result.Exception);
             imageManagementAdapter.Verify(x => x.AddImage(It.IsAny<Image>()), Times.Never);
@@ -95,15 +88,13 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var fileSystemAdapter = new Mock<IFileSystemAdapter>();
             fileSystemAdapter.Setup(x => x.ReadBinaryFile(It.IsAny<string>())).ThrowsAsync(new WorkflowTestException());
 
-            var workflow = new AddImagesWorkflow(_imageManagementAdapter.Object, fileSystemAdapter.Object,
-                _imagingAdapter.Object, _settingsManagementAdapter.Object);
-            var parameters = new AddImagesParameters(new List<string> {_image.Filename});
+            var workflow = new AddImagesWorkflow(_imageManagementAdapter.Object, fileSystemAdapter.Object, _imagingAdapter.Object);
 
             // act
-            var result = await workflow.Run(parameters);
+            var result = await workflow.Run(_addImagesParameters);
 
             // assert
-            Assert.Equal(ResultState.Failure, result.State);
+            Assert.False(result.IsSuccess);
             Assert.Equal(ErrorCode.WorkflowInternalError, result.ErrorCode);
             Assert.IsType<WorkflowTestException>(result.Exception);
             _imageManagementAdapter.Verify(x => x.AddImage(It.IsAny<Image>()), Times.Never);
@@ -116,15 +107,13 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var imagingAdapter = new Mock<IImagingAdapter>();
             imagingAdapter.Setup(x => x.CreateThumbnail(It.IsAny<byte[]>())).ThrowsAsync(new WorkflowTestException());
 
-            var workflow = new AddImagesWorkflow(_imageManagementAdapter.Object, _fileSystemAdapter.Object,
-                imagingAdapter.Object, _settingsManagementAdapter.Object);
-            var parameters = new AddImagesParameters(new List<string> {_image.Filename});
+            var workflow = new AddImagesWorkflow(_imageManagementAdapter.Object, _fileSystemAdapter.Object, imagingAdapter.Object);
 
             // act
-            var result = await workflow.Run(parameters);
+            var result = await workflow.Run(_addImagesParameters);
 
             // assert
-            Assert.Equal(ResultState.Failure, result.State);
+            Assert.False(result.IsSuccess);
             Assert.Equal(ErrorCode.WorkflowInternalError, result.ErrorCode);
             Assert.IsType<WorkflowTestException>(result.Exception);
             _imageManagementAdapter.Verify(x => x.AddImage(It.IsAny<Image>()), Times.Never);

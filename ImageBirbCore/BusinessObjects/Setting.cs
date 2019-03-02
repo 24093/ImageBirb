@@ -1,14 +1,12 @@
-﻿using LiteDB;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Globalization;
 
-namespace ImageBirb.Core.Common
+namespace ImageBirb.Core.BusinessObjects
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public class Setting
     {
-        [BsonId]
         public string Key { get; set; }
 
         public string Value { get; set; }

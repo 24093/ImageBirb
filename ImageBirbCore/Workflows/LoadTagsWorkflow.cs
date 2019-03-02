@@ -1,7 +1,7 @@
-﻿using ImageBirb.Core.Common;
-using ImageBirb.Core.Workflows.Results;
+﻿using ImageBirb.Core.Workflows.Results;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ImageBirb.Core.BusinessObjects;
 using ImageBirb.Core.Ports.Secondary;
 
 namespace ImageBirb.Core.Workflows
@@ -22,7 +22,7 @@ namespace ImageBirb.Core.Workflows
             // Sort tags by count, highest value first.
             tags.Sort((x, y) => -1 * x.Count.CompareTo(y.Count));
 
-            return new TagsResult(ResultState.Success, tags);
+            return new TagsResult(tags);
         }
     }
 }

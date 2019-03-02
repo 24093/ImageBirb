@@ -1,19 +1,19 @@
-﻿using System;
-using ImageBirb.Core.Common;
+﻿using ImageBirb.Core.BusinessObjects;
+using System;
 
 namespace ImageBirb.Core.Workflows.Results
 {
-    public class ImageResult : WorkflowResult
+    internal class ImageResult : WorkflowResult
     {
         public Image Image {get; }
 
-        public ImageResult(ResultState state, ErrorCode errorCode = ErrorCode.None, Exception exception = null) 
-            : base(state, errorCode, exception)
+        public ImageResult(ErrorCode errorCode = ErrorCode.None, Exception exception = null) 
+            : base(errorCode, exception)
         {
         }
 
-        public ImageResult(ResultState state, Image image, ErrorCode errorCode = ErrorCode.None, Exception exception = null) 
-            : base(state, errorCode, exception)
+        public ImageResult(Image image, ErrorCode errorCode = ErrorCode.None, Exception exception = null) 
+            : base(errorCode, exception)
         {
             Image = image;
         }

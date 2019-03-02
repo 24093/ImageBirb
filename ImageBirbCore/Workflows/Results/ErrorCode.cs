@@ -1,6 +1,6 @@
 ﻿namespace ImageBirb.Core.Workflows.Results
 {
-    public enum ErrorCode
+    internal enum ErrorCode
     {
         None,        
         WorkflowInternalError,

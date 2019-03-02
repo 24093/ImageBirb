@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:ImageBirb.Controls"
-                    xmlns:common="clr-namespace:ImageBirb.Core.Common;assembly=ImageBirb.Core">
+                    xmlns:businessObjects="clr-namespace:ImageBirb.Core.BusinessObjects;assembly=ImageBirb.Core">
 
     <Style TargetType="{x:Type local:ThumbnailsListView}">
         <Setter Property="Template">
@@ -14,11 +14,11 @@
                               SelectedItem="{Binding ThumbnailListViewModel.SelectedThumbnail, RelativeSource={RelativeSource TemplatedParent}}"
                               ItemsSource="{Binding ThumbnailListViewModel.Thumbnails, RelativeSource={RelativeSource TemplatedParent}}">
                         <ListBox.ItemTemplate>
-                            <DataTemplate DataType="{x:Type common:Image}">
+                            <DataTemplate DataType="{x:Type businessObjects:Image}">
                                 <Image Name="ThumbnailImage"
                                        Source="{Binding ThumbnailData}"
-                                       Width="{Binding Source={x:Static common:Constants.ThumbnailWidth}}"
-                                       Height="{Binding Source={x:Static common:Constants.ThumbnailHeight}}" />
+                                       Width="{Binding Source={x:Static businessObjects:Constants.ThumbnailWidth}}"
+                                       Height="{Binding Source={x:Static businessObjects:Constants.ThumbnailHeight}}" />
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>

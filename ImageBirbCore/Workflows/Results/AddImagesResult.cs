@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using ImageBirb.Core.Common;
 
 namespace ImageBirb.Core.Workflows.Results
 {
-    public class AddImagesResult : WorkflowResult
+    internal class AddImagesResult : WorkflowResult
     {
         public IList<string> IgnoredImages { get; }
 
-        public AddImagesResult(ResultState state, ErrorCode errorCode = ErrorCode.None, Exception exception = null)
-            : base(state, errorCode, exception)
+        public AddImagesResult(ErrorCode errorCode = ErrorCode.None, Exception exception = null)
+            : base(errorCode, exception)
         {
         }
 
-        public AddImagesResult(ResultState state, IList<string> ignoredImages, ErrorCode errorCode = ErrorCode.None,
-            Exception exception = null)
-            : base(state, errorCode, exception)
+        public AddImagesResult(IList<string> ignoredImages, ErrorCode errorCode = ErrorCode.None, Exception exception = null)
+            : base(errorCode, exception)
         {
             IgnoredImages = ignoredImages;
         }

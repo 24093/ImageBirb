@@ -1,4 +1,3 @@
-using ImageBirb.Core.Common;
 using ImageBirb.Core.Ports.Secondary;
 using ImageBirb.Core.Workflows;
 using ImageBirb.Core.Workflows.Parameters;
@@ -34,7 +33,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var result = await workflow.Run(parameters);
 
             // assert
-            Assert.Equal(ResultState.Success, result.State);
+            Assert.True(result.IsSuccess);
             _imageManagementAdapter.Verify(x => x.RemoveImage(_imageId), Times.Once());
         }
 
@@ -52,7 +51,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var result = await workflow.Run(parameters);
 
             // assert
-            Assert.Equal(ResultState.Failure, result.State);
+            Assert.False(result.IsSuccess);
             Assert.Equal(ErrorCode.WorkflowInternalError, result.ErrorCode);
             Assert.IsType<WorkflowTestException>(result.Exception);
         }

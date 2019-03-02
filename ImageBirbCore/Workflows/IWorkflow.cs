@@ -1,5 +1,5 @@
 ﻿using System;
-using ImageBirb.Core.Common;
+using ImageBirb.Core.Ports.Primary;
 
 namespace ImageBirb.Core.Workflows
 {

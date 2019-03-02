@@ -1,10 +1,10 @@
-using ImageBirb.Core.Common;
 using ImageBirb.Core.Ports.Secondary;
 using ImageBirb.Core.Workflows;
 using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
 using Moq;
 using System.Threading.Tasks;
+using ImageBirb.Core.BusinessObjects;
 using Xunit;
 
 namespace ImageBirbCoreUnitTests.WorkflowTests
@@ -45,7 +45,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var result = await workflow.Run(parameters);
 
             // assert
-            Assert.Equal(ResultState.Success, result.State);
+            Assert.True(result.IsSuccess);
             _imageManagementAdapter.Verify(x => x.GetImage(_image.ImageId), Times.Once());
             _fileSystemAdapter.Verify(x => x.ReadBinaryFile(_image.Filename), Times.Once);
         }
@@ -64,7 +64,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var result = await workflow.Run(parameters);
 
             // assert
-            Assert.Equal(ResultState.Failure, result.State);
+            Assert.False(result.IsSuccess);
             Assert.Equal(ErrorCode.WorkflowInternalError, result.ErrorCode);
             Assert.IsType<WorkflowTestException>(result.Exception);
         }

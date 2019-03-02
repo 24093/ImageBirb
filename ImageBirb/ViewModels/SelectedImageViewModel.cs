@@ -1,9 +1,9 @@
 using GalaSoft.MvvmLight.CommandWpf;
 using ImageBirb.Common;
-using ImageBirb.Core.Common;
 using ImageBirb.Core.Ports.Primary;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using ImageBirb.Core.BusinessObjects;
 
 namespace ImageBirb.ViewModels
 {
@@ -79,7 +79,7 @@ namespace ImageBirb.ViewModels
             }
 
             await RunAsync(Workflows.LoadImage(image.ImageId),
-                r => SelectedImage = r.Image);
+                i => SelectedImage = i);
         }
 
         private void UpdateTags()

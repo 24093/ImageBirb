@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace ImageBirb.Core.Common
+namespace ImageBirb.Core.BusinessObjects
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public class Tag

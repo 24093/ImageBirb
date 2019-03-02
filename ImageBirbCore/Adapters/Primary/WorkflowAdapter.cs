@@ -1,4 +1,4 @@
-﻿using ImageBirb.Core.Common;
+﻿using ImageBirb.Core.BusinessObjects;
 using ImageBirb.Core.Ports.Primary;
 using ImageBirb.Core.Workflows;
 using ImageBirb.Core.Workflows.Parameters;
@@ -20,50 +20,54 @@ namespace ImageBirb.Core.Adapters.Primary
             _workflows = workflows;
             _workflows.ProgressChanged += WorkflowsOnProgressChanged;
         }
-        
-        public async Task<WorkflowResult> AddImages(IList<string> filenames)
+
+        public async Task AddImages(IList<string> filenames, ImageStorageType imageStorageType,
+            bool ignoreSimilarImages, double similarityThreshold)
         {
-            return await _workflows.Run<AddImagesWorkflow, AddImagesParameters, AddImagesResult>(new AddImagesParameters(filenames));
+            await _workflows.Run<AddImagesWorkflow, AddImagesParameters, AddImagesResult>(
+                new AddImagesParameters(filenames, imageStorageType, ignoreSimilarImages, similarityThreshold));
         }
 
-        public async Task<WorkflowResult> AddImages(string directory)
+        public async Task AddImages(string directory, ImageStorageType imageStorageType, bool ignoreSimilarImages,
+            double similarityThreshold)
         {
-            return await _workflows.Run<AddImagesWorkflow, AddImagesParameters, AddImagesResult>(new AddImagesParameters(directory));
+            await _workflows.Run<AddImagesWorkflow, AddImagesParameters, AddImagesResult>(
+                new AddImagesParameters(directory, imageStorageType, ignoreSimilarImages, similarityThreshold));
         }
 
-        public async Task<WorkflowResult> RemoveImage(string imageId)
+        public async Task RemoveImage(string imageId)
         {
-            return await _workflows.Run<RemoveImageWorkflow, ImageIdParameters, WorkflowResult>(new ImageIdParameters(imageId));
+            await _workflows.Run<RemoveImageWorkflow, ImageIdParameters, WorkflowResult>(new ImageIdParameters(imageId));
         }
 
-        public async Task<ImageResult> LoadImage(string imageId)
+        public async Task<Image> LoadImage(string imageId)
         {
-            return await _workflows.Run<LoadImageWorkflow, ImageIdParameters, ImageResult>(new ImageIdParameters(imageId));
-        }
-        
-        public async Task<WorkflowResult> AddTag(string imageId, string tagName)
-        {
-            return await _workflows.Run<AddTagWorkflow, ImageIdTagParameters, WorkflowResult>(new ImageIdTagParameters(imageId, tagName));
-        }
-
-        public async Task<WorkflowResult> RemoveTag(string imageId, string tagName)
-        {
-            return await _workflows.Run<RemoveTagWorkflow, ImageIdTagParameters, WorkflowResult>(new ImageIdTagParameters(imageId, tagName));
-        }
-
-        public async Task<TagsResult> LoadTags()
-        {
-            return await _workflows.Run<LoadTagsWorkflow, TagsResult>();
-        }
-
-        public async Task<ThumbnailsResult> LoadThumbnails(List<string> tagNames)
-        {
-            return await _workflows.Run<LoadThumbnailsWorkflow, TagNamesParameters, ThumbnailsResult>(new TagNamesParameters(tagNames));
+            return (await _workflows.Run<LoadImageWorkflow, ImageIdParameters, ImageResult>(new ImageIdParameters(imageId)))?.Image;
         }
         
-        public async Task<ConnectionStringResult> ReadConnectionString()
+        public async Task AddTag(string imageId, string tagName)
         {
-            return await _workflows.Run<ReadConnectionStringWorkflow, ConnectionStringResult>();
+            await _workflows.Run<AddTagWorkflow, ImageIdTagParameters, WorkflowResult>(new ImageIdTagParameters(imageId, tagName));
+        }
+
+        public async Task RemoveTag(string imageId, string tagName)
+        {
+            await _workflows.Run<RemoveTagWorkflow, ImageIdTagParameters, WorkflowResult>(new ImageIdTagParameters(imageId, tagName));
+        }
+
+        public async Task<IList<Tag>> LoadTags()
+        {
+            return (await _workflows.Run<LoadTagsWorkflow, TagsResult>())?.Tags;
+        }
+
+        public async Task<IList<Image>> LoadThumbnails(List<string> tagNames)
+        {
+            return (await _workflows.Run<LoadThumbnailsWorkflow, TagNamesParameters, ThumbnailsResult>(new TagNamesParameters(tagNames)))?.Thumbnails;
+        }
+        
+        public async Task<string> ReadConnectionString()
+        {
+            return (await _workflows.Run<ReadConnectionStringWorkflow, ConnectionStringResult>())?.ConnectionString;
         }
 
         public async Task UpdateSetting(string key, string value)
@@ -71,9 +75,9 @@ namespace ImageBirb.Core.Adapters.Primary
             await _workflows.Run<UpdateSettingWorkflow, SettingParameters, WorkflowResult>(new SettingParameters(key, value));
         }
 
-        public async Task<SettingResult> ReadSetting(string key)
+        public async Task<Setting> ReadSetting(string key, string defaultValue)
         {
-            return await _workflows.Run<ReadSettingWorkflow, KeyParameters, SettingResult>(new KeyParameters(key));
+            return (await _workflows.Run<ReadSettingWorkflow, SettingParameters, SettingResult>(new SettingParameters(key, defaultValue)))?.Setting;
         }
 
         public void Dispose()

@@ -18,7 +18,7 @@ namespace ImageBirb.Core.Workflows
             return await Task.Run(() =>
             {
                 var connectionString = _databaseAdapter.ConnectionString;
-                return new ConnectionStringResult(ResultState.Success, connectionString);
+                return new ConnectionStringResult(connectionString);
             });
         }
     }

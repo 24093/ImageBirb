@@ -24,11 +24,8 @@ namespace ImageBirb.Core.Ports.Secondary
         Task<string> CreateFingerprint(byte[] imageData);
 
         /// <summary>
-        /// Calculates a similarity score for two fingerprints.
+        /// Function to calculate a similarity score for two fingerprints.
         /// </summary>
-        /// <param name="fingerprint1">First fingerprint.</param>
-        /// <param name="fingerprint2">Second fingerprint.</param>
-        /// <returns>Similarity score in [0,1]</returns>
-        Task<double> GetSimilarityScore(string fingerprint1, string fingerprint2);
+        Scoring.ScoreFunc GetSimilarityScore { get; }
     }
 }

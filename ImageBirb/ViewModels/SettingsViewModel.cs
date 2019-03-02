@@ -1,4 +1,4 @@
-﻿using ImageBirb.Core.Common;
+﻿using ImageBirb.Core.BusinessObjects;
 using ImageBirb.Core.Ports.Primary;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -11,6 +11,15 @@ namespace ImageBirb.ViewModels
     /// </summary>
     internal class SettingsViewModel : WorkflowViewModel
     {
+        private const string AddFoldersSetting = "AddFolders";
+        private const string AddFoldersSettingDefault = "True";
+        private const string ImageStorageSetting = "ImageStorage";
+        private const string ImageStorageSettingDefault = "LinkToSource";
+        private const string IgnoreSimilarImagesSetting = "IgnoreSimilarImages";
+        private const string IgnoreSimilarImagesSettingDefault = "True";
+        private const string SimilarityThresholdSetting = "SimilarityThreshold";
+        private const string SimilarityThresholdSettingDefault = "0.9";
+
         private string _databaseFilename;
 
         private bool _addFolders;
@@ -33,7 +42,7 @@ namespace ImageBirb.ViewModels
             set
             {
                 Set(ref _addFolders, value);
-                UpdateSetting(SettingType.AddFolders, value);
+                UpdateSetting(AddFoldersSetting, value);
             }
         }
 
@@ -43,7 +52,7 @@ namespace ImageBirb.ViewModels
             set
             {
                 Set(ref _ignoreSimilarImages, value);
-                UpdateSetting(SettingType.IgnoreSimilarImages, value);
+                UpdateSetting(IgnoreSimilarImagesSetting, value);
             }
         }
 
@@ -53,7 +62,7 @@ namespace ImageBirb.ViewModels
             set
             {
                 Set(ref _similarityThreshold, value);
-                UpdateSetting(SettingType.SimilarityThreshold, value);
+                UpdateSetting(SimilarityThresholdSetting, value);
             }
         }
 
@@ -70,7 +79,7 @@ namespace ImageBirb.ViewModels
             set
             {
                 Set(ref _selectedImageStorageType, value);
-                UpdateSetting(SettingType.ImageStorage, value);
+                UpdateSetting(ImageStorageSetting, value);
             }
         }
 
@@ -85,21 +94,21 @@ namespace ImageBirb.ViewModels
         /// </summary>
         public async Task ReadSettings()
         {
-            await RunAsync(Workflows.ReadConnectionString(), r => DatabaseFilename = r.ConnectionString);
-            await RunAsync(Workflows.ReadSetting(SettingType.AddFolders.ToString()), r => AddFolders = r.Setting.AsBool());
-            await RunAsync(Workflows.ReadSetting(SettingType.ImageStorage.ToString()), r => SelectedImageStorageType = r.Setting.AsEnum<ImageStorageType>());
-            await RunAsync(Workflows.ReadSetting(SettingType.IgnoreSimilarImages.ToString()), r => IgnoreSimilarImages = r.Setting.AsBool());
-            await RunAsync(Workflows.ReadSetting(SettingType.SimilarityThreshold.ToString()), r => SimilarityThreshold = r.Setting.AsDouble());
+            await RunAsync(Workflows.ReadConnectionString(), connectionString => DatabaseFilename = connectionString);
+            await RunAsync(Workflows.ReadSetting(AddFoldersSetting, AddFoldersSettingDefault), setting => AddFolders = setting.AsBool());
+            await RunAsync(Workflows.ReadSetting(ImageStorageSetting, ImageStorageSettingDefault), setting => SelectedImageStorageType = setting.AsEnum<ImageStorageType>());
+            await RunAsync(Workflows.ReadSetting(IgnoreSimilarImagesSetting, IgnoreSimilarImagesSettingDefault), setting => IgnoreSimilarImages = setting.AsBool());
+            await RunAsync(Workflows.ReadSetting(SimilarityThresholdSetting, SimilarityThresholdSettingDefault), setting => SimilarityThreshold = setting.AsDouble());
         }
 
-        private void UpdateSetting<T>(SettingType type, T value)
+        private void UpdateSetting<T>(string type, T value)
         {
-            Workflows.UpdateSetting(type.ToString(), value.ToString());
+            Workflows.UpdateSetting(type, value.ToString());
         }
 
-        private void UpdateSetting(SettingType type, double value)
+        private void UpdateSetting(string type, double value)
         {
-            Workflows.UpdateSetting(type.ToString(), value.ToString(CultureInfo.InvariantCulture));
+            Workflows.UpdateSetting(type, value.ToString(CultureInfo.InvariantCulture));
         }
     }
 }

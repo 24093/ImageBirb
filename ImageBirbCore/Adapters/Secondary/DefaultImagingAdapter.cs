@@ -1,4 +1,4 @@
-﻿using ImageBirb.Core.Common;
+﻿using ImageBirb.Core.BusinessObjects;
 using ImageBirb.Core.Ports.Secondary;
 using ImageMagick;
 using Shipwreck.Phash;
@@ -35,20 +35,19 @@ namespace ImageBirb.Core.Adapters.Secondary
             {
                 using (var ms = new MemoryStream(imageData))
                 {
-                    var bitmap = (Bitmap)System.Drawing.Image.FromStream(ms);
+                    var bitmap = (Bitmap) System.Drawing.Image.FromStream(ms);
                     var digest = ImagePhash.ComputeDigest(bitmap.ToLuminanceImage());
-                    
-                    return System.Text.Encoding.UTF8.GetString(digest.Coefficents);
+
+                    return Encoding.UTF8.GetString(digest.Coefficents);
                 }
             });
         }
 
-        public async Task<double> GetSimilarityScore(string fingerprint1, string fingerprint2)
+        public Scoring.ScoreFunc GetSimilarityScore => async (fingerprint1, fingerprint2) =>
         {
             return await Task.Run(() => ImagePhash.GetCrossCorrelation(
                 Encoding.UTF8.GetBytes(fingerprint1),
                 Encoding.UTF8.GetBytes(fingerprint2)));
-        }
+        };
     }
-
 }

@@ -27,7 +27,7 @@ namespace ImageBirb.Core.Workflows
             }
 
             await _tagManagementAdapter.AddTag(p.ImageId, p.TagName);
-            return new WorkflowResult(ResultState.Success);
+            return new WorkflowResult();
         }
     }
 }

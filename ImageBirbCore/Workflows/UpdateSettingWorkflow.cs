@@ -17,7 +17,7 @@ namespace ImageBirb.Core.Workflows
         protected override async Task<WorkflowResult> RunImpl(SettingParameters p)
         {
             await _settingsManagementAdapter.UpdateSetting(p.Setting);
-            return new WorkflowResult(ResultState.Success);
+            return new WorkflowResult();
         }
     }
 }

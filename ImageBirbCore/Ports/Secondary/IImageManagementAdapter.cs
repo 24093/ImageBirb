@@ -1,7 +1,6 @@
-﻿using System;
+﻿using ImageBirb.Core.BusinessObjects;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ImageBirb.Core.Common;
 
 namespace ImageBirb.Core.Ports.Secondary
 {
@@ -49,6 +48,6 @@ namespace ImageBirb.Core.Ports.Secondary
         /// <param name="scoreFunc">Function to determine the similarity score.</param>
         /// <param name="threshold">Threshold for images to be considered equal.</param>
         /// <returns>List of similar images.</returns>
-        Task<IList<ImageSimilarity>> GetSimilarImages(string fingerprint, Func<string, string, Task<double>> scoreFunc, double threshold);
+        Task<IList<ImageSimilarity>> GetSimilarImages(string fingerprint, Scoring.ScoreFunc scoreFunc, double threshold);
     }
 }

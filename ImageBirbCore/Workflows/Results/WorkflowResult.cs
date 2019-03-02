@@ -4,21 +4,18 @@ using Newtonsoft.Json.Converters;
 
 namespace ImageBirb.Core.Workflows.Results
 {
-    public class WorkflowResult
+    internal class WorkflowResult
     {
-        public bool IsSuccess => State == ResultState.Success;
-        
-        [JsonConverter(typeof(StringEnumConverter))]
-        public ResultState State { get; }
+        public bool IsSuccess { get; }
         
         [JsonConverter(typeof(StringEnumConverter))]
         public ErrorCode ErrorCode { get; }
 
         public Exception Exception { get; }
 
-        public WorkflowResult(ResultState state, ErrorCode errorCode = ErrorCode.None, Exception exception = null)
+        public WorkflowResult(ErrorCode errorCode = ErrorCode.None, Exception exception = null)
         {
-            State = state;
+            IsSuccess = errorCode == ErrorCode.None;
             ErrorCode = errorCode;
             Exception = exception;
         }
@@ -26,7 +23,6 @@ namespace ImageBirb.Core.Workflows.Results
         public static WorkflowResult CreateInvalidParameterResult(string parameterName)
         {
             return new WorkflowResult(
-                ResultState.Failure, 
                 ErrorCode.InvalidParameter,
                 new ArgumentException("parameter can not be empty", parameterName));
         }

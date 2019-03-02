@@ -1,4 +1,3 @@
-using ImageBirb.Core.Common;
 using ImageBirb.Core.Ports.Secondary;
 using ImageBirb.Core.Workflows;
 using ImageBirb.Core.Workflows.Parameters;
@@ -6,6 +5,7 @@ using ImageBirb.Core.Workflows.Results;
 using Moq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ImageBirb.Core.BusinessObjects;
 using Xunit;
 
 namespace ImageBirbCoreUnitTests.WorkflowTests
@@ -40,7 +40,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var result = await workflow.Run(parameters);
 
             // assert
-            Assert.Equal(ResultState.Success, result.State);
+            Assert.True(result.IsSuccess);
             Assert.Equal(3, result.Thumbnails.Count);
             _imageManagementAdapter.Verify(x => x.GetThumbnails(null), Times.Once());
         }
@@ -56,7 +56,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var result = await workflow.Run(parameters);
 
             // assert
-            Assert.Equal(ResultState.Success, result.State);
+            Assert.True(result.IsSuccess);
             Assert.Equal(3, result.Thumbnails.Count);
             _imageManagementAdapter.Verify(x => x.GetThumbnails(It.IsAny<IList<string>>()), Times.Once());
         }
@@ -75,7 +75,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var result = await workflow.Run(parameters);
 
             // assert
-            Assert.Equal(ResultState.Success, result.State);
+            Assert.True(result.IsSuccess);
         }
 
         [Fact]
@@ -92,7 +92,7 @@ namespace ImageBirbCoreUnitTests.WorkflowTests
             var result = await workflow.Run(parameters);
 
             // assert
-            Assert.Equal(ResultState.Failure, result.State);
+            Assert.False(result.IsSuccess);
             Assert.Equal(ErrorCode.WorkflowInternalError, result.ErrorCode);
             Assert.IsType<WorkflowTestException>(result.Exception);
         }

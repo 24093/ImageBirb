@@ -1,10 +1,8 @@
 using GalaSoft.MvvmLight.CommandWpf;
 using ImageBirb.Common;
-using ImageBirb.Controls;
-using ImageBirb.Core.Common;
+using ImageBirb.Core.BusinessObjects;
 using ImageBirb.Core.Ports.Primary;
 using MahApps.Metro.Controls.Dialogs;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -21,6 +19,8 @@ namespace ImageBirb.ViewModels
 
         private readonly DialogViewModel _dialogViewModel;
 
+        private readonly SettingsViewModel _settingsViewModel;
+
         private ProgressDialogController _progressDialogController;
 
         public ICommand AddImageFromFileCommand { get; }
@@ -31,12 +31,14 @@ namespace ImageBirb.ViewModels
             IWorkflowAdapter workflows,
             SelectedImageViewModel selectedImageViewModel,
             ThumbnailListViewModel thumbnailListViewModel,
-            DialogViewModel dialogViewModel)
+            DialogViewModel dialogViewModel,
+            SettingsViewModel settingsViewModel)
             : base(workflows)
         {
             _selectedImageViewModel = selectedImageViewModel;
             _thumbnailListViewModel = thumbnailListViewModel;
             _dialogViewModel = dialogViewModel;
+            _settingsViewModel = settingsViewModel;
 
             AddImageFromFileCommand = new RelayCommand(ExecuteAddImageFromFileCommand);
             RemoveImageCommand = new RelayCommand<string>(ExecuteRemoveImageCommand, CanExecuteRemoveImageCommand);
@@ -64,19 +66,14 @@ namespace ImageBirb.ViewModels
 
         private async void ExecuteAddImageFromFileCommand()
         {
-            await RunAsyncDispatch(Workflows.ReadSetting(SettingType.AddFolders.ToString()), async r =>
+            if (_settingsViewModel.AddFolders)
             {
-                var addingFolder = r.Setting.AsBool();
-                
-                if (addingFolder)
-                {
-                    await AddImagesFromFolder();
-                }
-                else
-                {
-                    await AddImagesFromFiles();
-                }
-            });
+                await AddImagesFromFolder();
+            }
+            else
+            {
+                await AddImagesFromFiles();
+            }
         }
 
         private async Task AddImagesFromFolder()
@@ -86,7 +83,8 @@ namespace ImageBirb.ViewModels
             if (result.IsOk)
             {
                 _progressDialogController = await _dialogViewModel.ShowProgressDialog("Adding images...", string.Empty);
-                await RunAsync(Workflows.AddImages(result.DirectoryName));
+                await RunAsync(Workflows.AddImages(result.DirectoryName, _settingsViewModel.SelectedImageStorageType,
+                    _settingsViewModel.IgnoreSimilarImages, _settingsViewModel.SimilarityThreshold));
             }
         }
 
@@ -97,7 +95,8 @@ namespace ImageBirb.ViewModels
             if (result.IsOk)
             {
                 _progressDialogController = await _dialogViewModel.ShowProgressDialog("Adding images...", string.Empty);
-                await RunAsync(Workflows.AddImages(result.FileNames));
+                await RunAsync(Workflows.AddImages(result.FileNames, _settingsViewModel.SelectedImageStorageType,
+                    _settingsViewModel.IgnoreSimilarImages, _settingsViewModel.SimilarityThreshold));
             }
         }
 

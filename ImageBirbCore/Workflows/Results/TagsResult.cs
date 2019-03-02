@@ -1,20 +1,20 @@
-﻿using System;
+﻿using ImageBirb.Core.BusinessObjects;
+using System;
 using System.Collections.Generic;
-using ImageBirb.Core.Common;
 
 namespace ImageBirb.Core.Workflows.Results
 {
-    public class TagsResult : WorkflowResult
+    internal class TagsResult : WorkflowResult
     {
         public IList<Tag> Tags { get; }
 
-        public TagsResult(ResultState state, ErrorCode errorCode = ErrorCode.None, Exception exception = null)
-            : base(state, errorCode, exception)
+        public TagsResult(ErrorCode errorCode = ErrorCode.None, Exception exception = null)
+            : base(errorCode, exception)
         {
         }
 
-        public TagsResult(ResultState state, IList<Tag> tags, ErrorCode errorCode = ErrorCode.None, Exception exception = null)
-            : base(state, errorCode, exception)
+        public TagsResult(IList<Tag> tags, ErrorCode errorCode = ErrorCode.None, Exception exception = null)
+            : base(errorCode, exception)
         {
             Tags = tags;
         }

@@ -1,4 +1,5 @@
-﻿using ImageBirb.Core.Common;
+﻿using ImageBirb.Core.BusinessObjects;
+using ImageBirb.Core.Ports.Primary;
 using ImageBirb.Core.Ports.Secondary;
 using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
@@ -18,15 +19,13 @@ namespace ImageBirb.Core.Workflows
         private readonly IImageManagementAdapter _imageManagementAdapter;
         private readonly IFileSystemAdapter _fileSystemAdapter;
         private readonly IImagingAdapter _imagingAdapter;
-        private readonly ISettingsManagementAdapter _settingsManagementAdapter;
         
         public AddImagesWorkflow(IImageManagementAdapter imageManagementAdapter, IFileSystemAdapter fileSystemAdapter,
-            IImagingAdapter imagingAdapter, ISettingsManagementAdapter settingsManagementAdapter)
+            IImagingAdapter imagingAdapter)
         {
             _imageManagementAdapter = imageManagementAdapter;
             _fileSystemAdapter = fileSystemAdapter;
             _imagingAdapter = imagingAdapter;
-            _settingsManagementAdapter = settingsManagementAdapter;
         }
 
         protected override async Task<AddImagesResult> RunImpl(AddImagesParameters p)
@@ -34,11 +33,6 @@ namespace ImageBirb.Core.Workflows
             return await Task.Run(async () =>
             {
                 var fileNames = p.FileNames;
-
-                // Read needed settings.
-                var imageStorageType = (await _settingsManagementAdapter.GetSetting(SettingType.ImageStorage)).AsEnum<ImageStorageType>();
-                var ignoreSimilarImages = (await _settingsManagementAdapter.GetSetting(SettingType.IgnoreSimilarImages)).AsBool();
-                var similarityThreshold = (await _settingsManagementAdapter.GetSetting(SettingType.SimilarityThreshold)).AsDouble();
 
                 // If a directory instead of file names was supplied, scan it for image files.
                 if (p.AddFolder)
@@ -56,14 +50,14 @@ namespace ImageBirb.Core.Workflows
 
                 if (fileNames.Count > 10)
                 {
-                    ignoredImageFileNames = AddImagesParallel(imageStorageType, ignoreSimilarImages, similarityThreshold, fileNames);
+                    ignoredImageFileNames = AddImagesParallel(p.ImageStorageType, p.IgnoreSimilarImages, p.SimilarityThreshold, fileNames);
                 }
                 else
                 {
-                    ignoredImageFileNames = await AddImages(imageStorageType, ignoreSimilarImages, similarityThreshold, fileNames);
+                    ignoredImageFileNames = await AddImages(p.ImageStorageType, p.IgnoreSimilarImages, p.SimilarityThreshold, fileNames);
                 }
 
-                return new AddImagesResult(ResultState.Success, ignoredImageFileNames);
+                return new AddImagesResult(ignoredImageFileNames);
             });
         }
 
@@ -158,14 +152,14 @@ namespace ImageBirb.Core.Workflows
             // Check for similar images.
             if (ignoreSimilarImages)
             {
-                var similarImages = await _imageManagementAdapter.GetSimilarImages(fingerprint,
+                var imageSimilarities = await _imageManagementAdapter.GetSimilarImages(fingerprint,
                     _imagingAdapter.GetSimilarityScore, similarityThreshold);
 
                 // If any similar images were found, ignore this image.
-                if (similarImages.Any())
+                if (imageSimilarities.Any())
                 {
                     Logger.Info("ignored image {0} from \"{1}\" because it is similar ({2}) to existing image (original source: \"{3}\")", 
-                        imageId, filename, similarImages.First().SimilarityScore, similarImages.First().Image.Filename);
+                        imageId, filename, imageSimilarities.First().SimilarityScore, imageSimilarities.First().Image.Filename);
                     return false;
                 }
             }

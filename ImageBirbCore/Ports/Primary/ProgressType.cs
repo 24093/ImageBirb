@@ -1,4 +1,4 @@
-﻿namespace ImageBirb.Core.Common
+﻿namespace ImageBirb.Core.Ports.Primary
 {
     public enum ProgressType
     {

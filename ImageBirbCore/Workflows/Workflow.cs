@@ -1,10 +1,10 @@
-﻿using ImageBirb.Core.Common;
-using ImageBirb.Core.Workflows.Parameters;
+﻿using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
 using Newtonsoft.Json;
 using NLog;
 using System;
 using System.Threading.Tasks;
+using ImageBirb.Core.Ports.Primary;
 
 namespace ImageBirb.Core.Workflows
 {
@@ -33,7 +33,7 @@ namespace ImageBirb.Core.Workflows
             catch (Exception ex)
             {
                 Logger.Error(ex, "workflow threw an exception");
-                return (TResult) Activator.CreateInstance(typeof(TResult), ResultState.Failure, ErrorCode.WorkflowInternalError, ex);
+                return (TResult) Activator.CreateInstance(typeof(TResult), ErrorCode.WorkflowInternalError, ex);
             }
         }
 
@@ -63,7 +63,7 @@ namespace ImageBirb.Core.Workflows
             catch (Exception ex)
             {
                 Logger.Error(ex, "workflow threw an exception");
-                return (TResult)Activator.CreateInstance(typeof(TResult), ResultState.Failure, ErrorCode.WorkflowInternalError, ex);
+                return (TResult)Activator.CreateInstance(typeof(TResult), ErrorCode.WorkflowInternalError, ex);
             }
         }
 

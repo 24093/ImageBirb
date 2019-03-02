@@ -1,7 +1,5 @@
 using GalaSoft.MvvmLight;
-using ImageBirb.Core.Common;
 using ImageBirb.Core.Ports.Primary;
-using ImageBirb.Core.Workflows.Results;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -40,20 +38,35 @@ namespace ImageBirb.ViewModels
         /// <param name="onSuccess">Action to be called if workflow was successfully run.</param>
         /// <param name="onFailure">Action to be called if workflow didn't run successfully.</param>
         protected async Task RunAsync<TResult>(Task<TResult> workflow, Action<TResult> onSuccess = null,
-            Action<TResult> onFailure = null)
-            where TResult : WorkflowResult
+            Action<Exception> onFailure = null)
         {
-            await workflow.ContinueWith(t =>
+            try
             {
-                if (t.Result.IsSuccess)
-                {
-                    onSuccess?.Invoke(t.Result);
-                }
-                else
-                {
-                    (onFailure ?? DefaultWorkflowOnError).Invoke(t.Result);
-                }
-            });
+                await workflow.ContinueWith(t => onSuccess?.Invoke(t.Result));
+            }
+            catch (Exception ex)
+            {
+                (onFailure ?? DefaultWorkflowOnError).Invoke(ex);
+            }
+        }
+
+        /// <summary>
+        /// Run a workflow. This is the default approach to run a workflow.
+        /// </summary>
+        /// <param name="workflow">Workflow to run.</param>
+        /// <param name="onSuccess">Action to be called if workflow was successfully run.</param>
+        /// <param name="onFailure">Action to be called if workflow didn't run successfully.</param>
+        protected async Task RunAsync(Task workflow, Action onSuccess = null,
+            Action<Exception> onFailure = null)
+        {
+            try
+            {
+                await workflow.ContinueWith(t => onSuccess?.Invoke());
+            }
+            catch (Exception ex)
+            {
+                (onFailure ?? DefaultWorkflowOnError).Invoke(ex);
+            }
         }
 
         /// <summary>
@@ -64,11 +77,10 @@ namespace ImageBirb.ViewModels
         /// <param name="onSuccess">Action to be called if workflow was successfully run.</param>
         /// <param name="onFailure">Action to be called if workflow didn't run successfully.</param>
         protected async Task RunAsyncDispatch<TResult>(Task<TResult> workflow, Action<TResult> onSuccess = null,
-            Action<TResult> onFailure = null)
-            where TResult : WorkflowResult
+            Action<Exception> onFailure = null)
         {
             Action<TResult> onSuccessDispatched = null;
-            Action<TResult> onFailureDispatched = r => Application.Current.Dispatcher.Invoke(() => (onFailure ?? DefaultWorkflowOnError)(r));
+            Action<Exception> onFailureDispatched = r => Application.Current.Dispatcher.Invoke(() => (onFailure ?? DefaultWorkflowOnError)(r));
             
             if (onSuccess != null)
             {
@@ -81,30 +93,25 @@ namespace ImageBirb.ViewModels
         /// <summary>
         /// The default error handler. Shows a windows message box in debug mode.
         /// </summary>
-        /// <typeparam name="TResult">Workflow result type.</typeparam>
-        /// <param name="result">The error result.</param>
-        private void DefaultWorkflowOnError<TResult>(TResult result)
-            where TResult : WorkflowResult
+        /// <param name="ex">The exception thrown by the workflow host.</param>
+        private void DefaultWorkflowOnError(Exception ex)
         {
-            Log.Error(result.Exception);
+            Log.Error(ex);
 
             if (Debugger.IsAttached)
             {
-                var message = (result.Exception?.Message + Environment.NewLine + Environment.NewLine +
-                               result.Exception?.StackTrace).Trim();
-                MessageBox.Show(message, result.ErrorCode.ToString(), MessageBoxButton.OK, MessageBoxImage.Error);
+                var message = (ex?.Message + Environment.NewLine + Environment.NewLine + ex?.StackTrace).Trim();
+                MessageBox.Show(message, ex?.GetType().Name, MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
-            WorkflowOnError(result);
+            WorkflowOnError(ex);
         }
 
         /// <summary>
         /// Custom error handler to be implemented in concrete classes.
         /// </summary>
-        /// <typeparam name="TResult">Workflow result type.</typeparam>
-        /// <param name="result">The error result.</param>
-        protected virtual void WorkflowOnError<TResult>(TResult result)
-            where TResult : WorkflowResult
+        /// <param name="ex">The exception thrown by the workflow host.</param>
+        protected virtual void WorkflowOnError(Exception ex)
         {
         }
 

@@ -1,7 +1,7 @@
 ﻿using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
 using System.Threading.Tasks;
-using ImageBirb.Core.Common;
+using ImageBirb.Core.BusinessObjects;
 using ImageBirb.Core.Ports.Secondary;
 
 namespace ImageBirb.Core.Workflows
@@ -28,7 +28,7 @@ namespace ImageBirb.Core.Workflows
                 image.ImageData = imageData;
             }
 
-            return new ImageResult(ResultState.Success, image);
+            return new ImageResult(image);
         }
     }
 }

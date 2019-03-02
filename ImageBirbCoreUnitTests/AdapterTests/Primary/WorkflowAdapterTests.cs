@@ -4,7 +4,9 @@ using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
 using Moq;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using ImageBirb.Core.BusinessObjects;
 using Xunit;
 
 namespace ImageBirbCoreUnitTests.AdapterTests.Primary
@@ -19,12 +21,15 @@ namespace ImageBirbCoreUnitTests.AdapterTests.Primary
             var workflowAdapter = new WorkflowAdapter(workflowHost.Object);
             
             // act
-            await workflowAdapter.AddImages(new List<string> {"123.bmp"});
+            await workflowAdapter.AddImages(new List<string> {"123.bmp"}, ImageStorageType.LinkToSource, true, 0.9);
 
             // assert
             workflowHost.Verify(
                 x => x.Run<AddImagesWorkflow, AddImagesParameters, AddImagesResult>(
-                    It.Is<AddImagesParameters>(y => y.FileNames[0] == "123.bmp" && y.AddFolder == false)), 
+                    It.Is<AddImagesParameters>(y =>
+                        y.FileNames[0] == "123.bmp" && y.AddFolder == false &&
+                        y.ImageStorageType == ImageStorageType.LinkToSource && y.IgnoreSimilarImages == true &&
+                        y.SimilarityThreshold == 0.9)),
                 Times.Once);
         }
 
@@ -36,12 +41,15 @@ namespace ImageBirbCoreUnitTests.AdapterTests.Primary
             var workflowAdapter = new WorkflowAdapter(workflowHost.Object);
 
             // act
-            await workflowAdapter.AddImages(@"C:\Images");
+            await workflowAdapter.AddImages(@"C:\Images", ImageStorageType.LinkToSource, true, 0.9);
 
             // assert
             workflowHost.Verify(
                 x => x.Run<AddImagesWorkflow, AddImagesParameters, AddImagesResult>(
-                    It.Is<AddImagesParameters>(y => y.Directory == @"C:\Images" && y.AddFolder == true)),
+                    It.Is<AddImagesParameters>(y => 
+                        y.Directory == @"C:\Images" && y.AddFolder == true &&
+                        y.ImageStorageType == ImageStorageType.LinkToSource && y.IgnoreSimilarImages == true &&
+                        y.SimilarityThreshold == 0.9)),
                 Times.Once);
         }
 
@@ -182,11 +190,11 @@ namespace ImageBirbCoreUnitTests.AdapterTests.Primary
             var workflowAdapter = new WorkflowAdapter(workflowHost.Object);
 
             // act
-            await workflowAdapter.ReadSetting("xy");
+            await workflowAdapter.ReadSetting("xy", "1.0");
 
             // assert
-            workflowHost.Verify(x => x.Run<ReadSettingWorkflow, KeyParameters, SettingResult>(
-                It.Is<KeyParameters>(y => y.Key == "xy")), Times.Once);
+            workflowHost.Verify(x => x.Run<ReadSettingWorkflow, SettingParameters, SettingResult>(
+                It.Is<SettingParameters>(y => y.Setting.Key == "xy" && y.Setting.Value == "1.0")), Times.Once);
         }
     }
 }

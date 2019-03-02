@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ImageBirb.Core.Common
+namespace ImageBirb.Core.Ports.Primary
 {
     public class ProgressChangedEventArgs : EventArgs
     {

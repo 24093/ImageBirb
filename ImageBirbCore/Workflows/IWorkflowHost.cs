@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ImageBirb.Core.Common;
+using ImageBirb.Core.Ports.Primary;
 using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
 

@@ -1,4 +1,4 @@
-﻿using ImageBirb.Core.Common;
+﻿using ImageBirb.Core.BusinessObjects;
 using System.Threading.Tasks;
 
 namespace ImageBirb.Core.Ports.Secondary
@@ -20,12 +20,5 @@ namespace ImageBirb.Core.Ports.Secondary
         /// <param name="key">The setting's key.</param>
         /// <returns>The setting or null if not found.</returns>
         Task<Setting> GetSetting(string key);
-
-        /// <summary>
-        /// Get a setting by its key.
-        /// </summary>
-        /// <param name="type">Strongly typed setting key.</param>
-        /// <returns>The setting or null if not found.</returns>
-        Task<Setting> GetSetting(SettingType type);
     }
 }
