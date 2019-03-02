@@ -1,12 +1,12 @@
+using System.Threading.Tasks;
+using ImageBirb.Core.Ports.Secondary;
 using ImageBirb.Core.Workflows;
 using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
 using Moq;
-using System.Threading.Tasks;
-using ImageBirb.Core.Ports.Secondary;
 using Xunit;
 
-namespace ImageBirbCoreUnitTests.WorkflowTests
+namespace ImageBirb.Core.UnitTests.WorkflowTests
 {
     public class RemoveTagWorkflowTests
     {

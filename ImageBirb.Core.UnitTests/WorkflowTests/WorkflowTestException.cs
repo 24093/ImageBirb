@@ -1,6 +1,6 @@
 using System;
 
-namespace ImageBirbCoreUnitTests.WorkflowTests
+namespace ImageBirb.Core.UnitTests.WorkflowTests
 {
     internal class WorkflowTestException : Exception
     {

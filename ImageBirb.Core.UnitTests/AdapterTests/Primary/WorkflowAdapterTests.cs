@@ -1,14 +1,14 @@
-﻿using ImageBirb.Core.Adapters;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using ImageBirb.Core.Adapters;
 using ImageBirb.Core.BusinessObjects;
 using ImageBirb.Core.Workflows;
 using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
 using Moq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Xunit;
 
-namespace ImageBirbCoreUnitTests.AdapterTests.Primary
+namespace ImageBirb.Core.UnitTests.AdapterTests.Primary
 {
     public class WorkflowAdapterTests
     {

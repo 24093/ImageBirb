@@ -1,6 +1,5 @@
 ﻿using ImageBirb.Core.BusinessObjects;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 namespace ImageBirb.Core.Workflows.Parameters
 {

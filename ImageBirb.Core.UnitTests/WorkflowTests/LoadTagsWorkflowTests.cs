@@ -1,13 +1,13 @@
-using ImageBirb.Core.Workflows;
-using ImageBirb.Core.Workflows.Results;
-using Moq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ImageBirb.Core.BusinessObjects;
 using ImageBirb.Core.Ports.Secondary;
+using ImageBirb.Core.Workflows;
+using ImageBirb.Core.Workflows.Results;
+using Moq;
 using Xunit;
 
-namespace ImageBirbCoreUnitTests.WorkflowTests
+namespace ImageBirb.Core.UnitTests.WorkflowTests
 {
     public class LoadTagsWorkflowTests
     {
