@@ -1,6 +1,4 @@
 ﻿using Autofac;
-using ImageBirb.Core.Adapters.Primary;
-using ImageBirb.Core.Adapters.Secondary;
 using ImageBirb.Core.Ports.Primary;
 using ImageBirb.Core.Ports.Secondary;
 using ImageBirb.Core.Workflows;
@@ -9,9 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using ImageBirb.Core.Adapters;
 using ImageBirb.Core.BusinessObjects;
 
-[assembly: InternalsVisibleTo("ImageBirbCoreUnitTests")]
+[assembly: InternalsVisibleTo("ImageBirb.Core.UnitTests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 namespace ImageBirb.Core

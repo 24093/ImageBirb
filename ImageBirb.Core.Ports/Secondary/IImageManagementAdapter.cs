@@ -7,7 +7,7 @@ namespace ImageBirb.Core.Ports.Secondary
     /// <summary>
     /// Database module that handles images.
     /// </summary>
-    internal interface IImageManagementAdapter
+    public interface IImageManagementAdapter
     {
         /// <summary>
         /// Creates an image id for a new image.

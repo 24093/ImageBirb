@@ -1,13 +1,13 @@
-﻿using ImageBirb.Core.BusinessObjects;
-using ImageBirb.Core.Ports.Secondary;
-using LiteDB;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ImageBirb.Core.BusinessObjects;
+using ImageBirb.Core.Ports.Secondary;
+using LiteDB;
 
-namespace ImageBirb.Core.Adapters.Secondary
+namespace ImageBirb.Core.Adapters
 {
-    internal class LiteDbTagManagementAdapter : ITagManagementAdapter
+    public class LiteDbTagManagementAdapter : ITagManagementAdapter
     {
         private readonly LiteCollection<Image> _imageCollection;
 

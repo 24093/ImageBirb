@@ -6,7 +6,7 @@ namespace ImageBirb.Core.Ports.Secondary
     /// This adapter handles all image inspection and
     /// manipulation tasks.
     /// </summary>
-    internal interface IImagingAdapter
+    public interface IImagingAdapter
     {
         /// <summary>
         /// Create a thumbnail from an image.

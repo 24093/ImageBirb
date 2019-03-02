@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>ImageBirb.Core.Adapters</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="7.11.0" />
+    <PackageReference Include="Shipwreck.Phash" Version="0.3.0" />
+    <PackageReference Include="Shipwreck.Phash.Bitmaps" Version="0.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ImageBirb.Core.Ports\ImageBirb.Core.Ports.csproj" />
+  </ItemGroup>
+
+</Project>

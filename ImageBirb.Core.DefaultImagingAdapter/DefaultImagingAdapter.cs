@@ -8,9 +8,9 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImageBirb.Core.Adapters.Secondary
+namespace ImageBirb.Core.Adapters
 {
-    internal class DefaultImagingAdapter : IImagingAdapter
+    public class DefaultImagingAdapter : IImagingAdapter
     {
         public async Task<byte[]> CreateThumbnail(byte[] imageData)
         {

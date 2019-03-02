@@ -2,9 +2,9 @@
 using ImageBirb.Core.Ports.Secondary;
 using LiteDB;
 
-namespace ImageBirb.Core.Adapters.Secondary
+namespace ImageBirb.Core.Adapters
 {
-    internal class LiteDbAdapter : IDatabaseAdapter
+    public class LiteDbAdapter : IDatabaseAdapter
     {
         private readonly LiteDatabase _liteDatabase;
 

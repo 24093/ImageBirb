@@ -167,9 +167,13 @@
       <Project>{2b1e7735-ed44-4391-b95b-ea3b5acfe34e}</Project>
       <Name>ImageBirb.Core.BusinessObjects</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ImageBirbCore\ImageBirbCore.csproj">
-      <Project>{b64855eb-ec77-401c-959c-0a3c9902a65b}</Project>
-      <Name>ImageBirbCore</Name>
+    <ProjectReference Include="..\ImageBirb.Core.Ports\ImageBirb.Core.Ports.csproj">
+      <Project>{a23d85df-6cbe-42be-86d0-2181631cccdc}</Project>
+      <Name>ImageBirb.Core.Ports</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ImageBirb.Core\ImageBirb.Core.csproj">
+      <Project>{af07034a-58c6-4121-a2a3-88c3950e5b0b}</Project>
+      <Name>ImageBirb.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

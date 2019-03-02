@@ -1,13 +1,13 @@
-﻿using ImageBirb.Core.BusinessObjects;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using ImageBirb.Core.BusinessObjects;
 using ImageBirb.Core.Ports.Primary;
 using ImageBirb.Core.Workflows;
 using ImageBirb.Core.Workflows.Parameters;
 using ImageBirb.Core.Workflows.Results;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace ImageBirb.Core.Adapters.Primary
+namespace ImageBirb.Core.Adapters
 {
     internal class WorkflowAdapter : IWorkflowAdapter, IDisposable
     {

@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>ImageBirb.Core.Adapters</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ImageBirb.Core.BusinessObjects\ImageBirb.Core.BusinessObjects.csproj" />
+    <ProjectReference Include="..\ImageBirb.Core.Ports\ImageBirb.Core.Ports.csproj" />
   </ItemGroup>
 
 </Project>

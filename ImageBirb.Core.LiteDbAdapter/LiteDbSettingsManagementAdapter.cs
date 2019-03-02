@@ -1,12 +1,11 @@
-﻿using ImageBirb.Core.BusinessObjects;
+﻿using System.Threading.Tasks;
+using ImageBirb.Core.BusinessObjects;
 using ImageBirb.Core.Ports.Secondary;
 using LiteDB;
-using System.Globalization;
-using System.Threading.Tasks;
 
-namespace ImageBirb.Core.Adapters.Secondary
+namespace ImageBirb.Core.Adapters
 {
-    internal class LiteDbSettingsManagementAdapter : ISettingsManagementAdapter
+    public class LiteDbSettingsManagementAdapter : ISettingsManagementAdapter
     {
         private readonly object lockObject = new object();
 

@@ -6,7 +6,7 @@ namespace ImageBirb.Core.Ports.Secondary
     /// <summary>
     /// This adapter handles the access to the local file system.
     /// </summary>
-    internal interface IFileSystemAdapter
+    public interface IFileSystemAdapter
     {
         /// <summary>
         /// Read a binary file.

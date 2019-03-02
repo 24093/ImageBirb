@@ -1,12 +1,12 @@
-﻿using ImageBirb.Core.Ports.Secondary;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ImageBirb.Core.Ports.Secondary;
 
-namespace ImageBirb.Core.Adapters.Secondary
+namespace ImageBirb.Core.Adapters
 {
-    internal class DefaultFileSystemAdapter : IFileSystemAdapter
+    public class DefaultFileSystemAdapter : IFileSystemAdapter
     {
         public async Task<byte[]> ReadBinaryFile(string filename)
         {
