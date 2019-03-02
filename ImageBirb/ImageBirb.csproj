@@ -163,6 +163,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ImageBirb.Core.BusinessObjects\ImageBirb.Core.BusinessObjects.csproj">
+      <Project>{2b1e7735-ed44-4391-b95b-ea3b5acfe34e}</Project>
+      <Name>ImageBirb.Core.BusinessObjects</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ImageBirbCore\ImageBirbCore.csproj">
       <Project>{b64855eb-ec77-401c-959c-0a3c9902a65b}</Project>
       <Name>ImageBirbCore</Name>

@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageBirbCore", "ImageBirbC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageBirbCoreUnitTests", "ImageBirbCoreUnitTests\ImageBirbCoreUnitTests.csproj", "{6BFE98F2-8B9F-4C80-A817-52CDF83A05C6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageBirb.Core.BusinessObjects", "ImageBirb.Core.BusinessObjects\ImageBirb.Core.BusinessObjects.csproj", "{2B1E7735-ED44-4391-B95B-EA3B5ACFE34E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageBirb.Core.Ports", "ImageBirb.Core.Ports\ImageBirb.Core.Ports.csproj", "{A23D85DF-6CBE-42BE-86D0-2181631CCCDC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{6BFE98F2-8B9F-4C80-A817-52CDF83A05C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BFE98F2-8B9F-4C80-A817-52CDF83A05C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BFE98F2-8B9F-4C80-A817-52CDF83A05C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B1E7735-ED44-4391-B95B-EA3B5ACFE34E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B1E7735-ED44-4391-B95B-EA3B5ACFE34E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B1E7735-ED44-4391-B95B-EA3B5ACFE34E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B1E7735-ED44-4391-B95B-EA3B5ACFE34E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A23D85DF-6CBE-42BE-86D0-2181631CCCDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A23D85DF-6CBE-42BE-86D0-2181631CCCDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A23D85DF-6CBE-42BE-86D0-2181631CCCDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A23D85DF-6CBE-42BE-86D0-2181631CCCDC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
