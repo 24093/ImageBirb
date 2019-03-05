@@ -1,5 +1,5 @@
-using GalaSoft.MvvmLight.CommandWpf;
 using ImageBirb.Common;
+using ImageBirb.Core.BusinessObjects;
 using ImageBirb.Core.Ports.Primary;
 using System;
 using System.Collections;
@@ -7,7 +7,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ImageBirb.Core.BusinessObjects;
 
 namespace ImageBirb.ViewModels
 {

@@ -1,6 +1,4 @@
 using System.Threading.Tasks;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.CommandWpf;
 using System.Windows.Input;
 
 namespace ImageBirb.ViewModels
