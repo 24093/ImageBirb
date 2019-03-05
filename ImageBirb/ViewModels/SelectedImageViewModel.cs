@@ -83,7 +83,7 @@ namespace ImageBirb.ViewModels
 
         private void UpdateTags()
         {
-            _tagListViewModel.UpdateTagsCommand.Exec();
+            _tagListViewModel.UpdateTagsCommand.Execute(null);
         }
     }
 }

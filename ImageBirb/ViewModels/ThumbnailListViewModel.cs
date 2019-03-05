@@ -37,7 +37,7 @@ namespace ImageBirb.ViewModels
             set
             {
                 Set(ref _selectedThumbnail, value);
-                _selectedImageViewModel.ShowImageCommand.Exec(_selectedThumbnail);
+                _selectedImageViewModel.ShowImageCommand.Execute(_selectedThumbnail);
             }
         }
 

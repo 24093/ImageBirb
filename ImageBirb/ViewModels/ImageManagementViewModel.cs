@@ -56,9 +56,9 @@ namespace ImageBirb.ViewModels
             {
                 await Workflows.RemoveImage(imageId);
 
-                _selectedImageViewModel.ShowImageCommand.Exec();
+                _selectedImageViewModel.ShowImageCommand.Execute(null);
 
-                _thumbnailListViewModel.UpdateThumbnailsCommand.Exec();
+                _thumbnailListViewModel.UpdateThumbnailsCommand.Execute(null);
             }
         }
 
@@ -117,7 +117,7 @@ namespace ImageBirb.ViewModels
             {
                 await _progressDialogController.CloseAsync();
 
-                _thumbnailListViewModel.UpdateThumbnailsCommand.Exec();
+                _thumbnailListViewModel.UpdateThumbnailsCommand.Execute(null);
             }
         }
     }

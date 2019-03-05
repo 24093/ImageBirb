@@ -26,7 +26,10 @@ namespace ImageBirb.ViewModels
 
         public void Execute(object parameter)
         {
-            _execute();
+            if (CanExecute(parameter))
+            {
+                _execute();
+            }
         }
     }
 
@@ -65,13 +68,19 @@ namespace ImageBirb.ViewModels
         {
             if (parameter is T p)
             {
-                Execute(p);
+                if (CanExecute(p))
+                {
+                    Execute(p);
+                }
             }
         }
 
         public void Execute(T parameter)
         {
-            _execute(parameter);
+            if (CanExecute(parameter))
+            {
+                _execute(parameter);
+            }
         }
     }
 }
