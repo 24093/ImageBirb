@@ -1,3 +1,4 @@
+using GalaSoft.MvvmLight.CommandWpf;
 using ImageBirb.Common;
 using ImageBirb.Core.BusinessObjects;
 using ImageBirb.Core.Ports.Primary;

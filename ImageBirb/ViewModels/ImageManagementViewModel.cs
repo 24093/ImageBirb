@@ -1,4 +1,4 @@
-using ImageBirb.Common;
+using GalaSoft.MvvmLight.CommandWpf;
 using ImageBirb.Core.Ports.Primary;
 using MahApps.Metro.Controls.Dialogs;
 using System.Threading.Tasks;

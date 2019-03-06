@@ -109,7 +109,12 @@
         <c:MainToolBar x:Name="MainToolBar"
                        Grid.Row="1"
                        Grid.Column="1"
-                       MainViewModel="{Binding}" />
+                       MainViewModel="{Binding}"
+                       ToggleTagListCommand="{Binding FlyoutViewModel.ToggleTagListCommand}"
+                       ToggleSelectedImageTagsCommand="{Binding FlyoutViewModel.ToggleSelectedImageTagsCommand}"
+                       AddImageFromFileCommand="{Binding ImageManagementViewModel.AddImageFromFileCommand}"
+                       RemoveImageCommand="{Binding ImageManagementViewModel.RemoveImageCommand}"
+                       ToggleSettingsCommand="{Binding FlyoutViewModel.ToggleSettingsCommand}"/>
     </Grid>
 
 </mah:MetroWindow>

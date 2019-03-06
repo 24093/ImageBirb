@@ -1,3 +1,4 @@
+using GalaSoft.MvvmLight;
 using ImageBirb.Core.Ports.Primary;
 using System;
 using System.Diagnostics;

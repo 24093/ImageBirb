@@ -90,13 +90,11 @@
     <Compile Include="ViewModels\FlyoutViewModel.cs" />
     <Compile Include="ViewModels\ImageManagementViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\SelectedImageViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\TagListViewModel.cs" />
     <Compile Include="ViewModels\ThumbnailListViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
-    <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\WorkflowViewModel.cs" />
     <Page Include="Views\SelectedImageTagsView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -191,6 +189,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell">
       <Version>1.1.3.3</Version>
+    </PackageReference>
+    <PackageReference Include="MvvmLight">
+      <Version>5.4.1.1</Version>
     </PackageReference>
     <PackageReference Include="NLog">
       <Version>4.5.11</Version>

@@ -1,4 +1,4 @@
-using ImageBirb.Common;
+using GalaSoft.MvvmLight.CommandWpf;
 using ImageBirb.Core.BusinessObjects;
 using ImageBirb.Core.Ports.Primary;
 using System.Threading.Tasks;
@@ -21,7 +21,7 @@ namespace ImageBirb.ViewModels
             private set
             {
                 Set(ref _selectedImage, value);
-                OnPropertyChanged(nameof(IsImageSelected));
+                RaisePropertyChanged(nameof(IsImageSelected));
             }
         }
 
