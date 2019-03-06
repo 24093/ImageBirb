@@ -1,8 +1,8 @@
 using Autofac;
+using ImageBirb.Common;
 using ImageBirb.Core.BusinessObjects;
-using ImageBirb.ViewModels;
 
-namespace ImageBirb.Common
+namespace ImageBirb.ViewModels
 {
     internal class ViewModelLocator
     {
