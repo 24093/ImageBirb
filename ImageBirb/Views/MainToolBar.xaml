@@ -37,7 +37,7 @@
                                 Margin="10, 0, 10, 0"
                                 Style="{DynamicResource MahApps.Metro.Styles.MetroCircleButtonStyle}"
                                 Command="{TemplateBinding RemoveImageCommand}"
-                                CommandParameter="{Binding DataContext.SelectedImageViewModel.SelectedImage.ImageId, RelativeSource={RelativeSource TemplatedParent}}"
+                                CommandParameter="{TemplateBinding SelectedImageId}"
                                 Content="{iconPacks:FontAwesome TrashAltRegular, Width=32, Height=32}" />
                         <Button Name="SettingsButton" 
                                 Width="64"

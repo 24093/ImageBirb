@@ -16,7 +16,7 @@
                                                    VerticalAlignment="Stretch" 
                                                    HorizontalAlignment="Stretch">
 
-                        <Image Source="{Binding SelectedImageViewModel.SelectedImage.ImageData, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <Image Source="{Binding SelectedImage.ImageData, RelativeSource={RelativeSource TemplatedParent}}" />
 
                     </panAndZoom:ZoomBorder>
 

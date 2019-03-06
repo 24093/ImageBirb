@@ -103,18 +103,17 @@
                              Grid.Column="1"
                              Grid.Row="0"
                              Margin="4"
-                             TagListViewModel="{Binding TagListViewModel}"
-                             SelectedImageViewModel="{Binding SelectedImageViewModel}"/>
+                             SelectedImage="{Binding SelectedImageViewModel.SelectedImage}" />
 
         <c:MainToolBar x:Name="MainToolBar"
                        Grid.Row="1"
                        Grid.Column="1"
-                       MainViewModel="{Binding}"
                        ToggleTagListCommand="{Binding FlyoutViewModel.ToggleTagListCommand}"
                        ToggleSelectedImageTagsCommand="{Binding FlyoutViewModel.ToggleSelectedImageTagsCommand}"
                        AddImageFromFileCommand="{Binding ImageManagementViewModel.AddImageFromFileCommand}"
                        RemoveImageCommand="{Binding ImageManagementViewModel.RemoveImageCommand}"
-                       ToggleSettingsCommand="{Binding FlyoutViewModel.ToggleSettingsCommand}"/>
+                       ToggleSettingsCommand="{Binding FlyoutViewModel.ToggleSettingsCommand}"
+                       SelectedImageId="{Binding SelectedImageViewModel.SelectedImage.ImageId}" />
     </Grid>
 
 </mah:MetroWindow>

@@ -1,27 +1,18 @@
-﻿using ImageBirb.ViewModels;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
+using Image = ImageBirb.Core.BusinessObjects.Image;
 
 namespace ImageBirb.Controls
 {
     internal class SelectedImageView : Control
     {
-        public static readonly DependencyProperty SelectedImageViewModelProperty = DependencyProperty.Register(
-            "SelectedImageViewModel", typeof(SelectedImageViewModel), typeof(SelectedImageView), new PropertyMetadata(default(SelectedImageViewModel)));
+        public static readonly DependencyProperty SelectedImageProperty = DependencyProperty.Register(
+            "SelectedImage", typeof(Image), typeof(SelectedImageView), new PropertyMetadata(default(Image)));
 
-        public static readonly DependencyProperty TagListViewModelProperty = DependencyProperty.Register(
-            "TagListViewModel", typeof(TagListViewModel), typeof(SelectedImageView), new PropertyMetadata(default(TagListViewModel)));
-
-        public SelectedImageViewModel SelectedImageViewModel
+        public Image SelectedImage
         {
-            get => (SelectedImageViewModel)GetValue(SelectedImageViewModelProperty);
-            set => SetValue(SelectedImageViewModelProperty, value);
-        }
-        
-        public TagListViewModel TagListViewModel
-        {
-            get => (TagListViewModel) GetValue(TagListViewModelProperty);
-            set => SetValue(TagListViewModelProperty, value);
+            get => (Image) GetValue(SelectedImageProperty);
+            set => SetValue(SelectedImageProperty, value);
         }
     }
 }

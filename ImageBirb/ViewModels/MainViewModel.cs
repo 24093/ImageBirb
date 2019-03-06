@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using System.Windows.Threading;
 using ImageBirb.Core.Ports.Primary;
 
 namespace ImageBirb.ViewModels
@@ -37,17 +35,6 @@ namespace ImageBirb.ViewModels
             FlyoutViewModel = flyoutViewModel;
             ImageManagementViewModel = imageManagementViewModel;
             SettingsViewModel = settingsViewModel;
-
-            SelectedImageViewModel.PropertyChanged += SelectedImageViewModelOnPropertyChanged;
-        }
-
-        private void SelectedImageViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(SelectedImageViewModel.IsImageSelected))
-            {
-                Dispatcher.CurrentDispatcher.Invoke(() =>
-                    FlyoutViewModel.ToggleSelectedImageTagsCommandRaiseCanExecuteChanged());
-            }
         }
     }
 }
